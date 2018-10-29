@@ -1,0 +1,6 @@
+.git/
+.idea/
+minigamedtools/
+out/
+target/
+*.iml

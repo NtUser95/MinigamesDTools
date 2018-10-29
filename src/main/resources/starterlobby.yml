@@ -1,0 +1,5 @@
+example_starter_lobby:
+  enabled: true
+  creator_id: default_starter_lobby
+  location_XYZWorldYawPitch: 74:30:113:world:0:0
+  hotbar: ExampleLobbyHotbar

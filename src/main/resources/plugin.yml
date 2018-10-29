@@ -1,0 +1,72 @@
+name: MinigamesDTools
+main: com.gmail.borlandlp.minigamesdtools.MinigamesDTools
+version: 1.0
+author: DeviantUser
+softdepend: [Vault]
+    
+commands:
+  arena: 
+    description: arena command
+    usage: /arena <subcommand>
+         
+permissions:
+  arena.*:
+    default: op
+    children:
+      arena.join: true
+      arena.leave: true
+      arena.info: true
+      arena.reload: true
+      arena.commandUse: true
+      arena.sign.create: true
+      arena.arena.add: true
+      arena.arena.del: true
+      arena.arena.setspawn1: true
+      arena.arena.setspawn2: true
+      arena.arena.list: true
+      arena.arena.enable: true
+      arena.arena.disable: true
+      arena.arena.setInv: true
+      arena.itemDrop: true
+      arena.itemPickUp: true
+      arena.blockPlace: true
+      arena.blockBreak: true
+      arena.teleport: true
+      arena.randomJoin: true
+      arena.arena.*: true
+      arena.top.*: true
+      arena.points.*: true
+  arena.arena.*:
+    default: op
+    children:
+      arena.arena.add: true
+      arena.arena.del: true
+      arena.arena.setspawn1: true
+      arena.arena.setspawn2: true
+      arena.arena.list: true
+      arena.arena.enable: true
+      arena.arena.disable: true
+      arena.arena.setInv: true
+  arena.top.*:
+    default: op
+    children:
+      arena.top.ten: true
+      arena.top.arena: true
+  arena.points.*:
+    default: op
+    children:
+      arena.points.total: true
+      arena.points.arena: true
+      arena.points.otherPlayers: true
+      arena.points.otherPlayers.arena: true
+  arena.default:
+    default: true
+    children:
+      arena.randomJoin: true
+      arena.points.total: true
+      arena.points.arena: true
+      arena.join: true
+      arena.leave: true
+      arena.info: true
+      arena.arena.list: true
+      arena.top.*: true

@@ -1,0 +1,10 @@
+example_lobby:
+  creator_id: default_server_lobby
+  spawn_point_XYZWorldYawPitch: -127:63:218:world:10:50
+  hotbar_id: ExampleLobbyHotbar
+  enabled: true
+example_lobby2:
+  creator_id: default_server_lobby
+  spawn_point_XYZWorldYawPitch: -127:63:206:world:10:50
+  hotbar_id: ExampleLobbyHotbar
+  enabled: true

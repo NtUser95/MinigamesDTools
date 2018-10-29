@@ -1,0 +1,4 @@
+example_scenario_parent:
+                creator_id: example_scenario
+                example_scenario_child:
+                  creator_id: example_scenario_two

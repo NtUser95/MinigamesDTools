@@ -1,0 +1,9 @@
+# in seconds
+broadcaster:
+  enabled: true
+  delay: 40
+prefix: '&4[&6&lArena&4]&r '
+debug: false
+lobby:
+  move_on_server_join: true
+  start_lobby: example_lobby

@@ -1,0 +1,14 @@
+ExampleHeldHotbar:
+  creator_id: held_hotbar
+  slots:
+    0: ExampleItem
+ExampleLobbyHotbar:
+  creator_id: interract_hotbar
+  slots:
+    0: ExampleItem
+ExampleSkyHotbar:
+  creator_id: held_hotbar
+  slots:
+    0: example_rocket_slot
+    1: example_speedboost_slot
+    2: example_thirdpersoncursor_slot

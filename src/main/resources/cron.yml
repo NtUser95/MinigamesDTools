@@ -1,0 +1,6 @@
+#seconds minute hour day month [action] [arena_name]
+#actions: enable, run_once, disable, run_once_delayed, run_rating_games, stop_rating_games, start, say
+tasks:
+- '* * 23 *  enable test1x1ranked'
+- '* 10 23 * * disable test1x1ranked'
+- '* 10 23 * * run_once test1x1ranked'

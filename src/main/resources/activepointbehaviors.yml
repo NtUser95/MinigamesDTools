@@ -1,0 +1,4 @@
+example_first_behavior:
+  creator_id: example_behavior
+  delay: 10
+  period: 10

@@ -1,0 +1,20 @@
+config:
+    ranks:
+        novice:
+            req_score: 0
+        stone:
+            req_score: 100
+        iron:
+            req_score: 200
+        gold:
+            req_score: 400
+        diamond:
+            req_score: 600
+        emerald:
+            req_score: 800
+type:
+    1vs1:
+        arenas:
+        - tournir1x1
+        command_size: 1
+        max_rating_diff: 300

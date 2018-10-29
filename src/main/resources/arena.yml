@@ -1,0 +1,69 @@
+enabled: true
+run_once: false
+type: teamdeathmatch
+onlyPartyCanJoin: true
+min_players_to_start: 2
+teams:
+- example_team
+scenarios_chain: ExampleScenario_Chain
+gui_provider:
+- 'BossbarExample'
+- 'ScoreboardExample'
+active_points:
+- 'example_sphereactivepoint'
+- 'example_squareactivepoint'
+- 'example_livingentity'
+interactive_hotbar:
+    enabled: false
+    hotbar_id: ExampleHeldHotbar
+chunk_loaders:
+    first_loader:
+        min_point_xz: 100:200
+        max_point_xz: 116:216
+        world: world
+    wow_is_a_loader:
+        min_point_xz: 116:216
+        max_point_xz: 132:232
+        world: world
+inventory:
+    armor:
+        helmet: 310:0!1,PROTECTION_ENVIRONMENTAL:1!
+        chestplate: 311:0!1,PROTECTION_ENVIRONMENTAL:1!THORNS:1!
+        leggings: 312:0!1,PROTECTION_ENVIRONMENTAL:1!
+        boots: 313:0!1,PROTECTION_ENVIRONMENTAL:1!
+    items:
+    - slot=0,id=DIAMOND_SWORD,amount=1,enchantments=DAMAGE_ALL:5
+    - slot=1,id=BOW,amount=1
+    - slot=2,id=ARROW,amount=32
+    - slot=3,id=GRILLED_PORK,amount=5
+prize:
+    economy:
+        enabled: true
+        amount: 50
+    items:
+        enabled: false
+        itemPrizes:
+        - id=DIAMOND,amount=1
+        - id=DIAMOND_SWORD,amount=1,enchantments=DAMAGE_ALL:3#FIRE_ASPECT:1
+countdown:
+    beforeTeleport:
+        duration: 20
+    beforeFight:
+        duration: 10
+        disableMoving: true
+        blindness: false
+        invincibility: true
+tickets:
+    rounds: 3
+    max_kills: 20
+    max_deaths: 1
+roundTime: 300
+eco:
+    arenaCost: 0
+    commission: 0
+maxRounds: 3
+playerItemDrop: false
+playerItemPickUp: false
+playerHungerDisable: false
+deletePointsAfterArenaDeletion: true
+world: world

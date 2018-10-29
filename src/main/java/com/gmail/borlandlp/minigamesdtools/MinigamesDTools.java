@@ -1,0 +1,282 @@
+package com.gmail.borlandlp.minigamesdtools;
+
+import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePointController;
+import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePointsAPI;
+import com.gmail.borlandlp.minigamesdtools.activepoints.behaviors.BehaviorCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.ReactionCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.arena.*;
+import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePointsCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunkLoaderCreator;
+import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioChainCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobbyCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.*;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarAPI;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarApiInst;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.HotbarItemCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUICreatorHub;
+import com.gmail.borlandlp.minigamesdtools.gui.inventory.api.InventoryAPI;
+import com.gmail.borlandlp.minigamesdtools.gui.inventory.api.ViewManager;
+import com.gmail.borlandlp.minigamesdtools.gui.inventory.slots.InventoryGuiSlotCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.lobby.LobbyServerAPI;
+import com.gmail.borlandlp.minigamesdtools.nmsentities.EntityAPI;
+import com.gmail.borlandlp.minigamesdtools.nmsentities.EntityController;
+import com.gmail.borlandlp.minigamesdtools.nmsentities.entity.SilentShulker;
+import com.gmail.borlandlp.minigamesdtools.nmsentities.entity.SkyDragon;
+import com.gmail.borlandlp.minigamesdtools.nmsentities.entity.SkyZombie;
+import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.arena.team.TeamCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.gui.inventory.*;
+import com.gmail.borlandlp.minigamesdtools.listener.Commands;
+import com.gmail.borlandlp.minigamesdtools.listener.Events;
+import com.gmail.borlandlp.minigamesdtools.lobby.LobbyHubController;
+import com.gmail.borlandlp.minigamesdtools.lobby.LobbyCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.sql.SQLite;
+
+import com.gmail.borlandlp.minigamesdtools.test.TestComponents;
+import net.minecraft.server.v1_12_R1.EntityEnderDragon;
+import net.minecraft.server.v1_12_R1.EntityShulker;
+import net.minecraft.server.v1_12_R1.EntityZombie;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class MinigamesDTools extends JavaPlugin {
+    private static final String prefix = ChatColor.BLUE + "[" + ChatColor.RED + "Arena" + ChatColor.BLUE + "]" + ChatColor.DARK_GREEN;
+    private SQLite dbConnection;
+
+    private APIComponentsController apiComponentsController;
+    private ArenaAPI arenaAPI;
+    private LobbyServerAPI lobbyController;
+    private ArenaCreatorHub arenaCreatorHub;
+    private ConfigManager configManager;
+    private HotbarAPI hotbarAPI;
+    private InventoryAPI inventoryGUIManger;
+    private ActivePointsAPI activePointsAPI;
+    private EntityAPI entityAPI;
+
+    private GUICreatorHub guiCreatorHub;
+    private HotbarCreatorHub hotbarCreatorHub;
+    private HotbarItemCreatorHub hotbarItemCreatorHub;
+    private ReactionCreatorHub reactionCreatorHub;
+    private BehaviorCreatorHub behaviorCreatorHub;
+    private ActivePointsCreatorHub activePointsCreatorHub;
+    private ScenarioCreatorHub scenarioCreatorHub;
+    private ScenarioChainCreatorHub scenarioChainCreatorHub;
+    private TeamCreatorHub teamCreatorHub;
+    private InventoryGUICreatorHub inventoryGUICreatorHub;
+    private InventoryGuiSlotCreatorHub inventoryGuiSlotCreatorHub;
+    private LobbyCreatorHub lobbyCreatorHub;
+    private ChunkLoaderCreator chunkLoaderCreator;
+    private ArenaLobbyCreatorHub arenaLobbyCreatorHub;
+
+    private static MinigamesDTools plugin;
+
+    public void onEnable() {
+       plugin = this;
+
+       this.configManager = new ConfigManager();
+       this.configManager.checkConfigs();
+       this.getServer().getPluginManager().registerEvents(new Events(), this);
+       this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+       this.getCommand("arena").setExecutor(new Commands());
+
+       this.loadMisc();
+    }
+
+    public void loadMisc() {
+        Debug.print(Debug.LEVEL.NOTICE, "#######################################################");
+        Debug.print(Debug.LEVEL.NOTICE, "########### MiniGames daemon is starting... ###########");
+        Debug.print(Debug.LEVEL.NOTICE, "#.....................................................#");
+
+        this.guiCreatorHub = new GUICreatorHub();
+        this.hotbarCreatorHub = new HotbarCreatorHub();
+        this.hotbarItemCreatorHub = new HotbarItemCreatorHub();
+        this.reactionCreatorHub = new ReactionCreatorHub();
+        this.behaviorCreatorHub = new BehaviorCreatorHub();
+        this.activePointsCreatorHub = new ActivePointsCreatorHub();
+        this.scenarioCreatorHub = new ScenarioCreatorHub();
+        this.scenarioChainCreatorHub = new ScenarioChainCreatorHub();
+        this.arenaCreatorHub = new ArenaCreatorHub();
+        this.teamCreatorHub = new TeamCreatorHub();
+        this.arenaLobbyCreatorHub = new ArenaLobbyCreatorHub();
+        this.chunkLoaderCreator = new ChunkLoaderCreator();
+        this.inventoryGuiSlotCreatorHub = new InventoryGuiSlotCreatorHub();
+
+        this.entityAPI = new EntityController();
+        this.inventoryGUICreatorHub = new InventoryGUICreatorHub();
+        this.inventoryGUIManger = new ViewManager();
+        this.lobbyCreatorHub = new LobbyCreatorHub();
+        this.activePointsAPI = new ActivePointController();
+        this.arenaAPI = new ArenaManager();
+        this.hotbarAPI = new HotbarApiInst();
+        this.lobbyController = new LobbyHubController();
+
+        this.apiComponentsController = new APIComponentsController();
+
+        Debug.print(Debug.LEVEL.NOTICE, "###############################################");
+        Debug.print(Debug.LEVEL.NOTICE, "########### register API components ###########");
+        Debug.print(Debug.LEVEL.NOTICE, "#..............................................#");
+        this.getApiComponentsController().register((APIComponent) this.getLobbyHubAPI());
+        this.getApiComponentsController().register((APIComponent) this.getHotbarAPI());
+        this.getApiComponentsController().register((APIComponent) this.getActivePointsAPI());
+        this.getApiComponentsController().register((APIComponent) this.getEntityAPI());
+        this.getApiComponentsController().register((APIComponent) this.getInventoryGUI_API());
+        this.getApiComponentsController().register((APIComponent) this.getArenaAPI());
+
+        (new TestComponents()).load();
+
+        // переделать инициализацию БД. Это тут вообще с лохматых годов.
+        dbConnection = new SQLite();
+        dbConnection.load();
+
+        Debug.print(Debug.LEVEL.NOTICE, "###################################");
+        Debug.print(Debug.LEVEL.NOTICE, "########### load addons ###########");
+        Debug.print(Debug.LEVEL.NOTICE, "#.................................#");
+        (new CustomMinigamesLoader()).loadAddons();
+
+        Debug.print(Debug.LEVEL.NOTICE, "##################################################");
+        Debug.print(Debug.LEVEL.NOTICE, "########### prepare daemon to start... ###########");
+        Debug.print(Debug.LEVEL.NOTICE, "#................................................#");
+        this.getApiComponentsController().announceEvent(APIComponentsController.ComponentEvent.PLUGIN_LOAD);
+        Debug.init();
+
+        Debug.print(Debug.LEVEL.NOTICE, "###################################################");
+        Debug.print(Debug.LEVEL.NOTICE, "########### MiniGames daemon is loaded! ###########");
+        Debug.print(Debug.LEVEL.NOTICE, "###################################################");
+    }
+
+    public void onDisable() {
+       this.unloadMisc();
+
+       this.getLogger().info("Arena disabled!");
+    }
+
+    public void unloadMisc() {
+        Debug.print(Debug.LEVEL.NOTICE, "#############################################################");
+        Debug.print(Debug.LEVEL.NOTICE, "########### MiniGames daemon prepare to unload... ###########");
+        Debug.print(Debug.LEVEL.NOTICE, "#...........................................................#");
+
+        MinigamesDTools.getInstance().getEntityAPI().unregister("test", 69, EntityShulker.class, SilentShulker.class);
+        MinigamesDTools.getInstance().getEntityAPI().unregister("my_zombie", 54, EntityZombie.class, SkyZombie.class);
+        MinigamesDTools.getInstance().getEntityAPI().unregister("sky_dragon", 63, EntityEnderDragon.class, SkyDragon.class);
+
+        this.getApiComponentsController().announceEvent(APIComponentsController.ComponentEvent.PLUGIN_UNLOAD);
+
+        Debug.print(Debug.LEVEL.NOTICE, "#######################################################");
+        Debug.print(Debug.LEVEL.NOTICE, "########### MiniGames daemon is unloaded... ###########");
+        Debug.print(Debug.LEVEL.NOTICE, "#.....................................................#");
+    }
+
+    public void reload() {
+       this.unloadMisc();
+       this.loadMisc();
+       System.out.println(MinigamesDTools.getPrefix() + " Конфиг арен перезагружен.");
+    }
+
+    public static MinigamesDTools getInstance() {
+       return plugin;
+    }
+
+    public static String getPrefix()
+    {
+      return prefix;
+    }
+
+    public ArenaAPI getArenaAPI()
+    {
+      return this.arenaAPI;
+    }
+
+    public ConfigManager getConfigManager()
+    {
+      return this.configManager;
+    }
+
+    public SQLite getDBWrapper() {
+       return dbConnection;
+    }
+
+    public GUICreatorHub getGuiCreatorHub() {
+        return guiCreatorHub;
+    }
+
+    public HotbarCreatorHub getHotbarCreatorHub() {
+        return hotbarCreatorHub;
+    }
+
+    public EntityAPI getEntityAPI() {
+        return entityAPI;
+    }
+
+    public ReactionCreatorHub getReactionCreatorHub() {
+        return reactionCreatorHub;
+    }
+
+    public BehaviorCreatorHub getBehaviorCreatorHub() {
+        return behaviorCreatorHub;
+    }
+
+    public ActivePointsCreatorHub getActivePointsCreatorHub() {
+        return activePointsCreatorHub;
+    }
+
+    public ScenarioCreatorHub getScenarioCreatorHub() {
+        return scenarioCreatorHub;
+    }
+
+    public ArenaCreatorHub getArenaCreatorHub() {
+        return arenaCreatorHub;
+    }
+
+    public TeamCreatorHub getTeamCreatorHub() {
+        return teamCreatorHub;
+    }
+
+    public InventoryGUICreatorHub getInventoryGUICreatorHub() {
+        return inventoryGUICreatorHub;
+    }
+
+    public InventoryAPI getInventoryGUI_API() {
+        return inventoryGUIManger;
+    }
+
+    public LobbyServerAPI getLobbyHubAPI() {
+        return lobbyController;
+    }
+
+    public HotbarAPI getHotbarAPI() {
+        return hotbarAPI;
+    }
+
+    public LobbyCreatorHub getLobbyCreatorHub() {
+        return lobbyCreatorHub;
+    }
+
+    public ActivePointsAPI getActivePointsAPI() {
+        return activePointsAPI;
+    }
+
+    public APIComponentsController getApiComponentsController() {
+        return apiComponentsController;
+    }
+
+    public ChunkLoaderCreator getChunkLoaderCreator() {
+        return chunkLoaderCreator;
+    }
+
+    public HotbarItemCreatorHub getHotbarItemCreatorHub() {
+        return hotbarItemCreatorHub;
+    }
+
+    public ScenarioChainCreatorHub getScenarioChainCreatorHub() {
+        return scenarioChainCreatorHub;
+    }
+
+    public ArenaLobbyCreatorHub getArenaLobbyCreatorHub() {
+        return arenaLobbyCreatorHub;
+    }
+
+    public InventoryGuiSlotCreatorHub getInventoryGuiSlotCreatorHub() {
+        return inventoryGuiSlotCreatorHub;
+    }
+}

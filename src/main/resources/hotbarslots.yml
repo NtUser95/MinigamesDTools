@@ -1,0 +1,7 @@
+ExampleItem:
+  creator_id: example_item
+  active_icon: WOOL
+  unactive_icon: GLASS
+  cooldown: 1
+  infinite: true
+  amount: 1

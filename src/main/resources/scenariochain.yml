@@ -1,0 +1,10 @@
+ExampleScenario_Chain:
+  creator_id: default_scenario_chain
+  chain:
+    first_exaple:
+      scenario_id: example_scenario_parent
+      parentList:
+    two_example:
+      scenario_id: example_scenario_child
+      parentList:
+      - first_exaple
