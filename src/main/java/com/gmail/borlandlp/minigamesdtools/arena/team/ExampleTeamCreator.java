@@ -130,6 +130,7 @@ public class ExampleTeamCreator implements Creator {
         Debug.print(Debug.LEVEL.NOTICE, "Build starter lobby for Team[ID:" + teamID + "]#" + starterLobby);
 
         team.setName(fileConfiguration.get("name").toString());
+        team.friendlyFireAllowed = Boolean.parseBoolean(fileConfiguration.get("friendly_fire").toString());
 
         return team;
     }

@@ -1,6 +1,7 @@
 package com.gmail.borlandlp.minigamesdtools.listener;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
+import com.gmail.borlandlp.minigamesdtools.arena.ArenaPlayersRelative;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerDamagedLocalEvent;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerDeathLocalEvent;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerKilledLocalEvent;
@@ -9,6 +10,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaGameEndedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -56,6 +58,42 @@ public class Events implements Listener {
         }
     }
 
+    /*
+    * <PlayerDMG>
+    * */
+    @EventHandler
+    public void onEntityDamageEvent(EntityDamageEvent event) {
+        if(!(event.getEntity() instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player)event.getEntity();
+        ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf(player);
+        if(arena == null) {
+            return;
+        }
+
+        if(arena.getState() != ArenaBase.STATE.EMPTY) {
+            if(event.getCause() == EntityDamageEvent.DamageCause.LAVA || (float)(player.getHealth() - event.getFinalDamage()) <= 0.0) {
+                event.setDamage(0D);
+                ArenaPlayerDeathLocalEvent arenaEvent = new ArenaPlayerDeathLocalEvent(player);
+                arena.getEventAnnouncer().announce(arenaEvent);
+                if(arenaEvent.isCancelled()) {
+                    event.setCancelled(true);
+                }
+            } else {
+                ArenaPlayerDamagedLocalEvent arenaEvent = new ArenaPlayerDamagedLocalEvent(player, event.getFinalDamage());
+                arena.getEventAnnouncer().announce(arenaEvent);
+                if(arenaEvent.isCancelled()) {
+                    event.setCancelled(true);
+                }
+            }
+
+        } else if(arena.getState() == ArenaBase.STATE.PAUSED && arena.getState() == ArenaBase.STATE.COUNTDOWN) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void onEntityDamageEvent(EntityDamageByEntityEvent event) {
         if(!(event.getEntity() instanceof Player)) {
@@ -69,6 +107,16 @@ public class Events implements Listener {
         }
 
         if(arena.getState() != ArenaBase.STATE.EMPTY) {
+            if(event.getDamager() instanceof Player) {
+                if(arena.getTeamController().getPlayersRelative(player, (Player) event.getDamager()) == ArenaPlayersRelative.TEAMMATE) {
+                    if(!arena.getTeamController().getTeamOf(player).friendlyFireAllowed()) {
+                        event.setCancelled(true);
+                        player.sendMessage("attack_teammate_msg");
+                        return;
+                    }
+                }
+            }
+
             if((player.getHealth() - event.getFinalDamage()) <= 0.0D) {
                 event.setDamage(0D);
                 if(event.getDamager() == null) {
@@ -104,37 +152,9 @@ public class Events implements Listener {
         }
     }
 
-    @EventHandler
-    public void onEntityDamageEvent(EntityDamageEvent event) {
-        if(event.getEntity() instanceof Player) {
-            Player player = (Player)event.getEntity();
-            ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf(player);
-            if(arena == null) {
-                return;
-            }
-
-            if(arena.getState() != ArenaBase.STATE.EMPTY) {
-
-                if(event.getCause() == EntityDamageEvent.DamageCause.LAVA || (float)(player.getHealth() - event.getFinalDamage()) <= 0.0) {
-                    event.setDamage(0D);
-                    ArenaPlayerDeathLocalEvent arenaEvent = new ArenaPlayerDeathLocalEvent(player);
-                    arena.getEventAnnouncer().announce(arenaEvent);
-                    if(arenaEvent.isCancelled()) {
-                        event.setCancelled(true);
-                    }
-                } else {
-                    ArenaPlayerDamagedLocalEvent arenaEvent = new ArenaPlayerDamagedLocalEvent(player, event.getFinalDamage());
-                    arena.getEventAnnouncer().announce(arenaEvent);
-                    if(arenaEvent.isCancelled()) {
-                        event.setCancelled(true);
-                    }
-                }
-
-            } else if(arena.getState() == ArenaBase.STATE.PAUSED && arena.getState() == ArenaBase.STATE.COUNTDOWN) {
-                event.setCancelled(true);
-            }
-        }
-    }
+    /*
+    * </playerDmg>
+    * */
 
     @EventHandler
     public void onFoodLevelChangeEvent(FoodLevelChangeEvent event) {

@@ -14,6 +14,8 @@ public interface TeamProvider extends ArenaPhaseComponent {
     boolean containsFreeSlots(int forAmountPlayers);
     void spawn(Player player);
 
+    boolean friendlyFireAllowed();
+
     void setArena(ArenaBase arena);
     ArenaBase getArena();
     Set<Player> getPlayers();

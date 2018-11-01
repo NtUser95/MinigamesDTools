@@ -30,6 +30,7 @@ public class ExampleTeam implements TeamProvider {
    protected HashMap<String, Location> fromTeleport = new HashMap<>();
    protected boolean manageInventory;
    protected boolean manageArmor;
+   protected boolean friendlyFireAllowed;
 
    protected SpectatorLobby spectatorLobby;
    protected RespawnLobby respawnLobby;
@@ -165,6 +166,11 @@ public class ExampleTeam implements TeamProvider {
             }
             player.teleport(this.spawnPoints.get(spawnLoc));
         }
+    }
+
+    @Override
+    public boolean friendlyFireAllowed() {
+        return this.friendlyFireAllowed;
     }
 
     @Override
