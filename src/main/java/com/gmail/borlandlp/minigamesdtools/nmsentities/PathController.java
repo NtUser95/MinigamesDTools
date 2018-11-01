@@ -48,9 +48,8 @@ public class PathController {
         }
 
         if(this.getPaths()[this.curIndex].pathEnding()) {//if the entity has reached the path point
-            //Debug.print(Debug.LEVEL.NOTICE, "next path");
+            // next path
             if((this.curIndex + 1) >= this.getPaths().length) {
-                //Debug.print(Debug.LEVEL.NOTICE, "set finished");
                 if(this.isRepeating()) {
                     this.curIndex = 0;
                 } else {
@@ -65,10 +64,10 @@ public class PathController {
             if(this.isRepeating() && nextPath.pathEnding()) {
                 nextPath.reloadPath();
             }
+            this.failCounter = 0;
             this.getEntity().setPath(nextPath);
-            //Debug.print(Debug.LEVEL.NOTICE, "set path #" + this.curIndex);
+
         } else if(!this.getEntity().isFollowsThisPath(this.getCurrentPath())) { // if entity switched path
-            //Debug.print(Debug.LEVEL.NOTICE, "inc failCounter #" + this.failCounter);
             if(++this.failCounter > 5) {
                 Debug.print(Debug.LEVEL.NOTICE, "teleport entity");
                 this.failCounter = 0;

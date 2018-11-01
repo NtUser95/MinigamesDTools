@@ -16,6 +16,8 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.ExampleTeamCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn.ExampleRespawnLobbyCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.spectator.ExampleSpectatorLobbyCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.starter.StarterLobbyCreator;
+import com.gmail.borlandlp.minigamesdtools.conditions.examples.EmptyInventoryConditionCreator;
+import com.gmail.borlandlp.minigamesdtools.conditions.examples.ExampleConditionCreator;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.HeldHotbarCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.ItemInterractHotbarCreator;
@@ -236,6 +238,20 @@ public class TestComponents {
             for(String key : keys) {
                 ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.SERVER_LOBBY, key);
                 MinigamesDTools.getInstance().getLobbyCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // conditions
+        try {
+            MinigamesDTools.getInstance().getConditionsCreatorHub().registerCreator(new ExampleConditionCreator());
+            MinigamesDTools.getInstance().getConditionsCreatorHub().registerCreator(new EmptyInventoryConditionCreator());
+
+            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.CONDITIONS).getKeys(false);
+            for(String key : keys) {
+                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.CONDITIONS, key);
+                MinigamesDTools.getInstance().getConditionsCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
             }
         } catch (Exception e) {
             e.printStackTrace();

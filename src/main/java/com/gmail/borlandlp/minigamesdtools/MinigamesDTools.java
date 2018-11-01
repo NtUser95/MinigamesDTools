@@ -9,6 +9,7 @@ import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePointsCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunkLoaderCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioChainCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobbyCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.*;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarAPI;
@@ -68,6 +69,7 @@ public class MinigamesDTools extends JavaPlugin {
     private LobbyCreatorHub lobbyCreatorHub;
     private ChunkLoaderCreator chunkLoaderCreator;
     private ArenaLobbyCreatorHub arenaLobbyCreatorHub;
+    private ConditionsCreatorHub conditionsCreatorHub;
 
     private static MinigamesDTools plugin;
 
@@ -101,6 +103,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.arenaLobbyCreatorHub = new ArenaLobbyCreatorHub();
         this.chunkLoaderCreator = new ChunkLoaderCreator();
         this.inventoryGuiSlotCreatorHub = new InventoryGuiSlotCreatorHub();
+        this.conditionsCreatorHub = new ConditionsCreatorHub();
 
         this.entityAPI = new EntityController();
         this.inventoryGUICreatorHub = new InventoryGUICreatorHub();
@@ -278,5 +281,9 @@ public class MinigamesDTools extends JavaPlugin {
 
     public InventoryGuiSlotCreatorHub getInventoryGuiSlotCreatorHub() {
         return inventoryGuiSlotCreatorHub;
+    }
+
+    public ConditionsCreatorHub getConditionsCreatorHub() {
+        return conditionsCreatorHub;
     }
 }

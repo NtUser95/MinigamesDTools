@@ -357,7 +357,7 @@ public class ExampleTeam implements TeamProvider {
     }
 
     @Override
-    public boolean containsFreeSlots(int forAmountPlayers) {System.out.println((this.getPlayers().size() + "+" + forAmountPlayers) + "<=" + this.getMaxPlayers());
+    public boolean containsFreeSlots(int forAmountPlayers) {
         return (this.getPlayers().size() + forAmountPlayers) <= this.getMaxPlayers();
     }
 

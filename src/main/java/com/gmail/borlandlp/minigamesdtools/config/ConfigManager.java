@@ -115,6 +115,7 @@ public class ConfigManager {
     public enum ConfigPath {
         MAIN(new File(MinigamesDTools.getInstance().getDataFolder(), "config.yml"), false),
         MESSAGES(new File(MinigamesDTools.getInstance().getDataFolder(),  "messages.yml"), false),
+        CONDITIONS(new File(MinigamesDTools.getInstance().getDataFolder(),  "conditions.yml"), false),
         CACHE_POINTS(new File(MinigamesDTools.getInstance().getDataFolder(), "cache" + File.separator + "points"), true),
         TEAMS(new File(MinigamesDTools.getInstance().getDataFolder(),  "teams.yml"), false),
         ARENA_FOLDER(new File(MinigamesDTools.getInstance().getDataFolder(), "arenas"), true),

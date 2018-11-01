@@ -3,6 +3,9 @@ run_once: false
 type: teamdeathmatch
 onlyPartyCanJoin: true
 min_players_to_start: 2
+join_conditions:
+- 'EmptyInventoryCondition'
+- 'ExampleCondition'
 teams:
 - example_team
 scenarios_chain: ExampleScenario_Chain

@@ -1,5 +1,6 @@
 package com.gmail.borlandlp.minigamesdtools.arena;
 
+import com.gmail.borlandlp.minigamesdtools.conditions.PlayerCheckResult;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -18,4 +19,6 @@ public interface ArenaAPI {
     boolean arenaJoinRequest(String arenaName, Player player);
     void disableArena(String arenaName);
     void enableArena(String arenaName);
+
+    PlayerCheckResult playerCanJoin(ArenaBase arenaBase, Player player);
 }

@@ -4,6 +4,8 @@ import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunkLoaderController;
 import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunksLoader;
+import com.gmail.borlandlp.minigamesdtools.conditions.AbstractCondition;
+import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsChain;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -21,6 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,13 +93,20 @@ public class ExampleArenaCreator implements Creator {
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load teams...");
         TeamController teamController = new TeamController(arenaTemplate);
-        List<String> teams = arenaConfig.getStringList("teams");
-        for(String teamID : teams) {
+        for(String teamID : arenaConfig.getStringList("teams")) {
             TeamProvider teamProvider = MinigamesDTools.getInstance().getTeamCreatorHub().createTeam(teamID, new DataProvider());
             teamProvider.setArena(arenaTemplate);
             teamController.addTeam(teamProvider);
         }
         arenaTemplate.setTeamController(teamController);
+
+        //conditions
+        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load conditions...");
+        List<AbstractCondition> conditions = new ArrayList<>();
+        for (String conditionId : arenaConfig.getStringList("join_conditions")) {
+            conditions.add(MinigamesDTools.getInstance().getConditionsCreatorHub().createCondition(conditionId, new DataProvider()));
+        }
+        arenaTemplate.setJoinConditionsChain(new ConditionsChain(conditions));
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load hotbar...");
         HotbarController hotbarController = new HotbarController();

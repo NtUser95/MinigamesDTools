@@ -1,0 +1,4 @@
+EmptyInventoryCondition:
+  creator_id: empty_inventory
+ExampleCondition:
+  creator_id: example_condition

@@ -12,6 +12,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerJoinLocal
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerLeaveLocalEvent;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamController;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
+import com.gmail.borlandlp.minigamesdtools.conditions.PlayerCheckResult;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerEnterEvent;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerQuitEvent;
@@ -153,6 +154,13 @@ public class ArenaManager implements APIComponent, ArenaAPI {
             return false;
         }
 
+        // TODO: Приделать конвертацию ID в Broadcaster
+        PlayerCheckResult result = this.playerCanJoin(arenaBase, player);
+        if(result.getResult() == PlayerCheckResult.CheckResult.DENIED) {
+            result.getErrId().forEach(player::sendMessage);
+            return false;
+        }
+
         TeamProvider team = teamControl.getTeams().stream().filter(t -> t.containsFreeSlots(1)).findFirst().get();
 
         arenaBase.getEventAnnouncer().announce(new ArenaPlayerJoinLocalEvent(player, team));
@@ -182,4 +190,9 @@ public class ArenaManager implements APIComponent, ArenaAPI {
             Bukkit.getServer().broadcastMessage("[MinigamesDTools] Запущена арена " + arenaName);
         }
    }
+
+    @Override
+    public PlayerCheckResult playerCanJoin(ArenaBase arenaBase, Player player) {
+        return arenaBase.getJoinConditionsChain().check(player);
+    }
 }

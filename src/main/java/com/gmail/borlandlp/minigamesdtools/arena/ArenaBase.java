@@ -8,6 +8,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.exceptions.ArenaAlreadyInitiali
 import com.gmail.borlandlp.minigamesdtools.arena.exceptions.ArenaAlreadyStartedException;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.hotbar.HotbarController;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUIController;
+import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsChain;
 import com.gmail.borlandlp.minigamesdtools.nmsentities.EntityController;
 import com.gmail.borlandlp.minigamesdtools.arena.phasecomponent.PhaseComponentController;
 import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioController;
@@ -59,6 +60,7 @@ public class ArenaBase {
     protected ChunkLoaderController chunkLoaderController;
     protected HotbarController hotbarController;
     protected GameRules gameRules;
+    protected ConditionsChain joinConditionsChain;
 
     private boolean initialized = false;
 
@@ -402,6 +404,14 @@ public class ArenaBase {
 
     public GameRules getArenaRules() {
         return this.gameRules;
+    }
+
+    public ConditionsChain getJoinConditionsChain() {
+        return joinConditionsChain;
+    }
+
+    public void setJoinConditionsChain(ConditionsChain joinConditionsChain) {
+        this.joinConditionsChain = joinConditionsChain;
     }
 
     public enum STATE {
