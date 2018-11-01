@@ -3,6 +3,7 @@ package com.gmail.borlandlp.minigamesdtools.arena.team;
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
+import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn.ExampleRespawnLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn.RespawnLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.spectator.SpectatorLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.starter.StarterLobby;
@@ -98,11 +99,13 @@ public class ExampleTeamCreator implements Creator {
         if(fileConfiguration.contains("respawn_lobby.enabled") && Boolean.parseBoolean(fileConfiguration.get("respawn_lobby.enabled").toString())) {
             ArenaLobby respawnLobby = MinigamesDTools.getInstance().getArenaLobbyCreatorHub().createLobby(fileConfiguration.get("respawn_lobby.lobby_handler").toString(), new DataProvider());
             respawnLobby.setTeamProvider(team);
-            team.setRespawnLobbyEnabled(true);
+            respawnLobby.setEnabled(true);
             team.setRespawnLobby((RespawnLobby) respawnLobby);
             Debug.print(Debug.LEVEL.NOTICE, "Build respawn lobby for Team[ID:" + teamID + "]#" + respawnLobby);
         } else {
-            team.setRespawnLobbyEnabled(false);
+            ArenaLobby l = new ExampleRespawnLobby();
+            l.setEnabled(false);
+            team.setRespawnLobby((RespawnLobby) l);
             Debug.print(Debug.LEVEL.NOTICE, "Respawn lobby is disabled for Team[ID:" + teamID + "]");
         }
 
@@ -112,6 +115,7 @@ public class ExampleTeamCreator implements Creator {
         }
         ArenaLobby spectatorLobby = MinigamesDTools.getInstance().getArenaLobbyCreatorHub().createLobby(fileConfiguration.get("spectate_lobby.id").toString(), new DataProvider());
         spectatorLobby.setTeamProvider(team);
+        spectatorLobby.setEnabled(true);
         team.setSpectatorLobby((SpectatorLobby) spectatorLobby);
         Debug.print(Debug.LEVEL.NOTICE, "Build spectator lobby for Team[ID:" + teamID + "]#" + spectatorLobby);
 
@@ -126,16 +130,6 @@ public class ExampleTeamCreator implements Creator {
         Debug.print(Debug.LEVEL.NOTICE, "Build starter lobby for Team[ID:" + teamID + "]#" + starterLobby);
 
         team.setName(fileConfiguration.get("name").toString());
-
-
-        /*
-        ChatColor randColor = null;
-        int randCount = 0;
-        do {
-            randColor = ;
-            randCount++;
-        } while(usedColors.contains(randColor) && randCount <= 20);*/
-        //team.setColor(ChatColor.values()[ (new Random()).nextInt(ChatColor.values().length-1) ]);
 
         return team;
     }

@@ -12,12 +12,12 @@ import java.util.Set;
 
 public class ExampleStarterLobby extends ArenaLobby implements StarterLobby {
     ArenaEventListener listener;
-    private boolean enabled = false;
     private Set<Player> playerList = new HashSet<>();
     private Hotbar defaultHotbar;
 
-    public boolean isEnabled() {
-        return enabled;
+    @Override
+    public void forceReleasePlayer(Player p) {
+        this.removePlayer(p);
     }
 
     @Override
@@ -84,9 +84,5 @@ public class ExampleStarterLobby extends ArenaLobby implements StarterLobby {
 
     public void setDefaultHotbar(Hotbar defaultHotbar) {
         this.defaultHotbar = defaultHotbar;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 }

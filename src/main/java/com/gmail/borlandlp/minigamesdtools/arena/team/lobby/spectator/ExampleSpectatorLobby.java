@@ -68,6 +68,11 @@ public class ExampleSpectatorLobby extends ArenaLobby implements SpectatorLobby,
     }
 
     @Override
+    public void forceReleasePlayer(Player p) {
+        this.removePlayer(p);
+    }
+
+    @Override
     public void addPlayer(Player player) {
         Debug.print(Debug.LEVEL.NOTICE, "Add player[name:" + player.getName() + "] to Spectator lobby, arena:" + this.getTeamProvider().getArena().getName());
         player.teleport(this.getSpawnPoint());

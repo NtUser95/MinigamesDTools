@@ -3,6 +3,7 @@ package com.gmail.borlandlp.minigamesdtools.arena.team;
 import java.util.*;
 
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
+import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn.RespawnLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.spectator.SpectatorLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.starter.StarterLobby;
@@ -14,6 +15,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+/*
+* ToDo:
+* lobbyPlayers - в beforeRoundStarting выпсукать всех, но как быть со зрителями?
+* */
 public class ExampleTeam implements TeamProvider {
    private int maxPlayers;
    private HashMap<String, Player> players = new HashMap<>();
@@ -22,26 +27,17 @@ public class ExampleTeam implements TeamProvider {
    private HashMap<String, ItemStack> armor;
    private ItemStack[] inventory;
    private ArenaBase arenaBase;
-   public HashMap<String, Location> fromTeleport = new HashMap<>();
+   protected HashMap<String, Location> fromTeleport = new HashMap<>();
    protected boolean manageInventory;
    protected boolean manageArmor;
-   protected boolean respawnLobbyEnabled;
 
    protected SpectatorLobby spectatorLobby;
    protected RespawnLobby respawnLobby;
    protected StarterLobby starterLobby;
 
+   protected Map<Player, ArenaLobby> lobbyPlayers = new Hashtable<>();
+
    public ExampleTeam() {}
-
-    @Override
-    public boolean respawnLobbyEnabled() {
-        return this.respawnLobbyEnabled;
-    }
-
-    @Override
-    public void setRespawnLobbyEnabled(Boolean b) {
-        this.respawnLobbyEnabled = b;
-    }
 
     public void setArena(ArenaBase arenaBase) {
         this.arenaBase = arenaBase;
@@ -276,13 +272,46 @@ public class ExampleTeam implements TeamProvider {
     }
 
     @Override
-   public void addPlayer(Player player) {
+    public void setSpectatorLobby(SpectatorLobby l) {
+        this.spectatorLobby = l;
+    }
+
+    @Override
+    public boolean movePlayerTo(ArenaLobby lobby, Player p) {
+        if(this.lobbyPlayers.containsKey(p)) {
+            this.lobbyPlayers.get(p).forceReleasePlayer(p);
+        }
+
+        lobby.addPlayer(p);
+        this.lobbyPlayers.put(p, lobby);
+
+        return true;
+    }
+
+    @Override
+    public boolean movePlayerTo(TeamProvider team, Player p) {
+       if(this.lobbyPlayers.containsKey(p)) {
+           this.lobbyPlayers.get(p).forceReleasePlayer(p);
+       }
+
+       if(team.addPlayer(p)) {
+           this.removePlayer(p);
+           return true;
+       } else {
+           return false;
+       }
+    }
+
+    @Override
+   public boolean addPlayer(Player player) {
       this.players.put(player.getName(), player);
+      return true;
    }
 
    @Override
-   public void removePlayer(Player player) {
+   public boolean removePlayer(Player player) {
        this.players.remove(player.getName());
+       return true;
     }
 
    @Override
@@ -311,10 +340,6 @@ public class ExampleTeam implements TeamProvider {
         return respawnLobby;
     }
 
-    @Override
-    public void moveToRespawn(Player p) {
-        this.getRespawnLobby().addPlayer(p);
-    }
 
     @Override
     public void setSpectate(Player p, boolean trueOrFalse) {
@@ -327,18 +352,13 @@ public class ExampleTeam implements TeamProvider {
     }
 
     @Override
+    public Set<Player> getSpectators() {
+        return this.spectatorLobby.getPlayers();
+    }
+
+    @Override
     public boolean containsFreeSlots(int forAmountPlayers) {System.out.println((this.getPlayers().size() + "+" + forAmountPlayers) + "<=" + this.getMaxPlayers());
         return (this.getPlayers().size() + forAmountPlayers) <= this.getMaxPlayers();
-    }
-
-    @Override
-    public void setSpectatorLobby(SpectatorLobby l) {
-        this.spectatorLobby = l;
-    }
-
-    @Override
-    public boolean isSpectating(Player p) {
-        return false;
     }
 
     public void setRespawnLobby(RespawnLobby respawnLobby) {
@@ -368,13 +388,14 @@ public class ExampleTeam implements TeamProvider {
 
     @Override
     public void update() {
-       if(this.respawnLobbyEnabled()) {
+       if(((ArenaLobby) this.getRespawnLobby()).isEnabled()) {
            this.getRespawnLobby().update();
 
            Set<Player> respPlayers = this.getRespawnLobby().getReadyPlayersToRespawn();
            if(respPlayers.size() > 0) {
                for (Player player : respPlayers) {
                    this.getRespawnLobby().playerRespawned(player);
+                   this.lobbyPlayers.remove(player);// TODO: переделать в нечто осмысленное
                    this.spawn(player);
                }
            }
@@ -385,11 +406,12 @@ public class ExampleTeam implements TeamProvider {
     public void beforeRoundStarting() {
         Set<Player> respPlayers = new HashSet<>();
 
-        if(this.respawnLobbyEnabled()) {
+        if(((ArenaLobby) this.getRespawnLobby()).isEnabled()) {
             respPlayers = this.getRespawnLobby().getWaitingPlayers().keySet();
             if(respPlayers.size() > 0) {
                 for (Player player : respPlayers) {
                     this.getRespawnLobby().playerRespawned(player);
+                    this.lobbyPlayers.remove(player);// TODO: переделать в нечто осмысленное
                     this.spawn(player);
                 }
             }

@@ -5,6 +5,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaEventHandler;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaEventPriority;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerJoinLocalEvent;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerLeaveLocalEvent;
+import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
 
 public class StarterLobbyListener implements ArenaEventListener {
     private StarterLobby lobby;
@@ -15,14 +16,14 @@ public class StarterLobbyListener implements ArenaEventListener {
 
     @ArenaEventHandler(priority = ArenaEventPriority.HIGHEST)
     public void onPJoin(ArenaPlayerJoinLocalEvent event) {
-        if(this.lobby.isEnabled()) {
+        if(((ArenaLobby) this.lobby).isEnabled()) {
             this.lobby.addPlayer(event.getPlayer());
         }
     }
 
     @ArenaEventHandler(priority = ArenaEventPriority.HIGHEST)
     public void onPLeave(ArenaPlayerLeaveLocalEvent event) {
-        if(this.lobby.isEnabled()) {
+        if(((ArenaLobby) this.lobby).isEnabled()) {
             this.lobby.removePlayer(event.getPlayer());
         }
     }

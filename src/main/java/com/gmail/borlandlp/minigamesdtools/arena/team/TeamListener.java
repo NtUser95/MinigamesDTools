@@ -1,12 +1,9 @@
 package com.gmail.borlandlp.minigamesdtools.arena.team;
 
-import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaEventListener;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.*;
+import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TeamListener implements ArenaEventListener {
     private TeamController teamController;
@@ -24,8 +21,8 @@ public class TeamListener implements ArenaEventListener {
         ArenaPlayerRespawnLocalEvent arenaPlayerRespawnLocalEvent = new ArenaPlayerRespawnLocalEvent(teamProvider, event.getPlayer());
         teamProvider.getArena().getEventAnnouncer().announce(arenaPlayerRespawnLocalEvent);
         if(!arenaPlayerRespawnLocalEvent.isCancelled()) {
-            if(teamProvider.respawnLobbyEnabled()) {
-                teamProvider.getRespawnLobby().addPlayer(event.getPlayer());
+            if(((ArenaLobby)teamProvider.getRespawnLobby()).isEnabled()) {
+                teamProvider.movePlayerTo((ArenaLobby) teamProvider.getRespawnLobby(), event.getPlayer());
             } else {
                 teamProvider.spawn(event.getPlayer());
             }
@@ -45,8 +42,8 @@ public class TeamListener implements ArenaEventListener {
         ArenaPlayerRespawnLocalEvent arenaPlayerRespawnLocalEvent = new ArenaPlayerRespawnLocalEvent(teamProvider, event.getPlayer());
         teamProvider.getArena().getEventAnnouncer().announce(arenaPlayerRespawnLocalEvent);
         if(!arenaPlayerRespawnLocalEvent.isCancelled()) {
-            if(teamProvider.respawnLobbyEnabled()) {
-                teamProvider.moveToRespawn(event.getPlayer());
+            if(((ArenaLobby)teamProvider.getRespawnLobby()).isEnabled()) {
+                teamProvider.movePlayerTo((ArenaLobby) teamProvider.getRespawnLobby(), event.getPlayer());
             } else {
                 teamProvider.spawn(event.getPlayer());
             }
@@ -69,7 +66,6 @@ public class TeamListener implements ArenaEventListener {
             player.getInventory().setArmorContents(null);
             player.getInventory().clear();
             team.removePlayer(player);
-            //player.teleport(team.fromTeleport.get(player.getName()));
         }
     }
 

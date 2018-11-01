@@ -17,11 +17,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class ExampleRespawnLobby extends ArenaLobby implements RespawnLobby, PlayerLocker {
-    private boolean enabled;
     private int secondsWaiting;
     private Map<Player, Long> players = new Hashtable<>();// player -> unixtime
     private ArenaEventListener listener;
     private Map<Player, BossBar> bossBarMap = new Hashtable<>();
+
+    @Override
+    public void forceReleasePlayer(Player p) {
+        this.playerRespawned(p);
+    }
 
     @Override
     public void addPlayer(Player player) {
@@ -98,14 +102,6 @@ public class ExampleRespawnLobby extends ArenaLobby implements RespawnLobby, Pla
     @Override
     public Map<Player, Long> getWaitingPlayers() {
         return new Hashtable<>(this.players);
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
     }
 
     public void setSecondsWaiting(int secondsWaiting) {
