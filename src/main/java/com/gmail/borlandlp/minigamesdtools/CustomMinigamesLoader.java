@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomMinigamesLoader {
+    private List<Plugin> loadedPlugins = new ArrayList<>();
     private LoadingPhase currentLoadingPhase;
 
     public LoadingPhase getCurrentLoadingPhase() {
@@ -36,11 +37,12 @@ public class CustomMinigamesLoader {
 
     private void loadAddon(String jarName) throws InvalidPluginException, InvalidDescriptionException {
         File addonFile = new File(MinigamesDTools.getInstance().getConfigManager().getAddonsPath(), jarName);
-        Debug.print(Debug.LEVEL.WARNING, "Load addon '" + jarName + "'");
+        Debug.print(Debug.LEVEL.NOTICE, "Load addon '" + jarName + "'");
         Plugin plugin = Bukkit.getPluginManager().loadPlugin(addonFile);
         if(plugin != null) {
-            Debug.print(Debug.LEVEL.WARNING, "Trying to enable plugin '" + plugin.getName() + "'.");
+            Debug.print(Debug.LEVEL.NOTICE, "Trying to enable plugin '" + plugin.getName() + "'.");
             Bukkit.getPluginManager().enablePlugin(plugin);
+            this.loadedPlugins.add(plugin);
         } else {
             Debug.print(Debug.LEVEL.WARNING, "Error while load '" + jarName + "'.");
         }
@@ -58,6 +60,16 @@ public class CustomMinigamesLoader {
         }
 
         this.currentLoadingPhase = LoadingPhase.DONE;
+    }
+
+    public void unloadAddons() {
+        for (Plugin plugin : this.loadedPlugins) {
+            try {
+                Bukkit.getPluginManager().disablePlugin(plugin);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public enum LoadingPhase {

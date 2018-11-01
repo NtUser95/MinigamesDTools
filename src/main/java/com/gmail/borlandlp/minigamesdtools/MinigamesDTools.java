@@ -45,6 +45,7 @@ public class MinigamesDTools extends JavaPlugin {
     private static final String prefix = ChatColor.BLUE + "[" + ChatColor.RED + "Arena" + ChatColor.BLUE + "]" + ChatColor.DARK_GREEN;
     private SQLite dbConnection;
 
+    private CustomMinigamesLoader customMinigamesLoader;
     private APIComponentsController apiComponentsController;
     private ArenaAPI arenaAPI;
     private LobbyServerAPI lobbyController;
@@ -135,7 +136,8 @@ public class MinigamesDTools extends JavaPlugin {
         Debug.print(Debug.LEVEL.NOTICE, "###################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### load addons ###########");
         Debug.print(Debug.LEVEL.NOTICE, "#.................................#");
-        (new CustomMinigamesLoader()).loadAddons();
+        this.customMinigamesLoader = new CustomMinigamesLoader();
+        this.customMinigamesLoader.loadAddons();
 
         Debug.print(Debug.LEVEL.NOTICE, "##################################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### prepare daemon to start... ###########");
@@ -164,6 +166,11 @@ public class MinigamesDTools extends JavaPlugin {
         MinigamesDTools.getInstance().getEntityAPI().unregister("sky_dragon", 63, EntityEnderDragon.class, SkyDragon.class);
 
         this.getApiComponentsController().announceEvent(APIComponentsController.ComponentEvent.PLUGIN_UNLOAD);
+
+        Debug.print(Debug.LEVEL.NOTICE, "###################################");
+        Debug.print(Debug.LEVEL.NOTICE, "########### unload addons ###########");
+        Debug.print(Debug.LEVEL.NOTICE, "#.................................#");
+        this.customMinigamesLoader.unloadAddons();
 
         Debug.print(Debug.LEVEL.NOTICE, "#######################################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### MiniGames daemon is unloaded... ###########");
