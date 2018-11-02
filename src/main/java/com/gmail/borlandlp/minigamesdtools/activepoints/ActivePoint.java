@@ -13,6 +13,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,10 @@ public abstract class ActivePoint {
     private boolean spawned = false;
     private List<Behavior> behavior;
     private Map<ReactionReason, List<Reaction>> reactions = new HashMap<>();
+    private Map<LivingEntity, Long> damageCooldowns = new Hashtable<>();
+    private Map<LivingEntity, Long> intersectionCooldowns = new Hashtable<>();
+    private long damageCdNanoSeconds = 500000; // 0.5 sec
+    private long intersectionCdNanoSeconds = 1000000; // 1 sec
 
     public List<Behavior> getBehaviors() {
         return behavior;
@@ -108,8 +113,14 @@ public abstract class ActivePoint {
             return;
         }
 
+        if(this.damageCooldowns.containsKey(entity) && (System.nanoTime() - this.damageCooldowns.get(entity)) <= this.damageCdNanoSeconds) {
+            return;
+        } else {
+            this.damageCooldowns.put(entity, System.nanoTime());
+        }
+
         Cancellable event = null;
-        if(this.getHealth() < damage) {
+        if(this.getHealth() <= damage) {
             event = new ActivePointDestroyedLocalEvent(this, (Player) entity);
         } else {
             event = new ActivePointDamagedLocalEvent(this, (Player) entity, damage);
@@ -132,6 +143,12 @@ public abstract class ActivePoint {
     public void performIntersect(LivingEntity entity) {
         if(!this.isPerformEntityIntersection()) {
             return;
+        }
+
+        if(this.intersectionCooldowns.containsKey(entity) && (System.nanoTime() - this.intersectionCooldowns.get(entity)) <= this.intersectionCdNanoSeconds) {
+            return;
+        } else {
+            this.intersectionCooldowns.put(entity, System.nanoTime());
         }
 
         for(Reaction reaction : this.getReactions().get(ReactionReason.INTERSECT)) {
