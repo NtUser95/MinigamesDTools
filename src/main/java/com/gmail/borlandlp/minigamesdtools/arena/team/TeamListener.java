@@ -1,5 +1,6 @@
 package com.gmail.borlandlp.minigamesdtools.arena.team;
 
+import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaEventListener;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.*;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
@@ -30,7 +31,7 @@ public class TeamListener implements ArenaEventListener {
             teamProvider.setSpectate(event.getPlayer(), true);
         }
 
-        System.out.println(this.getClass().getSimpleName() + "#" + event);
+        Debug.print(Debug.LEVEL.NOTICE, this.getClass().getSimpleName() + "#" + event);
     }
 
     @ArenaEventHandler(
@@ -51,7 +52,7 @@ public class TeamListener implements ArenaEventListener {
             teamProvider.setSpectate(event.getPlayer(), true);
         }
 
-        System.out.println(this.getClass().getSimpleName() + "#" + event);
+        Debug.print(Debug.LEVEL.NOTICE, this.getClass().getSimpleName() + "#" + event);
     }
 
     @ArenaEventHandler(

@@ -19,6 +19,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.starter.StarterLobby
 import com.gmail.borlandlp.minigamesdtools.conditions.examples.EmptyInventoryConditionCreator;
 import com.gmail.borlandlp.minigamesdtools.conditions.examples.ExampleConditionCreator;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.events.BlockDamageByEntityEvent;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.HeldHotbarCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.ItemInterractHotbarCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.ExampleItemCreator;

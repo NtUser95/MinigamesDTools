@@ -27,10 +27,6 @@ public abstract class ActivePoint {
     private boolean spawned = false;
     private List<Behavior> behavior;
     private Map<ReactionReason, List<Reaction>> reactions = new HashMap<>();
-    private Map<LivingEntity, Long> damageCooldowns = new Hashtable<>();
-    private Map<LivingEntity, Long> intersectionCooldowns = new Hashtable<>();
-    private long damageCdNanoSeconds = 500000; // 0.5 sec
-    private long intersectionCdNanoSeconds = 1000000; // 1 sec
 
     public List<Behavior> getBehaviors() {
         return behavior;
@@ -108,15 +104,12 @@ public abstract class ActivePoint {
         this.performDamage = performDamage;
     }
 
+    /*
+    * Возвращает
+    * */
     public void performDamage(LivingEntity entity, double damage) {
         if(!this.isPerformDamage()) {
             return;
-        }
-
-        if(this.damageCooldowns.containsKey(entity) && (System.nanoTime() - this.damageCooldowns.get(entity)) <= this.damageCdNanoSeconds) {
-            return;
-        } else {
-            this.damageCooldowns.put(entity, System.nanoTime());
         }
 
         Cancellable event = null;
@@ -143,12 +136,6 @@ public abstract class ActivePoint {
     public void performIntersect(LivingEntity entity) {
         if(!this.isPerformEntityIntersection()) {
             return;
-        }
-
-        if(this.intersectionCooldowns.containsKey(entity) && (System.nanoTime() - this.intersectionCooldowns.get(entity)) <= this.intersectionCdNanoSeconds) {
-            return;
-        } else {
-            this.intersectionCooldowns.put(entity, System.nanoTime());
         }
 
         for(Reaction reaction : this.getReactions().get(ReactionReason.INTERSECT)) {
