@@ -10,7 +10,8 @@ import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunkLoaderCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioChainCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobbyCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsCreatorHub;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.*;
+import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.*;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarAPI;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarApiInst;
@@ -50,7 +51,7 @@ public class MinigamesDTools extends JavaPlugin {
     private ArenaAPI arenaAPI;
     private LobbyServerAPI lobbyController;
     private ArenaCreatorHub arenaCreatorHub;
-    private ConfigManager configManager;
+    private ConfigProvider configManager;
     private HotbarAPI hotbarAPI;
     private InventoryAPI inventoryGUIManger;
     private ActivePointsAPI activePointsAPI;
@@ -77,19 +78,26 @@ public class MinigamesDTools extends JavaPlugin {
     public void onEnable() {
        plugin = this;
 
-       this.configManager = new ConfigManager();
-       this.configManager.checkConfigs();
        this.getServer().getPluginManager().registerEvents(new Events(), this);
        this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
        this.getCommand("arena").setExecutor(new Commands());
 
-       this.loadMisc();
+       try {
+           this.loadMisc();
+       } catch (InvalidPathException e) {
+           e.printStackTrace();
+       }
     }
 
-    public void loadMisc() {
+    public void loadMisc() throws InvalidPathException {
         Debug.print(Debug.LEVEL.NOTICE, "#######################################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### MiniGames daemon is starting... ###########");
         Debug.print(Debug.LEVEL.NOTICE, "#.....................................................#");
+
+        ConfigLoader loader = new ConfigLoader();
+        loader.addPath(this.getDataFolder());
+        loader.addPath(ConfigPath.ARENA_FOLDER.getPath());
+        this.configManager = loader.load();
 
         this.guiCreatorHub = new GUICreatorHub();
         this.hotbarCreatorHub = new HotbarCreatorHub();
@@ -177,7 +185,7 @@ public class MinigamesDTools extends JavaPlugin {
         Debug.print(Debug.LEVEL.NOTICE, "#.....................................................#");
     }
 
-    public void reload() {
+    public void reload() throws InvalidPathException {
        this.unloadMisc();
        this.loadMisc();
        System.out.println(MinigamesDTools.getPrefix() + " Конфиг арен перезагружен.");
@@ -197,7 +205,7 @@ public class MinigamesDTools extends JavaPlugin {
       return this.arenaAPI;
     }
 
-    public ConfigManager getConfigManager()
+    public ConfigProvider getConfigProvider()
     {
       return this.configManager;
     }

@@ -3,6 +3,7 @@ package com.gmail.borlandlp.minigamesdtools.arena.team.lobby.starter;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -17,7 +18,7 @@ public class StarterLobbyCreator implements Creator {
     public ArenaLobby create(String ID, AbstractDataProvider dataProvider) throws Exception {
         ExampleStarterLobby lobby = new ExampleStarterLobby();
 
-        ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.STARTER_LOBBY, ID);
+        ConfigurationSection conf = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.STARTER_LOBBY, ID).getData();
         Hotbar hotbar = null;
         try {
             hotbar = MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar(conf.get("hotbar").toString(), new DataProvider());

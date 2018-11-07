@@ -1,2 +1,5 @@
-fristSlot:
-  creator_id: default_view_inventory_slot
+meta_info:
+  pool_id: inventory_gui_slot
+data:
+  fristSlot:
+    creator_id: default_view_inventory_slot

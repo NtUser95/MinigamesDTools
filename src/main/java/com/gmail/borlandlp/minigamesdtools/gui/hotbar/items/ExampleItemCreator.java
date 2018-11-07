@@ -2,6 +2,7 @@ package com.gmail.borlandlp.minigamesdtools.gui.hotbar.items;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -14,7 +15,7 @@ public class ExampleItemCreator implements Creator {
     @Override
     public Object create(String ID, AbstractDataProvider dataProvider) throws Exception {
         ExampleItem slotItem = new ExampleItem();
-        ConfigurationSection configurationSection = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.HOTBAR_SLOTS, ID);
+        ConfigurationSection configurationSection = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.HOTBAR_SLOTS, ID).getData();
 
         ItemStack activeIcon = new ItemStack(Material.getMaterial(configurationSection.get("active_icon").toString()));
         slotItem.setActiveIcon(activeIcon);

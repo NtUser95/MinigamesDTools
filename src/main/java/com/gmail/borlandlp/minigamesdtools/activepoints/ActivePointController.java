@@ -4,6 +4,8 @@ import com.gmail.borlandlp.minigamesdtools.APIComponent;
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.activepoints.behaviors.Behavior;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigEntity;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -33,11 +35,11 @@ public class ActivePointController implements APIComponent, ActivePointsAPI {
         }.runTaskTimer(MinigamesDTools.getInstance(), 0, 20);
 
         // load default activepoints
-        for(String activepointID : MinigamesDTools.getInstance().getConfigManager().getActivepointsList()) {
-            Debug.print(Debug.LEVEL.NOTICE,"[ActivePointController] load activePoint " + activepointID);
+        for(ConfigEntity configEntity : MinigamesDTools.getInstance().getConfigProvider().getPoolContents(ConfigPath.ACTIVE_POINT)) {
+            Debug.print(Debug.LEVEL.NOTICE,"[ActivePointController] load activePoint " + configEntity.getID());
             ActivePoint activePoint = null;
             try {
-                activePoint = MinigamesDTools.getInstance().getActivePointsCreatorHub().createActivePoint(activepointID, new DataProvider());
+                activePoint = MinigamesDTools.getInstance().getActivePointsCreatorHub().createActivePoint(configEntity.getID(), new DataProvider());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -45,7 +47,7 @@ public class ActivePointController implements APIComponent, ActivePointsAPI {
             if(activePoint != null) {
                 this.registerPoint(activePoint);
             } else {
-                Debug.print(Debug.LEVEL.WARNING,"[ActivePointController] fail on load activePoint " + activepointID);
+                Debug.print(Debug.LEVEL.WARNING,"[ActivePointController] fail on load activePoint " + configEntity.getID());
             }
         }
     }

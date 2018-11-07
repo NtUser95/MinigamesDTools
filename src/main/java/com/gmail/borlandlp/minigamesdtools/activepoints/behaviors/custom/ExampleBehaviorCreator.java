@@ -3,6 +3,7 @@ package com.gmail.borlandlp.minigamesdtools.activepoints.behaviors.custom;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePoint;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -13,7 +14,7 @@ public class ExampleBehaviorCreator implements Creator {
     @Override
     public Object create(String Id, AbstractDataProvider dataProvider) throws Exception {
         ExampleBehavior exampleBehavior = new ExampleBehavior();
-        ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.ACTIVE_POINT_BEHAVIORS, Id);
+        ConfigurationSection conf = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.ACTIVE_POINT_BEHAVIORS, Id).getData();
         if(conf == null) {
             throw new Exception("Cant find config for Behavior[ID:" + Id + "]");
         }

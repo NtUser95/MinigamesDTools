@@ -7,10 +7,10 @@ import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerKilledLoc
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerLeaveLocalEvent;
 
 public class ScenarioListener implements ArenaEventListener {
-    private ScenarioController scenarioController;
+    private ScenarioChainController scenarioChainController;
 
-    public ScenarioListener(ScenarioController scenarioController) {
-        this.scenarioController = scenarioController;
+    public ScenarioListener(ScenarioChainController scenarioChainController) {
+        this.scenarioChainController = scenarioChainController;
     }
 
     public void onPlayerDeath(ArenaPlayerDeathLocalEvent event) {

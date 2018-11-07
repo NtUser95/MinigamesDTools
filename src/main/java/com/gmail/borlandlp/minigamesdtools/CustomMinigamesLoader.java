@@ -1,5 +1,6 @@
 package com.gmail.borlandlp.minigamesdtools;
 
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -19,7 +20,7 @@ public class CustomMinigamesLoader {
 
     private List<String> getAddonsList() {
         List<String> addons = new ArrayList<>();
-        String[] source = MinigamesDTools.getInstance().getConfigManager().getAddonsPath().list();
+        String[] source = ConfigPath.ADDONS.getPath().list();
         if(source != null) {
             for(String addonName : source) {
                 if(addonName.contains(".jar")) {
@@ -36,7 +37,7 @@ public class CustomMinigamesLoader {
     }
 
     private void loadAddon(String jarName) throws InvalidPluginException, InvalidDescriptionException {
-        File addonFile = new File(MinigamesDTools.getInstance().getConfigManager().getAddonsPath(), jarName);
+        File addonFile = new File(ConfigPath.ADDONS.getPath(), jarName);
         Debug.print(Debug.LEVEL.NOTICE, "Load addon '" + jarName + "'");
         Plugin plugin = Bukkit.getPluginManager().loadPlugin(addonFile);
         if(plugin != null) {

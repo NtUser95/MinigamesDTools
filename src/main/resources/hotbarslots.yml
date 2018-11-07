@@ -1,7 +1,10 @@
-ExampleItem:
-  creator_id: example_item
-  active_icon: WOOL
-  unactive_icon: GLASS
-  cooldown: 1
-  infinite: true
-  amount: 1
+meta_info:
+  pool_id: hotbar_slots
+data:
+  ExampleItem:
+    creator_id: example_item
+    active_icon: WOOL
+    unactive_icon: GLASS
+    cooldown: 1
+    infinite: true
+    amount: 1

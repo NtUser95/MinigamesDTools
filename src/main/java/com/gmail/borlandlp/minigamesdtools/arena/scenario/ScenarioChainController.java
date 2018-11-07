@@ -6,7 +6,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.ArenaPhaseComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScenarioController implements ArenaPhaseComponent {
+public class ScenarioChainController implements ArenaPhaseComponent {
     private List<Scenario> scenarios = new ArrayList<>();
     private List<Scenario> activeScenarios = new ArrayList<>();
     private ScenarioListener scenarioListener;
@@ -16,7 +16,7 @@ public class ScenarioController implements ArenaPhaseComponent {
     private boolean signalGameEnding;
     private ArenaBase arena;
 
-    public ScenarioController(ArenaBase arena) {
+    public ScenarioChainController(ArenaBase arena) {
         this.arena = arena;
     }
 

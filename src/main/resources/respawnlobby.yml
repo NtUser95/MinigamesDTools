@@ -1,4 +1,7 @@
-example_respawn_lobby:
-  creator_id: default_respawn_lobby
-  seconds_wait: 20
-  location_XYZWorld: '-137:63:231:world:0:0'
+meta_info:
+  pool_id: respawn_lobby
+data:
+  example_respawn_lobby:
+    creator_id: default_respawn_lobby
+    seconds_wait: 20
+    location_XYZWorld: '-137:63:231:world:0:0'

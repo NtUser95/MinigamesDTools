@@ -24,14 +24,10 @@ public interface TeamProvider extends ArenaPhaseComponent {
     boolean removePlayer(Player player);
 
     boolean isManageInventory();
-    void setManageInventory(boolean b);
     boolean isManageArmor();
-    void setManageArmor(boolean b);
 
     RespawnLobby getRespawnLobby();
-    void setRespawnLobby(RespawnLobby l);
     SpectatorLobby getSpectatorLobby();
-    void setSpectatorLobby(SpectatorLobby l);
 
     boolean movePlayerTo(ArenaLobby lobby, Player p);
     boolean movePlayerTo(TeamProvider team, Player p);

@@ -9,9 +9,8 @@ import com.gmail.borlandlp.minigamesdtools.arena.exceptions.ArenaAlreadyStartedE
 import com.gmail.borlandlp.minigamesdtools.arena.gui.hotbar.HotbarController;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUIController;
 import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsChain;
-import com.gmail.borlandlp.minigamesdtools.nmsentities.EntityController;
 import com.gmail.borlandlp.minigamesdtools.arena.phasecomponent.PhaseComponentController;
-import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioController;
+import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioChainController;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamController;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaGameEndedEvent;
 import org.bukkit.Bukkit;
@@ -55,7 +54,7 @@ public class ArenaBase {
     protected HandlersController handlersController = new HandlersController();
 
     protected GUIController guiController;
-    protected ScenarioController scenarioController;
+    protected ScenarioChainController scenarioChainController;
     protected TeamController teamController;
     protected ChunkLoaderController chunkLoaderController;
     protected HotbarController hotbarController;
@@ -101,9 +100,9 @@ public class ArenaBase {
 
                 arenaObj.update();
 
-                if(arenaObj.getScenarioController().hasSignalGameEnding()) {
+                if(arenaObj.getScenarioChainController().hasSignalGameEnding()) {
                     arenaObj.gameEnded(false);
-                } else if(arenaObj.getScenarioController().hasSignalRoundEnding()) {
+                } else if(arenaObj.getScenarioChainController().hasSignalRoundEnding()) {
                     arenaObj.roundEnded();
                     arenaObj.setCurrentRound(arenaObj.getCurrentRound() + 1);
                     arenaObj.beforeRoundStarting();
@@ -216,12 +215,12 @@ public class ArenaBase {
         return gameId;
     }
 
-    public void setScenarioController(ScenarioController scenarioController) {
-        this.scenarioController = scenarioController;
+    public void setScenarioChainController(ScenarioChainController scenarioChainController) {
+        this.scenarioChainController = scenarioChainController;
     }
 
-    public ScenarioController getScenarioController() {
-        return scenarioController;
+    public ScenarioChainController getScenarioChainController() {
+        return scenarioChainController;
     }
 
     public GUIController getGuiController() {

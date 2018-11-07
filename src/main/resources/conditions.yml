@@ -1,4 +1,7 @@
-EmptyInventoryCondition:
-  creator_id: empty_inventory
-ExampleCondition:
-  creator_id: example_condition
+meta_info:
+  pool_id: conditions
+data:
+  EmptyInventoryCondition:
+    creator_id: empty_inventory
+  ExampleCondition:
+    creator_id: example_condition

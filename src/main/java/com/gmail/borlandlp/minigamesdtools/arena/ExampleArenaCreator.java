@@ -6,6 +6,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunkLoaderControll
 import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunksLoader;
 import com.gmail.borlandlp.minigamesdtools.conditions.AbstractCondition;
 import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsChain;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -14,13 +15,14 @@ import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.hotbar.HotbarController;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUIController;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUIProvider;
-import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioController;
+import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioChainController;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamController;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class ExampleArenaCreator implements Creator {
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " started loading...");
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load options...");
-        FileConfiguration arenaConfig = MinigamesDTools.getInstance().getConfigManager().getArenaConfig(ID);
+        ConfigurationSection arenaConfig = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.ARENA_FOLDER, ID).getData();
         arenaTemplate.setEnabled(arenaConfig.get("enabled").toString().equalsIgnoreCase("true"));
         arenaTemplate.setRoundTime(Integer.parseInt(arenaConfig.get("roundTime").toString()));
         arenaTemplate.setMaxRounds(Integer.parseInt(arenaConfig.get("maxRounds").toString()));
@@ -88,8 +90,8 @@ public class ExampleArenaCreator implements Creator {
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load ScenarioChain...");
         AbstractDataProvider abstractDataProvider = new DataProvider();
         abstractDataProvider.set("arena_instance", arenaTemplate);
-        ScenarioController scenarioController = MinigamesDTools.getInstance().getScenarioChainCreatorHub().createChain(arenaConfig.get("scenarios_chain").toString(), abstractDataProvider);
-        arenaTemplate.setScenarioController(scenarioController);
+        ScenarioChainController scenarioChainController = MinigamesDTools.getInstance().getScenarioChainCreatorHub().createChain(arenaConfig.get("scenarios_chain").toString(), abstractDataProvider);
+        arenaTemplate.setScenarioChainController(scenarioChainController);
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load teams...");
         TeamController teamController = new TeamController(arenaTemplate);
@@ -137,7 +139,7 @@ public class ExampleArenaCreator implements Creator {
         // register
         arenaTemplate.getPhaseComponentController().register(arenaTemplate.getChunkLoaderController());
         arenaTemplate.getPhaseComponentController().register(arenaTemplate.getTeamController());
-        arenaTemplate.getPhaseComponentController().register(arenaTemplate.getScenarioController());
+        arenaTemplate.getPhaseComponentController().register(arenaTemplate.getScenarioChainController());
         arenaTemplate.getPhaseComponentController().register(arenaTemplate.getGuiController());
         arenaTemplate.getPhaseComponentController().register(arenaTemplate.getHotbarController());
         arenaTemplate.getPhaseComponentController().register(arenaTemplate.getHandlersController());

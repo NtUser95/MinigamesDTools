@@ -13,6 +13,8 @@ import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerLeaveLoca
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamController;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
 import com.gmail.borlandlp.minigamesdtools.conditions.PlayerCheckResult;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigEntity;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerEnterEvent;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerQuitEvent;
@@ -21,11 +23,16 @@ import org.bukkit.entity.Player;
 
 public class ArenaManager implements APIComponent, ArenaAPI {
     private Map<String, ArenaBase> mArenas = new Hashtable<>();
+    private List<String> reg2Load = new ArrayList<>();
 
     @Override
     public void onLoad() {
         ArenaBase arena = null;
-        for(String arenaName : MinigamesDTools.getInstance().getConfigManager().getArenasName()) {
+        for(ConfigEntity configEntity : MinigamesDTools.getInstance().getConfigProvider().getPoolContents(ConfigPath.ARENA_FOLDER)) {
+            this.registerToLoad(configEntity.getID());
+        }
+
+        for (String arenaName : this.reg2Load) {
             try {
                 arena = MinigamesDTools.getInstance().getArenaCreatorHub().createArena(arenaName, new DataProvider());
                 try {
@@ -50,6 +57,17 @@ public class ArenaManager implements APIComponent, ArenaAPI {
         }
     }
 
+    @Override
+    public void registerToLoad(String arenaName) {
+        this.reg2Load.add(arenaName);
+    }
+
+    @Override
+    public void unregisterToLoad(String arenaName) {
+        this.reg2Load.remove(arenaName);
+    }
+
+    @Override
     public void restartArena(String name) {
         if(!this.mArenas.containsKey(name)) {
             return;
@@ -76,6 +94,7 @@ public class ArenaManager implements APIComponent, ArenaAPI {
         Debug.print(Debug.LEVEL.NOTICE, "Reload arena '" + name + "', oldInstance:" + oldInstance + " # newInstance:" + newInstance);
     }
 
+    @Override
     public void addArena(ArenaBase arena) throws Exception {
        for(ArenaBase qArena : this.getArenas()) {
            if(qArena.getName().equalsIgnoreCase(arena.getName())) {
@@ -86,18 +105,20 @@ public class ArenaManager implements APIComponent, ArenaAPI {
        this.mArenas.put(arena.getName(), arena);
    }
 
-   public void removeArena(String arenaName) {
+    @Override
+    public void removeArena(String arenaName) {
         this.mArenas.remove(arenaName);
    }
 
-   public ArenaBase getArenaOf(Player player) {
-      for (ArenaBase arenaBase : this.getEnabledArenas()) {
-         if(arenaBase.getTeamController().getTeamOf(player) != null) return arenaBase;
-      }
+    public ArenaBase getArenaOf(Player player) {
+        for (ArenaBase arenaBase : this.getEnabledArenas()) {
+            if(arenaBase.getTeamController().getTeamOf(player) != null) return arenaBase;
+        }
 
-      return null;
-   }
+        return null;
+    }
 
+    @Override
     public ArenaBase getArenaOf(String playerName) {
         for (ArenaBase arenaBase : this.getEnabledArenas()) {
             if(arenaBase.getTeamController().getTeamOf(playerName) != null) return arenaBase;
@@ -177,7 +198,6 @@ public class ArenaManager implements APIComponent, ArenaAPI {
        ArenaBase arena = this.getArena(arenaName);
        if(arena != null) {
           arena.setEnabled(false);
-          MinigamesDTools.getInstance().getConfigManager().setArenaState(arenaName, false);
           Bukkit.getServer().broadcastMessage("[MinigamesDTools] Выключена арена " + arenaName);
        }
    }
@@ -186,7 +206,6 @@ public class ArenaManager implements APIComponent, ArenaAPI {
         ArenaBase arena = this.getArena(arenaName);
         if(arena != null) {
             arena.setEnabled(true);
-            MinigamesDTools.getInstance().getConfigManager().setArenaState(arenaName, true);
             Bukkit.getServer().broadcastMessage("[MinigamesDTools] Запущена арена " + arenaName);
         }
    }

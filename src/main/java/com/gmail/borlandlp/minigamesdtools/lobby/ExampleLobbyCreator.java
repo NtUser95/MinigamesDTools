@@ -2,6 +2,7 @@ package com.gmail.borlandlp.minigamesdtools.lobby;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -12,7 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 public class ExampleLobbyCreator implements Creator {
     @Override
     public Object create(String ID, AbstractDataProvider dataProvider) throws Exception {
-        ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.SERVER_LOBBY, ID);
+        ConfigurationSection conf = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.SERVER_LOBBY, ID).getData();
         if(conf == null) {
             throw new Exception("Cant find config for " + ID);
         }

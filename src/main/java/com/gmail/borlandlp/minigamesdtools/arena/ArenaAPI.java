@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 
 public interface ArenaAPI {
+    void registerToLoad(String arenaName);
+    void unregisterToLoad(String arenaName);
     void restartArena(String name);
     void addArena(ArenaBase arena) throws Exception;
     void removeArena(String arenaName);

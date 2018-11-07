@@ -3,6 +3,7 @@ package com.gmail.borlandlp.minigamesdtools.arena.scenario;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -16,8 +17,8 @@ import java.util.Map;
 @CreatorInfo(creatorId = "default_scenario_chain")
 public class DefaultScenarioChainCreator implements Creator {
     @Override
-    public Object create(String ID, AbstractDataProvider dataProvider) throws Exception {
-        ConfigurationSection configurationSection = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.SCENARIO_CHAIN, ID);
+    public ScenarioChainController create(String ID, AbstractDataProvider dataProvider) throws Exception {
+        ConfigurationSection configurationSection = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.SCENARIO_CHAIN, ID).getData();
         if(configurationSection == null) {
             throw new Exception("Cant find config for ScenarioChain[ID:" + ID + "]");
         }
@@ -49,9 +50,9 @@ public class DefaultScenarioChainCreator implements Creator {
             }
         }
 
-        ScenarioController scenarioController = new ScenarioController((ArenaBase) dataProvider.get("arena_instance"));
-        scenarioController.setScenarios(new ArrayList<>(scenarioMap.values()));
+        ScenarioChainController scenarioChainController = new ScenarioChainController((ArenaBase) dataProvider.get("arena_instance"));
+        scenarioChainController.setScenarios(new ArrayList<>(scenarioMap.values()));
 
-        return scenarioController;
+        return scenarioChainController;
     }
 }

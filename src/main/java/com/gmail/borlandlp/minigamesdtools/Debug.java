@@ -1,7 +1,8 @@
 package com.gmail.borlandlp.minigamesdtools;
 
+import com.gmail.borlandlp.minigamesdtools.config.ConfigEntity;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
-import org.bukkit.ChatColor;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.fusesource.jansi.Ansi;
 
@@ -13,8 +14,8 @@ public class Debug {
 
     public static void init() {
         try {
-            YamlConfiguration conf = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.MAIN);
-            Debug.enabled = Boolean.parseBoolean(conf.get("debug").toString());
+            ConfigEntity conf = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.MAIN, "minigamesdtools");
+            Debug.enabled = Boolean.parseBoolean(conf.getData().get("debug").toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

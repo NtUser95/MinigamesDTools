@@ -1,4 +1,7 @@
-example_scenario_parent:
-                creator_id: example_scenario
-                example_scenario_child:
-                  creator_id: example_scenario_two
+meta_info:
+  pool_id: scenario
+data:
+  example_scenario_parent:
+    creator_id: example_scenario
+  example_scenario_child:
+    creator_id: example_scenario_two

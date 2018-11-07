@@ -9,6 +9,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+@Deprecated
 public class ConfigManager {
     public void checkConfigs() {
         // restore plugin folder
@@ -130,7 +131,7 @@ public class ConfigManager {
         SPECTATOR_LOBBY(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "spectatorlobby.yml"), false),
         STARTER_LOBBY(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "starterlobby.yml"), false),
         SERVER_LOBBY(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "lobby.yml"), false),
-        ADDONS(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "minigames"), true),
+        ADDONS(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "addons"), true),
         INVENTORY_GUI(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "inventory_gui.yml"), false),
         INVENTORY_GUI_SLOT(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "inventory_gui_slot.yml"), false);
 

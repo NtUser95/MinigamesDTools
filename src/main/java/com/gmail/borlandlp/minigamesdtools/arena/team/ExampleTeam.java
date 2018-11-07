@@ -173,7 +173,6 @@ public class ExampleTeam implements TeamProvider {
         return this.friendlyFireAllowed;
     }
 
-    @Override
     public void setManageInventory(boolean b) {
        this.manageInventory = b;
     }
@@ -183,7 +182,6 @@ public class ExampleTeam implements TeamProvider {
         return this.manageInventory;
     }
 
-    @Override
     public void setManageArmor(boolean b) {
        this.manageArmor = b;
     }
@@ -277,7 +275,6 @@ public class ExampleTeam implements TeamProvider {
         return this.spectatorLobby;
     }
 
-    @Override
     public void setSpectatorLobby(SpectatorLobby l) {
         this.spectatorLobby = l;
     }

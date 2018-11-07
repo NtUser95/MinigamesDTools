@@ -8,6 +8,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn.RespawnLobby
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.spectator.SpectatorLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.starter.StarterLobby;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -23,7 +24,7 @@ import java.util.*;
 @CreatorInfo(creatorId = "default_team")
 public class ExampleTeamCreator implements Creator {
     public TeamProvider create(String teamID, AbstractDataProvider dataProvider) throws Exception {
-        ConfigurationSection fileConfiguration = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.TEAMS, teamID);
+        ConfigurationSection fileConfiguration = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.TEAMS, teamID).getData();
         if(fileConfiguration == null) {
             throw new Exception("cant find config of team[ID:" + teamID + "]");
         }

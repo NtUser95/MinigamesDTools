@@ -18,8 +18,10 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.spectator.ExampleSpe
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.starter.StarterLobbyCreator;
 import com.gmail.borlandlp.minigamesdtools.conditions.examples.EmptyInventoryConditionCreator;
 import com.gmail.borlandlp.minigamesdtools.conditions.examples.ExampleConditionCreator;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigEntity;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
-import com.gmail.borlandlp.minigamesdtools.events.BlockDamageByEntityEvent;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
+import com.gmail.borlandlp.minigamesdtools.creator.CreatorHub;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.HeldHotbarCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.ItemInterractHotbarCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.ExampleItemCreator;
@@ -34,11 +36,46 @@ import net.minecraft.server.v1_12_R1.EntityEnderDragon;
 import net.minecraft.server.v1_12_R1.EntityShulker;
 import net.minecraft.server.v1_12_R1.EntityZombie;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.util.Set;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 public class TestComponents {
+    private Map<ConfigPath, CreatorHub> hubs = new Hashtable<ConfigPath, CreatorHub>() {{
+        this.put(ConfigPath.HOTBAR_SLOTS, MinigamesDTools.getInstance().getHotbarItemCreatorHub());
+        this.put(ConfigPath.HOTBAR, MinigamesDTools.getInstance().getHotbarCreatorHub());
+        this.put(ConfigPath.SCENARIO_CHAIN, MinigamesDTools.getInstance().getScenarioChainCreatorHub());
+        this.put(ConfigPath.SCENARIO, MinigamesDTools.getInstance().getScenarioCreatorHub());
+        this.put(ConfigPath.ACTIVE_POINT_REACTIONS, MinigamesDTools.getInstance().getReactionCreatorHub());
+        this.put(ConfigPath.ACTIVE_POINT_BEHAVIORS, MinigamesDTools.getInstance().getBehaviorCreatorHub());
+        this.put(ConfigPath.ACTIVE_POINT, MinigamesDTools.getInstance().getActivePointsCreatorHub());
+        this.put(ConfigPath.STARTER_LOBBY, MinigamesDTools.getInstance().getArenaLobbyCreatorHub());
+        this.put(ConfigPath.RESPAWN_LOBBY, MinigamesDTools.getInstance().getArenaLobbyCreatorHub());
+        this.put(ConfigPath.SPECTATOR_LOBBY, MinigamesDTools.getInstance().getArenaLobbyCreatorHub());
+        this.put(ConfigPath.INVENTORY_GUI, MinigamesDTools.getInstance().getInventoryGUICreatorHub());
+        this.put(ConfigPath.INVENTORY_GUI_SLOT, MinigamesDTools.getInstance().getInventoryGuiSlotCreatorHub());
+        this.put(ConfigPath.ARENA_FOLDER, MinigamesDTools.getInstance().getArenaCreatorHub());
+        this.put(ConfigPath.SERVER_LOBBY, MinigamesDTools.getInstance().getLobbyCreatorHub());
+        this.put(ConfigPath.CONDITIONS, MinigamesDTools.getInstance().getConditionsCreatorHub());
+        this.put(ConfigPath.TEAMS, MinigamesDTools.getInstance().getTeamCreatorHub());
+    }};
+
+    private void linkCreators(ConfigPath path) {
+        List<ConfigEntity> keys = MinigamesDTools.getInstance().getConfigProvider().getPoolContents(path);
+        for(ConfigEntity configEntity : keys) {
+            ConfigurationSection conf = MinigamesDTools.getInstance().getConfigProvider().getEntity(path, configEntity.getID()).getData();
+            try {
+                CreatorHub creatorHub = this.hubs.get(path);
+                String configEntityId = configEntity.getID();
+                String creatorId = conf.get("creator_id").toString();
+                creatorHub.registerRouteId2Creator(configEntityId, creatorId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void load() {
         Debug.print(Debug.LEVEL.NOTICE, "###########################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### load code for tests ###########");
@@ -49,12 +86,7 @@ public class TestComponents {
             MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerCreator(new ExampleItemCreator());
             MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerCreator(new ShowTeamSpectatorItemCreator());
 
-            // привязываем описываемые предметы в конфигах к их сборщикам-создателям.
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.HOTBAR_SLOTS).getKeys(false);
-            for(String hotbarSlotID : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.HOTBAR_SLOTS, hotbarSlotID);
-                MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerRouteId2Creator(hotbarSlotID, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.HOTBAR_SLOTS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,12 +96,7 @@ public class TestComponents {
             MinigamesDTools.getInstance().getHotbarCreatorHub().registerCreator(new HeldHotbarCreator());
             MinigamesDTools.getInstance().getHotbarCreatorHub().registerCreator(new ItemInterractHotbarCreator());
 
-            // привязываем описываемые предметы в конфигах к их сборщикам-создателям.
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.HOTBAR).getKeys(false);
-            for(String hotbarSlotID : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.HOTBAR, hotbarSlotID);
-                MinigamesDTools.getInstance().getHotbarCreatorHub().registerRouteId2Creator(hotbarSlotID, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.HOTBAR);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,13 +104,7 @@ public class TestComponents {
         // scenario chain
         try {
             MinigamesDTools.getInstance().getScenarioChainCreatorHub().registerCreator(new DefaultScenarioChainCreator());
-
-            // привязываем описываемые предметы в конфигах к их сборщикам-создателям.
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.SCENARIO_CHAIN).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.SCENARIO_CHAIN, key);
-                MinigamesDTools.getInstance().getScenarioChainCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.SCENARIO_CHAIN);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,12 +114,7 @@ public class TestComponents {
             MinigamesDTools.getInstance().getScenarioCreatorHub().registerCreator(new ExampleScenarioCreator());
             MinigamesDTools.getInstance().getScenarioCreatorHub().registerCreator(new ExampleTwoScenarioCreator());
 
-            // привязываем описываемые предметы в конфигах к их сборщикам-создателям.
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.SCENARIO).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.SCENARIO, key);
-                MinigamesDTools.getInstance().getScenarioCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.SCENARIO);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,12 +129,7 @@ public class TestComponents {
             MinigamesDTools.getInstance().getReactionCreatorHub().registerCreator(new TeamIncrementWinTicketsReactionCreator());
             MinigamesDTools.getInstance().getReactionCreatorHub().registerCreator(new ItemGiveReactionCreator());
 
-            // привязываем описываемые предметы в конфигах к их сборщикам-создателям.
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.ACTIVE_POINT_REACTIONS).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.ACTIVE_POINT_REACTIONS, key);
-                MinigamesDTools.getInstance().getReactionCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.ACTIVE_POINT_REACTIONS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,11 +138,7 @@ public class TestComponents {
         try {
             MinigamesDTools.getInstance().getBehaviorCreatorHub().registerCreator(new ExampleBehaviorCreator());
 
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.ACTIVE_POINT_BEHAVIORS).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.ACTIVE_POINT_BEHAVIORS, key);
-                MinigamesDTools.getInstance().getBehaviorCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.ACTIVE_POINT_BEHAVIORS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,11 +147,7 @@ public class TestComponents {
         try {
             MinigamesDTools.getInstance().getActivePointsCreatorHub().registerCreator(new ExampleActivePointsCreator());
 
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.ACTIVE_POINT).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.ACTIVE_POINT, key);
-                MinigamesDTools.getInstance().getActivePointsCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.ACTIVE_POINT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -153,11 +156,7 @@ public class TestComponents {
         try {
             MinigamesDTools.getInstance().getTeamCreatorHub().registerCreator(new ExampleTeamCreator());
 
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.TEAMS).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.TEAMS, key);
-                MinigamesDTools.getInstance().getTeamCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.TEAMS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -168,23 +167,9 @@ public class TestComponents {
             MinigamesDTools.getInstance().getArenaLobbyCreatorHub().registerCreator(new ExampleRespawnLobbyCreator());
             MinigamesDTools.getInstance().getArenaLobbyCreatorHub().registerCreator(new ExampleSpectatorLobbyCreator());
 
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.STARTER_LOBBY).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.STARTER_LOBBY, key);
-                MinigamesDTools.getInstance().getArenaLobbyCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
-
-            keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.RESPAWN_LOBBY).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.RESPAWN_LOBBY, key);
-                MinigamesDTools.getInstance().getArenaLobbyCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
-
-            keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.SPECTATOR_LOBBY).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.SPECTATOR_LOBBY, key);
-                MinigamesDTools.getInstance().getArenaLobbyCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.STARTER_LOBBY);
+            this.linkCreators(ConfigPath.RESPAWN_LOBBY);
+            this.linkCreators(ConfigPath.SPECTATOR_LOBBY);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -192,18 +177,10 @@ public class TestComponents {
         // inventory gui
         try {
             MinigamesDTools.getInstance().getInventoryGUICreatorHub().registerCreator(new DefaultViewInventoryCreator());
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.INVENTORY_GUI).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.INVENTORY_GUI, key);
-                MinigamesDTools.getInstance().getInventoryGUICreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.INVENTORY_GUI);
 
             MinigamesDTools.getInstance().getInventoryGuiSlotCreatorHub().registerCreator(new ExampleInventorySlotCreator());
-            keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.INVENTORY_GUI_SLOT).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.INVENTORY_GUI_SLOT, key);
-                MinigamesDTools.getInstance().getInventoryGuiSlotCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.INVENTORY_GUI_SLOT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -223,10 +200,7 @@ public class TestComponents {
         try {
             MinigamesDTools.getInstance().getArenaCreatorHub().registerCreator(new ExampleArenaCreator());
 
-            for(String arenaID : MinigamesDTools.getInstance().getConfigManager().getArenasName()) {
-                YamlConfiguration conf = MinigamesDTools.getInstance().getConfigManager().getArenaConfig(arenaID);
-                MinigamesDTools.getInstance().getArenaCreatorHub().registerRouteId2Creator(arenaID, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.ARENA_FOLDER);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -235,11 +209,7 @@ public class TestComponents {
         try {
             MinigamesDTools.getInstance().getLobbyCreatorHub().registerCreator(new ExampleLobbyCreator());
 
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.SERVER_LOBBY).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.SERVER_LOBBY, key);
-                MinigamesDTools.getInstance().getLobbyCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.SERVER_LOBBY);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -249,11 +219,7 @@ public class TestComponents {
             MinigamesDTools.getInstance().getConditionsCreatorHub().registerCreator(new ExampleConditionCreator());
             MinigamesDTools.getInstance().getConditionsCreatorHub().registerCreator(new EmptyInventoryConditionCreator());
 
-            Set<String> keys = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.CONDITIONS).getKeys(false);
-            for(String key : keys) {
-                ConfigurationSection conf = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.CONDITIONS, key);
-                MinigamesDTools.getInstance().getConditionsCreatorHub().registerRouteId2Creator(key, conf.get("creator_id").toString());
-            }
+            this.linkCreators(ConfigPath.CONDITIONS);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -7,6 +7,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerJoinLocal
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamListener;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
+import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaMathHelper;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaUtils;
 import net.minecraft.server.v1_12_R1.*;
@@ -124,8 +125,12 @@ public class Commands implements CommandExecutor {
                 player.sendMessage(MinigamesDTools.getPrefix() + " Недостаточно прав для доступа.");
                 return true;
             } else if (args[0].equalsIgnoreCase("fullreload")) {
-                MinigamesDTools.getInstance().reload();
-                player.sendMessage(MinigamesDTools.getPrefix() + " Произведена полная перезагрузка плагина.");
+                  try {
+                      MinigamesDTools.getInstance().reload();
+                  } catch (InvalidPathException e) {
+                      e.printStackTrace();
+                  }
+                  player.sendMessage(MinigamesDTools.getPrefix() + " Произведена полная перезагрузка плагина.");
                return true;
             } else if(args[0].equalsIgnoreCase("enable")) {
                 if(args.length == 2) {
@@ -171,8 +176,8 @@ public class Commands implements CommandExecutor {
                 return true;
             } else if(args[0].equalsIgnoreCase("dbg_join") && p.hasPermission("arena.reload")) {
 
-                MinigamesDTools.getInstance().getArenaAPI().arenaJoinRequest("test1x1", p);
-                p.sendMessage("dbg_join: test1x1 ");
+                MinigamesDTools.getInstance().getArenaAPI().arenaJoinRequest(args[1], p);
+                p.sendMessage("dbg_join: " + args[1]);
                 return true;
 
             } else if(args[0].equalsIgnoreCase("dbg_force_join") && p.hasPermission("arena.reload")) {

@@ -3,10 +3,13 @@ package com.gmail.borlandlp.minigamesdtools.lobby;
 import com.gmail.borlandlp.minigamesdtools.APIComponent;
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigEntity;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -14,7 +17,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class LobbyHubController implements APIComponent, LobbyServerAPI {
@@ -84,19 +86,20 @@ public class LobbyHubController implements APIComponent, LobbyServerAPI {
         Bukkit.getServer().getPluginManager().registerEvents(this.lobbyListener, MinigamesDTools.getInstance());
 
         //load all serverLobby
-        for (String lobbyID : MinigamesDTools.getInstance().getConfigManager().getEnabledServerLobbyIds()) {
+        for (ConfigEntity configEntity : MinigamesDTools.getInstance().getConfigProvider().getPoolContents(ConfigPath.SERVER_LOBBY)) {
+            if(configEntity.getData().get("enabled").toString().equals("true"))
             try {
-                Debug.print(Debug.LEVEL.NOTICE, "Load ServerLobby[ID:" + lobbyID + "]");
-                this.register(MinigamesDTools.getInstance().getLobbyCreatorHub().createLobby(lobbyID, new DataProvider()));
+                Debug.print(Debug.LEVEL.NOTICE, "Load ServerLobby[ID:" + configEntity.getID() + "]");
+                this.register(MinigamesDTools.getInstance().getLobbyCreatorHub().createLobby(configEntity.getID(), new DataProvider()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         // set default serverLobby
-        YamlConfiguration conf = null;
+        ConfigurationSection conf = null;
         try {
-            conf = MinigamesDTools.getInstance().getConfigManager().getConfig(ConfigManager.ConfigPath.MAIN);
+            conf = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.MAIN, "minigamesdtools").getData();
         } catch (Exception e) {
             e.printStackTrace();
         }

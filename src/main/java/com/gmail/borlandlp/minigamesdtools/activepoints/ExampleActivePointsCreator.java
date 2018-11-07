@@ -9,7 +9,9 @@ import com.gmail.borlandlp.minigamesdtools.activepoints.type.BossEntity;
 import com.gmail.borlandlp.minigamesdtools.activepoints.type.SphereBlockPoint;
 import com.gmail.borlandlp.minigamesdtools.activepoints.type.SquareBlockPoint;
 import com.gmail.borlandlp.minigamesdtools.activepoints.type.StaticBlockPoint;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigEntity;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -32,7 +34,7 @@ import java.util.Map;
 public class ExampleActivePointsCreator implements Creator {
     public ActivePoint create(String activepoint_id, AbstractDataProvider dataProvider) throws Exception {
         ActivePoint activePoint = null;
-        ConfigurationSection activePointConfig = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.ACTIVE_POINT, activepoint_id);
+        ConfigurationSection activePointConfig = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.ACTIVE_POINT, activepoint_id).getData();
 
         //init by type
         if (activePointConfig == null) {

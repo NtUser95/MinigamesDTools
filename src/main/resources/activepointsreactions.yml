@@ -1,3 +1,6 @@
-example_r:
-  creator_id: team_increment_win_ticket_reaction
-  value: 1
+meta_info:
+  pool_id: active_point_reactions
+data:
+  example_r:
+    creator_id: team_increment_win_ticket_reaction
+    value: 1

@@ -4,6 +4,7 @@ import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePoint;
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.Reaction;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
+import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
@@ -14,7 +15,7 @@ public class TeamIncrementWinTicketsReactionCreator implements Creator {
     @Override
     public Reaction create(String ID, AbstractDataProvider dataProvider) throws Exception {
         TeamIncrementWinTicketsReaction reaction = new TeamIncrementWinTicketsReaction();
-        ConfigurationSection configurationSection = MinigamesDTools.getInstance().getConfigManager().getConfigSection(ConfigManager.ConfigPath.ACTIVE_POINT_REACTIONS, ID);
+        ConfigurationSection configurationSection = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.ACTIVE_POINT_REACTIONS, ID).getData();
         reaction.setActivePoint((ActivePoint) dataProvider.get("active_point_instance"));
         reaction.setValue(Integer.parseInt(configurationSection.get("value").toString()));
 
