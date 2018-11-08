@@ -3,7 +3,7 @@ package com.gmail.borlandlp.minigamesdtools.events.sponge;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class POST_UNLOAD_EVENT extends Event {
+public class UNLOAD_EVENT extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     @Override

@@ -12,9 +12,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobbyCreatorHub
 import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.config.*;
 import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException;
-import com.gmail.borlandlp.minigamesdtools.events.sponge.INITIALIZATION_EVENT;
-import com.gmail.borlandlp.minigamesdtools.events.sponge.POST_INITIALIZATION_EVENT;
-import com.gmail.borlandlp.minigamesdtools.events.sponge.PRE_INITIALIZATION_EVENT;
+import com.gmail.borlandlp.minigamesdtools.events.sponge.*;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.*;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarAPI;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarApiInst;
@@ -174,6 +172,7 @@ public class MinigamesDTools extends JavaPlugin {
         Debug.print(Debug.LEVEL.NOTICE, "#############################################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### MiniGames daemon prepare to unload... ###########");
         Debug.print(Debug.LEVEL.NOTICE, "#...........................................................#");
+        Bukkit.getPluginManager().callEvent(new PRE_UNLOAD_EVENT());
 
         MinigamesDTools.getInstance().getEntityAPI().unregister("test", 69, EntityShulker.class, SilentShulker.class);
         MinigamesDTools.getInstance().getEntityAPI().unregister("my_zombie", 54, EntityZombie.class, SkyZombie.class);
@@ -184,6 +183,7 @@ public class MinigamesDTools extends JavaPlugin {
         Debug.print(Debug.LEVEL.NOTICE, "###################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### unload addons ###########");
         Debug.print(Debug.LEVEL.NOTICE, "#.................................#");
+        Bukkit.getPluginManager().callEvent(new UNLOAD_EVENT());
         this.customMinigamesLoader.unloadAddons();
 
         Debug.print(Debug.LEVEL.NOTICE, "#######################################################");
