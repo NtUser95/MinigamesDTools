@@ -100,6 +100,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.customMinigamesLoader = new CustomMinigamesLoader();
         this.customMinigamesLoader.loadAddons();
 
+        ConfigUtils.checkAndRestoreDefaultConfigs();
         this.configLoader = new ConfigLoader();
         configLoader.addPath(this.getDataFolder());
         configLoader.addPath(ConfigPath.ARENA_FOLDER.getPath());
