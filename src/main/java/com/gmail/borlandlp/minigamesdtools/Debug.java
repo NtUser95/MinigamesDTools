@@ -1,9 +1,7 @@
 package com.gmail.borlandlp.minigamesdtools;
 
 import com.gmail.borlandlp.minigamesdtools.config.ConfigEntity;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.fusesource.jansi.Ansi;
 
 import java.util.logging.Level;

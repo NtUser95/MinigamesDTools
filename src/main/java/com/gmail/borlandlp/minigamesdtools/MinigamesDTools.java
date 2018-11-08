@@ -12,6 +12,9 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobbyCreatorHub
 import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.config.*;
 import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException;
+import com.gmail.borlandlp.minigamesdtools.events.sponge.INITIALIZATION_EVENT;
+import com.gmail.borlandlp.minigamesdtools.events.sponge.POST_INITIALIZATION_EVENT;
+import com.gmail.borlandlp.minigamesdtools.events.sponge.PRE_INITIALIZATION_EVENT;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.*;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarAPI;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarApiInst;
@@ -39,12 +42,14 @@ import com.gmail.borlandlp.minigamesdtools.test.TestComponents;
 import net.minecraft.server.v1_12_R1.EntityEnderDragon;
 import net.minecraft.server.v1_12_R1.EntityShulker;
 import net.minecraft.server.v1_12_R1.EntityZombie;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MinigamesDTools extends JavaPlugin {
     private static final String prefix = ChatColor.BLUE + "[" + ChatColor.RED + "Arena" + ChatColor.BLUE + "]" + ChatColor.DARK_GREEN;
     private SQLite dbConnection;
+    private ConfigLoader configLoader;
 
     private CustomMinigamesLoader customMinigamesLoader;
     private APIComponentsController apiComponentsController;
@@ -94,10 +99,12 @@ public class MinigamesDTools extends JavaPlugin {
         Debug.print(Debug.LEVEL.NOTICE, "########### MiniGames daemon is starting... ###########");
         Debug.print(Debug.LEVEL.NOTICE, "#.....................................................#");
 
-        ConfigLoader loader = new ConfigLoader();
-        loader.addPath(this.getDataFolder());
-        loader.addPath(ConfigPath.ARENA_FOLDER.getPath());
-        this.configManager = loader.load();
+        this.customMinigamesLoader = new CustomMinigamesLoader();
+        this.customMinigamesLoader.loadAddons();
+
+        this.configLoader = new ConfigLoader();
+        configLoader.addPath(this.getDataFolder());
+        configLoader.addPath(ConfigPath.ARENA_FOLDER.getPath());
 
         this.guiCreatorHub = new GUICreatorHub();
         this.hotbarCreatorHub = new HotbarCreatorHub();
@@ -124,6 +131,10 @@ public class MinigamesDTools extends JavaPlugin {
         this.lobbyController = new LobbyHubController();
 
         this.apiComponentsController = new APIComponentsController();
+        Bukkit.getPluginManager().callEvent(new PRE_INITIALIZATION_EVENT());
+
+        // load configs
+        this.configManager = configLoader.load();
 
         Debug.print(Debug.LEVEL.NOTICE, "###############################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### register API components ###########");
@@ -140,18 +151,13 @@ public class MinigamesDTools extends JavaPlugin {
         // переделать инициализацию БД. Это тут вообще с лохматых годов.
         dbConnection = new SQLite();
         dbConnection.load();
-
-        Debug.print(Debug.LEVEL.NOTICE, "###################################");
-        Debug.print(Debug.LEVEL.NOTICE, "########### load addons ###########");
-        Debug.print(Debug.LEVEL.NOTICE, "#.................................#");
-        this.customMinigamesLoader = new CustomMinigamesLoader();
-        this.customMinigamesLoader.loadAddons();
+        Bukkit.getPluginManager().callEvent(new INITIALIZATION_EVENT());
 
         Debug.print(Debug.LEVEL.NOTICE, "##################################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### prepare daemon to start... ###########");
         Debug.print(Debug.LEVEL.NOTICE, "#................................................#");
         this.getApiComponentsController().announceEvent(APIComponentsController.ComponentEvent.PLUGIN_LOAD);
-        Debug.init();
+        Bukkit.getPluginManager().callEvent(new POST_INITIALIZATION_EVENT());
 
         Debug.print(Debug.LEVEL.NOTICE, "###################################################");
         Debug.print(Debug.LEVEL.NOTICE, "########### MiniGames daemon is loaded! ###########");
@@ -300,5 +306,9 @@ public class MinigamesDTools extends JavaPlugin {
 
     public ConditionsCreatorHub getConditionsCreatorHub() {
         return conditionsCreatorHub;
+    }
+
+    public ConfigLoader getConfigLoader() {
+        return configLoader;
     }
 }
