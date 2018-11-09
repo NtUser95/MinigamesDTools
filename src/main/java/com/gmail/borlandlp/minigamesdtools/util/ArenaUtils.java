@@ -43,36 +43,6 @@ public class ArenaUtils {
 
     }
 
-    public static void test(ArenaEventListener listener) {
-        Method[] publicMethods = listener.getClass().getMethods();
-        Method[] privateMethods = listener.getClass().getDeclaredMethods();
-        HashSet methods = new HashSet<Method>(publicMethods.length + privateMethods.length, 1.0F);
-        Method[] var10 = publicMethods;
-        int var9 = publicMethods.length;
-
-        Method method;
-        int var8;
-        for(var8 = 0; var8 < var9; ++var8) {
-            method = var10[var8];
-            methods.add(method);
-        }
-
-        var10 = privateMethods;
-        var9 = privateMethods.length;
-        for(var8 = 0; var8 < var9; ++var8) {
-            method = var10[var8];
-            methods.add(method);
-        }
-
-        for (Object IMethod : methods) {
-            String methodName = ((Method)IMethod).getName();
-            if(((Method)IMethod).getGenericParameterTypes().length == 1 && ((Method)IMethod).getAnnotation(ArenaEventHandler.class) != null) {
-                String argumentClass = (((Method)IMethod).getGenericParameterTypes()[0]).getTypeName();
-                System.out.println(methodName+ "#" + argumentClass);
-            }
-        }
-    }
-
     public static void sendMessage(Player player, ChatMessageType chatMessageType, String message) {
         IChatBaseComponent comp = IChatBaseComponent.ChatSerializer
                 .a("{\"text\":\"" + ChatColor.RED + message + "\"}");
