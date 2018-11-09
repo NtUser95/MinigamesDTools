@@ -1,7 +1,6 @@
 package com.gmail.borlandlp.minigamesdtools.gui.hotbar.items;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;

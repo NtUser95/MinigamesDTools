@@ -1,6 +1,7 @@
 package com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
+import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaEventListener;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.PlayerLocker;
@@ -24,7 +25,7 @@ public class ExampleRespawnLobby extends ArenaLobby implements RespawnLobby, Pla
 
     @Override
     public void forceReleasePlayer(Player p) {
-        this.playerRespawned(p);
+        this.removePlayer(p);
     }
 
     @Override
@@ -38,13 +39,27 @@ public class ExampleRespawnLobby extends ArenaLobby implements RespawnLobby, Pla
         bossBar.setVisible(true);
         bossBar.addPlayer(player);
         this.bossBarMap.put(player, bossBar);
+
+        if(MinigamesDTools.getInstance().getHotbarAPI().isBindedPlayer(player)) {
+            MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
+        }
+        if(this.isHotbarEnabled()) {
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getHotbar(), player);
+        }
     }
 
     @Override
-    public void playerRespawned(Player player) {
+    public void removePlayer(Player player) {
         this.bossBarMap.get(player).removePlayer(player);
         this.bossBarMap.remove(player);
         this.players.remove(player);
+
+        if(this.isHotbarEnabled()) {
+            MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
+        }
+        if(this.getTeamProvider().getArena().getHotbarController().isEnabled()) {
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getTeamProvider().getArena().getHotbarController().getDefaultHotbar(), player);
+        }
     }
 
     @Override

@@ -1,8 +1,0 @@
-meta_info:
-  pool_id: spectator_lobby
-data:
-  example_starter_lobby:
-    creator_id: default_spectator_lobby
-    location_XYZWorldYawPitch: '-129:63:234:world:0:0'
-    team_watching:
-      enabled: true

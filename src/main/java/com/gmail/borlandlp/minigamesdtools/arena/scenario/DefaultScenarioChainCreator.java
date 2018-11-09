@@ -2,7 +2,6 @@ package com.gmail.borlandlp.minigamesdtools.arena.scenario;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;

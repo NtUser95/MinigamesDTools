@@ -11,5 +11,5 @@ public interface RespawnLobby extends ArenaPhaseComponent {
     void addPlayer(Player player);
     Set<Player> getReadyPlayersToRespawn();
     Map<Player, Long> getWaitingPlayers();
-    void playerRespawned(Player player);
+    void removePlayer(Player player);
 }

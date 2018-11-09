@@ -8,6 +8,8 @@ import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamListener;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
 import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException;
+import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaMathHelper;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaUtils;
 import net.minecraft.server.v1_12_R1.*;
@@ -211,7 +213,14 @@ public class Commands implements CommandExecutor {
                 }
 
                 return true;
-             }
+             } else if(args[0].equalsIgnoreCase("hotbar")) {
+                  try {
+                      Hotbar hotbar = MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar("example_skyhotbar", new DataProvider());
+                      MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(hotbar, p);
+                  } catch (Exception e) {
+                      e.printStackTrace();
+                  }
+              }
 
              if(args[0].equalsIgnoreCase("dbg_stop") && p.hasPermission("arena.reload")) {
                  p.sendMessage("===arena_stop===");

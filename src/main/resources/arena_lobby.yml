@@ -1,0 +1,25 @@
+meta_info:
+  pool_id: arena_lobby
+data:
+  example_starter_lobby:
+    enabled: true
+    creator_id: default_starter_lobby
+    location_XYZWorldYawPitch: '74:30:113:world:0:0'
+    hotbar:
+      enabled: true
+      id: ExampleLobbyHotbar
+  example_spectate_lobby:
+    creator_id: default_spectator_lobby
+    location_XYZWorldYawPitch: '-129:63:234:world:0:0'
+    team_watching:
+      enabled: true
+    hotbar:
+      enabled: true
+      id: ExampleLobbyHotbar
+  example_respawn_lobby:
+    creator_id: default_respawn_lobby
+    seconds_wait: 20
+    location_XYZWorld: '-137:63:231:world:0:0'
+    hotbar:
+      enabled: true
+      id: ExampleLobbyHotbar

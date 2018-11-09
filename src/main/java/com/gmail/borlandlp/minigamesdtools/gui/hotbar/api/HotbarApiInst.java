@@ -5,6 +5,7 @@ import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.HotbarListener;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.HeldHotbar;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -49,12 +51,20 @@ public class HotbarApiInst implements HotbarAPI, APIComponent {
     }
 
     public void update() {
-        for(Player player : this.getAll().keySet()) {
+        for(Player player : new ArrayList<>(this.getAll().keySet())) {
             if(player != null) {
                 Hotbar hotbar = this.getAll().get(player);
-                hotbar.update();
+                ItemStack[] drawData = null;
+                try {
+                    hotbar.update();
+                    drawData = hotbar.getDrawData();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    this.unbindHotbar(player);
+                    Debug.print(Debug.LEVEL.WARNING, "Player " + player.getName() + " was unbinded due to problems with his hotbar.");
+                    continue;
+                }
 
-                ItemStack[] drawData = hotbar.getDrawData();
                 ItemStack[] inventory = player.getInventory().getContents();
 
                 if(!isIdentDrawData(drawData, inventory)) {
@@ -115,6 +125,10 @@ public class HotbarApiInst implements HotbarAPI, APIComponent {
     @Override
     public void bindHotbar(Hotbar hotbar, Player player) {
         Debug.print(Debug.LEVEL.NOTICE, "Bind hotbar for Player[name:" + player.getName() + "]");
+        if(hotbar instanceof HeldHotbar) {
+            player.getInventory().setHeldItemSlot(8);
+        }
+
         this.players.put(player, hotbar);
     }
 

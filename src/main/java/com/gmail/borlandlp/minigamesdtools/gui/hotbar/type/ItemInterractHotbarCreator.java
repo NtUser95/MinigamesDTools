@@ -1,7 +1,6 @@
 package com.gmail.borlandlp.minigamesdtools.gui.hotbar.type;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
@@ -27,7 +26,11 @@ public class ItemInterractHotbarCreator implements Creator {
             SlotItem slotItem = null;
             if(MinigamesDTools.getInstance().getHotbarItemCreatorHub().containsRouteId2Creator(slotID)) {
                 slotItem = MinigamesDTools.getInstance().getHotbarItemCreatorHub().createHotbarItem(slotID, new DataProvider());
-                hotbar.setSlot(slotIndex, slotItem);
+                if(slotItem != null) {
+                    hotbar.setSlot(slotIndex, slotItem);
+                } else {
+                    throw new Exception("Detected a factory problem for HotbarSlotConfig[ID:" + slotID + "] for HotbarConfig[ID:" + ID + "]");
+                }
             } else {
                 throw new Exception("detected problem for HotbarSlotConfig[ID:" + slotID + "] for HotbarConfig[ID:" + ID + "]");
             }

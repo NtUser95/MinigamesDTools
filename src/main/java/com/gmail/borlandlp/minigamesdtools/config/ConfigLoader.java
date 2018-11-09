@@ -51,7 +51,7 @@ public class ConfigLoader {
                     Debug.print(Debug.LEVEL.NOTICE,  "Load file: " + fileName);
                 }
 
-                ConfigPath poolId = ConfigPath.getByPoolId(yaml.get("meta_info.pool_id").toString());
+                String poolId = yaml.get("meta_info.pool_id").toString();
 
                 for (String keyID : yaml.getConfigurationSection("data").getKeys(false)) {
                     ConfigurationSection data = yaml.getConfigurationSection("data." + keyID);

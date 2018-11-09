@@ -106,4 +106,17 @@ public abstract class SlotItem {
     }
 
     public abstract boolean use(Player player);
+
+    public String toString() {
+        StringBuilder str = new StringBuilder()
+                .append("{")
+                .append("activeIcon=").append(this.getActiveIcon().getType().name())
+                .append(", unactiveIcon=").append(this.getUnactiveIcon().getType().name())
+                .append(", amount=").append(this.getAmount())
+                .append(", infiniteSlot=").append(this.isInfiniteSlot())
+                .append(", name=").append(this.getName())
+                .append("}");
+
+        return str.toString();
+    }
 }

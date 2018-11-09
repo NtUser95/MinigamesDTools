@@ -1,7 +1,6 @@
 package com.gmail.borlandlp.minigamesdtools.gui.hotbar.items;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
@@ -18,12 +17,16 @@ public class ExampleItemCreator implements Creator {
         ConfigurationSection configurationSection = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.HOTBAR_SLOTS, ID).getData();
 
         ItemStack activeIcon = new ItemStack(Material.getMaterial(configurationSection.get("active_icon").toString()));
-        slotItem.setActiveIcon(activeIcon);
         ItemStack unactiveIcon = new ItemStack(Material.getMaterial(configurationSection.get("unactive_icon").toString()));
+        int cooldown = Integer.parseInt(configurationSection.get("cooldown").toString());
+        boolean infinite = Boolean.parseBoolean(configurationSection.get("infinite").toString());
+        int amount = Integer.parseInt(configurationSection.get("amount").toString());
+
+        slotItem.setActiveIcon(activeIcon);
         slotItem.setUnactiveIcon(unactiveIcon);
-        slotItem.setCooldownTime(Integer.parseInt(configurationSection.get("cooldown").toString()));
-        slotItem.setInfiniteSlot(Boolean.parseBoolean(configurationSection.get("infinite").toString()));
-        slotItem.setAmount(Integer.parseInt(configurationSection.get("amount").toString()));
+        slotItem.setCooldownTime(cooldown);
+        slotItem.setInfiniteSlot(infinite);
+        slotItem.setAmount(amount);
 
         return slotItem;
     }

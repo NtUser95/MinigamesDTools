@@ -78,21 +78,28 @@ public class ExampleSpectatorLobby extends ArenaLobby implements SpectatorLobby,
         player.teleport(this.getSpawnPoint());
         this.players.add(player);
 
-        if(this.hotbar != null) {
-            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.hotbar, player);
-        } else {
-            Debug.print(Debug.LEVEL.NOTICE, "binded hotbar for player[name:" + player.getName() + "] is null.");
+        if(MinigamesDTools.getInstance().getHotbarAPI().isBindedPlayer(player)) {
+            MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
+        }
+        if(this.isHotbarEnabled()) {
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getHotbar(), player);
         }
     }
 
     @Override
     public void removePlayer(Player player) {
         this.players.remove(player);
-        MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
         /*if(player.getSpectatorTarget() != null) {
             player.setSpectatorTarget(null);
         }
         player.setGameMode(GameMode.SURVIVAL);*/
+
+        if(this.isHotbarEnabled()) {
+            MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
+        }
+        if(this.getTeamProvider().getArena().getHotbarController().isEnabled()) {
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getTeamProvider().getArena().getHotbarController().getDefaultHotbar(), player);
+        }
     }
 
     @Override

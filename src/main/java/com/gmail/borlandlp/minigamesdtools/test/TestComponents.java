@@ -49,9 +49,7 @@ public class TestComponents {
         this.put(ConfigPath.ACTIVE_POINT_REACTIONS, MinigamesDTools.getInstance().getReactionCreatorHub());
         this.put(ConfigPath.ACTIVE_POINT_BEHAVIORS, MinigamesDTools.getInstance().getBehaviorCreatorHub());
         this.put(ConfigPath.ACTIVE_POINT, MinigamesDTools.getInstance().getActivePointsCreatorHub());
-        this.put(ConfigPath.STARTER_LOBBY, MinigamesDTools.getInstance().getArenaLobbyCreatorHub());
-        this.put(ConfigPath.RESPAWN_LOBBY, MinigamesDTools.getInstance().getArenaLobbyCreatorHub());
-        this.put(ConfigPath.SPECTATOR_LOBBY, MinigamesDTools.getInstance().getArenaLobbyCreatorHub());
+        this.put(ConfigPath.ARENA_LOBBY, MinigamesDTools.getInstance().getArenaLobbyCreatorHub());
         this.put(ConfigPath.INVENTORY_GUI, MinigamesDTools.getInstance().getInventoryGUICreatorHub());
         this.put(ConfigPath.INVENTORY_GUI_SLOT, MinigamesDTools.getInstance().getInventoryGuiSlotCreatorHub());
         this.put(ConfigPath.ARENA_FOLDER, MinigamesDTools.getInstance().getArenaCreatorHub());
@@ -70,6 +68,7 @@ public class TestComponents {
                 String creatorId = conf.get("creator_id").toString();
                 creatorHub.registerRouteId2Creator(configEntityId, creatorId);
             } catch (Exception e) {
+                Debug.print(Debug.LEVEL.WARNING, "Error while link creator: " + configEntity.getID());
                 e.printStackTrace();
             }
         }
@@ -166,9 +165,7 @@ public class TestComponents {
             MinigamesDTools.getInstance().getArenaLobbyCreatorHub().registerCreator(new ExampleRespawnLobbyCreator());
             MinigamesDTools.getInstance().getArenaLobbyCreatorHub().registerCreator(new ExampleSpectatorLobbyCreator());
 
-            this.linkCreators(ConfigPath.STARTER_LOBBY);
-            this.linkCreators(ConfigPath.RESPAWN_LOBBY);
-            this.linkCreators(ConfigPath.SPECTATOR_LOBBY);
+            this.linkCreators(ConfigPath.ARENA_LOBBY);
         } catch (Exception e) {
             e.printStackTrace();
         }

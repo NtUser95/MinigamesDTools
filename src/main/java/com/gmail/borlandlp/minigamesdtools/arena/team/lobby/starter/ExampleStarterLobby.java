@@ -13,7 +13,6 @@ import java.util.Set;
 public class ExampleStarterLobby extends ArenaLobby implements StarterLobby {
     ArenaEventListener listener;
     private Set<Player> playerList = new HashSet<>();
-    private Hotbar defaultHotbar;
 
     @Override
     public void forceReleasePlayer(Player p) {
@@ -24,14 +23,25 @@ public class ExampleStarterLobby extends ArenaLobby implements StarterLobby {
     public void addPlayer(Player player) {
         Debug.print(Debug.LEVEL.NOTICE, "Player[name:" + player.getName() + "] added to StarterLobby");
         this.playerList.add(player);
-        MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.defaultHotbar, player);
+
+        if(MinigamesDTools.getInstance().getHotbarAPI().isBindedPlayer(player)) {
+            MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
+        }
+        if(this.isHotbarEnabled()) {
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getHotbar(), player);
+        }
     }
 
     @Override
     public void removePlayer(Player player) {
         Debug.print(Debug.LEVEL.NOTICE, "Player[name:" + player.getName() + "] removed from StarterLobby");
         this.playerList.remove(player);
-        MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
+        if(this.isHotbarEnabled()) {
+            MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
+        }
+        if(this.getTeamProvider().getArena().getHotbarController().isEnabled()) {
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getTeamProvider().getArena().getHotbarController().getDefaultHotbar(), player);
+        }
     }
 
     @Override
@@ -76,13 +86,5 @@ public class ExampleStarterLobby extends ArenaLobby implements StarterLobby {
     @Override
     public void onRoundEnd() {
 
-    }
-
-    public Hotbar getDefaultHotbar() {
-        return defaultHotbar;
-    }
-
-    public void setDefaultHotbar(Hotbar defaultHotbar) {
-        this.defaultHotbar = defaultHotbar;
     }
 }

@@ -7,7 +7,6 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn.ExampleRespa
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn.RespawnLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.spectator.SpectatorLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.starter.StarterLobby;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;

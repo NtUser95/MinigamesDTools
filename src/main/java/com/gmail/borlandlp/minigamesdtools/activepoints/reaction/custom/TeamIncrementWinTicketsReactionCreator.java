@@ -3,7 +3,6 @@ package com.gmail.borlandlp.minigamesdtools.activepoints.reaction.custom;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePoint;
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.Reaction;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;

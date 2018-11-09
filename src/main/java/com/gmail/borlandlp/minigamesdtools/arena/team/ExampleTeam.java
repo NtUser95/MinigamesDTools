@@ -397,7 +397,7 @@ public class ExampleTeam implements TeamProvider {
            Set<Player> respPlayers = this.getRespawnLobby().getReadyPlayersToRespawn();
            if(respPlayers.size() > 0) {
                for (Player player : respPlayers) {
-                   this.getRespawnLobby().playerRespawned(player);
+                   this.getRespawnLobby().removePlayer(player);
                    this.lobbyPlayers.remove(player);// TODO: переделать в нечто осмысленное
                    this.spawn(player);
                }
@@ -413,7 +413,7 @@ public class ExampleTeam implements TeamProvider {
             respPlayers = this.getRespawnLobby().getWaitingPlayers().keySet();
             if(respPlayers.size() > 0) {
                 for (Player player : respPlayers) {
-                    this.getRespawnLobby().playerRespawned(player);
+                    this.getRespawnLobby().removePlayer(player);
                     this.lobbyPlayers.remove(player);// TODO: переделать в нечто осмысленное
                     this.spawn(player);
                 }

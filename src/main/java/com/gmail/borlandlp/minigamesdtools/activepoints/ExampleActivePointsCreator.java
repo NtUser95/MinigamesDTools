@@ -9,8 +9,6 @@ import com.gmail.borlandlp.minigamesdtools.activepoints.type.BossEntity;
 import com.gmail.borlandlp.minigamesdtools.activepoints.type.SphereBlockPoint;
 import com.gmail.borlandlp.minigamesdtools.activepoints.type.SquareBlockPoint;
 import com.gmail.borlandlp.minigamesdtools.activepoints.type.StaticBlockPoint;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigEntity;
-import com.gmail.borlandlp.minigamesdtools.config.ConfigManager;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
