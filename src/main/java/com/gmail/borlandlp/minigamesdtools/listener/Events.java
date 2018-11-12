@@ -1,16 +1,13 @@
 package com.gmail.borlandlp.minigamesdtools.listener;
 
+import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaPlayersRelative;
-import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerDamagedLocalEvent;
-import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerDeathLocalEvent;
-import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerKilledLocalEvent;
-import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerLeaveLocalEvent;
+import com.gmail.borlandlp.minigamesdtools.arena.localevent.*;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaGameEndedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -65,6 +62,8 @@ public class Events implements Listener {
     public void onEntityDamageEvent(EntityDamageEvent event) {
         if(!(event.getEntity() instanceof Player)) {
             return;
+        } else if(event instanceof EntityDamageByEntityEvent) {
+            return;
         }
 
         Player player = (Player)event.getEntity();
@@ -74,7 +73,7 @@ public class Events implements Listener {
         }
 
         if(arena.getState() != ArenaBase.STATE.EMPTY) {
-            if(event.getCause() == EntityDamageEvent.DamageCause.LAVA || (float)(player.getHealth() - event.getFinalDamage()) <= 0.0) {
+            if((player.getHealth() - event.getFinalDamage()) <= 0D) {
                 event.setDamage(0D);
                 ArenaPlayerDeathLocalEvent arenaEvent = new ArenaPlayerDeathLocalEvent(player);
                 arena.getEventAnnouncer().announce(arenaEvent);
@@ -96,6 +95,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void onEntityDamageEvent(EntityDamageByEntityEvent event) {
+        Debug.print(Debug.LEVEL.NOTICE, event.toString());
         if(!(event.getEntity() instanceof Player)) {
             return;
         }
@@ -118,19 +118,16 @@ public class Events implements Listener {
             }
 
             if((player.getHealth() - event.getFinalDamage()) <= 0.0D) {
-                event.setDamage(0D);System.out.println();
-                if(event.getDamager() == null) {
-                    ArenaPlayerDeathLocalEvent arenaEvent = new ArenaPlayerDeathLocalEvent(player);
-                    arena.getEventAnnouncer().announce(arenaEvent);
-                } else {
-                    ArenaPlayerKilledLocalEvent arenaEvent = new ArenaPlayerKilledLocalEvent(player, event.getDamager());
-                    arena.getEventAnnouncer().announce(arenaEvent);
-                }
+                event.setDamage(0D);
+                event.setCancelled(true);
+                ArenaPlayerKilledLocalEvent arenaEvent = new ArenaPlayerKilledLocalEvent(player, event.getDamager());
+                arena.getEventAnnouncer().announce(arenaEvent);
             } else {
-                ArenaPlayerDamagedLocalEvent arenaEvent = new ArenaPlayerDamagedLocalEvent(player, event.getFinalDamage());
+                ArenaEntityDamagePlayerLocalEvent arenaEvent = new ArenaEntityDamagePlayerLocalEvent(event.getDamager(), player, event.getFinalDamage());
                 arena.getEventAnnouncer().announce(arenaEvent);
                 if(arenaEvent.isCancelled()) {
                     event.setCancelled(true);
+                    event.setDamage(0D);
                 }
             }
         } else if(arena.getState() == ArenaBase.STATE.PAUSED || arena.getState() == ArenaBase.STATE.COUNTDOWN) {
@@ -140,6 +137,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
+        Debug.print(Debug.LEVEL.NOTICE, event.toString());
         if(event.getEntity() != null) {
             Player player = event.getEntity();
             ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf(player);

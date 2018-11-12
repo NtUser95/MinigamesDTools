@@ -30,7 +30,7 @@ public class HotbarListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onItemClicked(InventoryClickEvent event) {
-        //System.out.println(event);
+
     }
 
     @EventHandler(ignoreCancelled = true)

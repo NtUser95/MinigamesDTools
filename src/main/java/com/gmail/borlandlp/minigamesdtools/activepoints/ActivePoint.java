@@ -3,8 +3,8 @@ package com.gmail.borlandlp.minigamesdtools.activepoints;
 import com.gmail.borlandlp.minigamesdtools.activepoints.behaviors.Behavior;
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.Reaction;
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.ReactionReason;
-import com.gmail.borlandlp.minigamesdtools.events.ActivePointDamagedLocalEvent;
-import com.gmail.borlandlp.minigamesdtools.events.ActivePointDestroyedLocalEvent;
+import com.gmail.borlandlp.minigamesdtools.events.ActivePointDamagedEvent;
+import com.gmail.borlandlp.minigamesdtools.events.ActivePointDestroyedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -13,7 +13,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -114,16 +113,16 @@ public abstract class ActivePoint {
 
         Cancellable event = null;
         if(this.getHealth() <= damage) {
-            event = new ActivePointDestroyedLocalEvent(this, (Player) entity);
+            event = new ActivePointDestroyedEvent(this, (Player) entity);
         } else {
-            event = new ActivePointDamagedLocalEvent(this, (Player) entity, damage);
+            event = new ActivePointDamagedEvent(this, (Player) entity, damage);
         }
 
         Bukkit.getServer().getPluginManager().callEvent((Event) event);
 
         if(event.isCancelled()) {
             return;
-        } else if(event instanceof ActivePointDestroyedLocalEvent) {
+        } else if(event instanceof ActivePointDestroyedEvent) {
             this.onDestroy();
             this.getActivePointController().deactivatePoint(this);
         }

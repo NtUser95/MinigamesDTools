@@ -44,31 +44,7 @@ public class Commands implements CommandExecutor {
 
               Player p = (Player) sender;
 
-              if(args[0].equalsIgnoreCase("test")) {
-                  Player diost = sender.getServer().getPlayer("Diost");
-                  Player quss = sender.getServer().getPlayer("Quss");
-
-                  /*
-                  double var1 = this.e - this.a.locX;
-                  double var3 = this.f - (this.a.locY + (double)this.a.getHeadHeight());
-                  double var5 = this.g - this.a.locZ;
-                  double var7 = (double)MathHelper.sqrt(var1 * var1 + var5 * var5);
-                  float var9 = (float)(MathHelper.c(var5, var1) * 57.2957763671875D) - 90.0F;
-                  float var10 = (float)(-(MathHelper.c(var3, var7) * 57.2957763671875D));
-                  this.a.pitch = this.a(this.a.pitch, var10, this.c);
-                  this.a.aP = this.a(this.a.aP, var9, this.b);
-                  */
-
-                    // var1 = куда - откуда
-                  double var1 = quss.getLocation().getX() - diost.getLocation().getX();
-                  double var5 = quss.getLocation().getZ() - diost.getLocation().getZ();
-                  float var9 = (float)(MathHelper.c(var5, var1) * 57.2957763671875D) - 90.0F;
-
-                  System.out.println("yaw:" + p.getLocation().getYaw());
-                  System.out.println("source:" + ((var9 < 0) ? var9 + 360 : var9));
-              } else if(args[0].equalsIgnoreCase("bossbar")) {
-                  bossBar.addPlayer(p);
-              } else if(args[0].equalsIgnoreCase("title")) {
+              if(args[0].equalsIgnoreCase("title")) {
 
                   // tested
                   Player diost = sender.getServer().getPlayer("Diost");
@@ -161,24 +137,6 @@ public class Commands implements CommandExecutor {
                 } else {
                     player.sendMessage(MinigamesDTools.getPrefix() + "/arena enable arena_name");
                 }
-            } else if(args[0].equalsIgnoreCase("edit")) {
-
-                if(args.length > 1) {
-
-                    String arenaName = args[1];
-                    String action = args[2];
-
-
-                } else {
-                    p.sendMessage("/arena edit <arena_name> <action>");
-                    return true;
-                }
-
-            } else if(args[0].equalsIgnoreCase("dbg_msg")) {
-                IChatBaseComponent comp = IChatBaseComponent.ChatSerializer.a("{\"text\":\"simplyteampvp message!\"}");
-                PacketPlayOutChat packet = new PacketPlayOutChat(comp, ChatMessageType.GAME_INFO);
-                ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
-                return true;
             } else if(args[0].equalsIgnoreCase("dbg_join") && p.hasPermission("arena.reload")) {
 
                 MinigamesDTools.getInstance().getArenaAPI().arenaJoinRequest(args[1], p);

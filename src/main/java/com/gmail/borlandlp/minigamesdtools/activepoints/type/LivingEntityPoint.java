@@ -37,7 +37,6 @@ public abstract class LivingEntityPoint extends ActivePoint {
         try {
             this.pathController = MinigamesDTools.getInstance().getEntityAPI().addMovePaths(this.getClassTemplate(), this.getMovePaths(), true);
         } catch (Exception e) {
-            System.out.println(this.getActivePointController());
             e.printStackTrace();
         }
         Debug.print(Debug.LEVEL.NOTICE, "spawn activepoint " + this.getName());

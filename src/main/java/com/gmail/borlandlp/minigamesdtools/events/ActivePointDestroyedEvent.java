@@ -6,13 +6,13 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ActivePointDestroyedLocalEvent extends Event implements Cancellable {
+public class ActivePointDestroyedEvent extends Event implements Cancellable {
     private ActivePoint activePoint;
     private Player destroyer;
     private boolean canceled;
     private static final HandlerList handlers = new HandlerList();
 
-    public ActivePointDestroyedLocalEvent(ActivePoint activePoint1, Player destroyer1) {
+    public ActivePointDestroyedEvent(ActivePoint activePoint1, Player destroyer1) {
         this.activePoint = activePoint1;
         this.destroyer = destroyer1;
     }

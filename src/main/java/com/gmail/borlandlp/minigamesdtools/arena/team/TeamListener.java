@@ -60,7 +60,6 @@ public class TeamListener implements ArenaEventListener {
             priority = ArenaEventPriority.LOWEST
     )
     public void onPlayerLeave(ArenaPlayerLeaveLocalEvent event) {
-        System.out.println(this.getClass().getSimpleName() + "#" + event);
         Player player = event.getPlayer();
         TeamProvider team = this.teamController.getTeamOf(player);
         if(team != null) {
@@ -75,7 +74,6 @@ public class TeamListener implements ArenaEventListener {
             priority = ArenaEventPriority.LOWEST
     )
     public void onPlayerJoin(ArenaPlayerJoinLocalEvent event) {
-        System.out.println(this.getClass().getSimpleName() + "#" + event);
         event.getTeam().addPlayer(event.getPlayer());
     }
 

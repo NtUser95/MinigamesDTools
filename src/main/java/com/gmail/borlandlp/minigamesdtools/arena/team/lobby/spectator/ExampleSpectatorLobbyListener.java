@@ -19,7 +19,6 @@ public class ExampleSpectatorLobbyListener implements ArenaEventListener, Listen
     @EventHandler
     public void onSpectateReq(ArenaRequestSpectatePlayer2Player event) {
         event.getPlayerInvoker().setSpectatorTarget(event.getPlayerTarget());
-        System.out.println(event);
     }
 
     @ArenaEventHandler

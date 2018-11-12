@@ -44,6 +44,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Level;
+
 public class MinigamesDTools extends JavaPlugin {
     private static final String prefix = ChatColor.BLUE + "[" + ChatColor.RED + "Arena" + ChatColor.BLUE + "]" + ChatColor.DARK_GREEN;
     private SQLite dbConnection;
@@ -195,7 +197,7 @@ public class MinigamesDTools extends JavaPlugin {
     public void reload() throws InvalidPathException {
        this.unloadMisc();
        this.loadMisc();
-       System.out.println(MinigamesDTools.getPrefix() + " Конфиг арен перезагружен.");
+       this.getLogger().log(Level.INFO, MinigamesDTools.getPrefix() + " Конфиг арен перезагружен.");
     }
 
     public static MinigamesDTools getInstance() {

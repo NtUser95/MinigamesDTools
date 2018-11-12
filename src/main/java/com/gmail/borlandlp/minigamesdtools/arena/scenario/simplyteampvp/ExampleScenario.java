@@ -115,6 +115,6 @@ public class ExampleScenario extends ScenarioAbstract {
 
     @ArenaEventHandler
     public void onEvent(ArenaPlayerJoinLocalEvent event) {
-        System.out.println(this.getClass().getSimpleName() + "#" + event);
+
     }
 }

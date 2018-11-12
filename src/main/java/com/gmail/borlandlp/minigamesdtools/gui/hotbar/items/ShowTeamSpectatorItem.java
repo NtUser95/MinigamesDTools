@@ -9,7 +9,6 @@ public class ShowTeamSpectatorItem extends SlotItem  {
     public boolean use(Player player) {
         PlayerRequestOpenInvGUIEvent event = new PlayerRequestOpenInvGUIEvent(player, "spectator_switch_target");
         Bukkit.getPluginManager().callEvent(event);
-        System.out.println("show spectator HUD!");
         return true;
     }
 }
