@@ -104,7 +104,7 @@ public class TeamController implements ArenaPhaseComponent {
 
 		if(team1 == null || team2 == null) {
 			return ArenaPlayersRelative.ENEMY;
-		} else if(team1 == team2) {
+		} else if(team1 == team2 && !team1.friendlyFireAllowed()) {
 			return ArenaPlayersRelative.TEAMMATE;
 		} else {
 			return ArenaPlayersRelative.ENEMY;
