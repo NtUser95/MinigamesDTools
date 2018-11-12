@@ -15,7 +15,7 @@ public class InventoryUtil {
         String[] itemInfo = info.split(",");
         String[] idDamageValueAndAmount = itemInfo[0].split("!");
         String[] idAndDamageValue = idDamageValueAndAmount[0].split(":");
-        ItemStack is = new ItemStack(Integer.valueOf(idAndDamageValue[0]).intValue(), Integer.valueOf(idDamageValueAndAmount[1]).intValue());
+        ItemStack is = new ItemStack(Integer.valueOf(idAndDamageValue[0]), Integer.valueOf(idDamageValueAndAmount[1]));
         if(itemInfo.length > 1) {
             String[] enchantments = itemInfo[1].split("!");
             String[] arr$ = enchantments;
@@ -23,9 +23,9 @@ public class InventoryUtil {
 
             for(int i$ = 0; i$ < len$; ++i$) {
                 String ench = arr$[i$];
-                if(!ench.equals("") || ench != null) {
+                if(ench != null && ench.length() > 2) {
                     String[] enchantment = ench.split(":");
-                    is.addUnsafeEnchantment(Enchantment.getByName(enchantment[0]), Integer.valueOf(enchantment[1]).intValue());
+                    is.addUnsafeEnchantment(Enchantment.getByName(enchantment[0]), Integer.valueOf(enchantment[1]));
                 }
             }
         }
@@ -57,7 +57,7 @@ public class InventoryUtil {
         if(enchantments.length() > 0) {
             for(String row : enchantments.split("#")) {
                 String[] splitted = row.split(":");
-                int enchPower = (enchantments.length() > 1) ? Integer.valueOf(splitted[1]).intValue() : 1;
+                int enchPower = (enchantments.length() > 1) ? Integer.valueOf(splitted[1]) : 1;
 
                 is.addEnchantment(Enchantment.getByName(splitted[0]), enchPower);
             }

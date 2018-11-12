@@ -111,14 +111,14 @@ public class Events implements Listener {
                 if(arena.getTeamController().getPlayersRelative(player, (Player) event.getDamager()) == ArenaPlayersRelative.TEAMMATE) {
                     if(!arena.getTeamController().getTeamOf(player).friendlyFireAllowed()) {
                         event.setCancelled(true);
-                        player.sendMessage("attack_teammate_msg");
+                        event.getDamager().sendMessage("attack_teammate_msg");
                         return;
                     }
                 }
             }
 
             if((player.getHealth() - event.getFinalDamage()) <= 0.0D) {
-                event.setDamage(0D);
+                event.setDamage(0D);System.out.println();
                 if(event.getDamager() == null) {
                     ArenaPlayerDeathLocalEvent arenaEvent = new ArenaPlayerDeathLocalEvent(player);
                     arena.getEventAnnouncer().announce(arenaEvent);
@@ -289,7 +289,7 @@ public class Events implements Listener {
         if(!(event.getEntity() instanceof Player)) return;
 
         ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf((Player) event.getEntity());
-        if(arena != null && (arena.getState() == ArenaBase.STATE.IN_PROGRESS)) {
+        if(arena != null && !arena.isRegainHealth()) {
             event.setCancelled(true);
         }
     }

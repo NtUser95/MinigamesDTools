@@ -51,6 +51,9 @@ public class ExampleArenaCreator implements Creator {
         arenaTemplate.setCountdown_disableMoving(Boolean.parseBoolean(arenaConfig.get("countdown.beforeFight.disableMoving").toString()));
         arenaTemplate.setHungerDisable(Boolean.parseBoolean(arenaConfig.get("playerHungerDisable").toString()));
         arenaTemplate.setMinPlayersToStart(Integer.parseInt(arenaConfig.get("min_players_to_start").toString()));
+        if(arenaConfig.contains("regain_health")) {
+            arenaTemplate.setRegainHealth(arenaConfig.get("regain_health").toString().equalsIgnoreCase("true"));
+        }
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load chunkLoaders...");
         ChunkLoaderController chunkLoaderController = new ChunkLoaderController();

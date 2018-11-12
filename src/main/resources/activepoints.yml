@@ -2,7 +2,7 @@ meta_info:
   pool_id: active_point
 data:
   example_sphereactivepoint:
-    creator_id: default_factory
+    creator_id: default_activepoint_factory
     type: static_block
     params:
       is_damagable: false
@@ -28,7 +28,7 @@ data:
         reactions_handler:
         - example_r
   example_squareactivepoint:
-    creator_id: default_factory
+    creator_id: default_activepoint_factory
     type: static_block
     params:
       is_damagable: false
@@ -54,7 +54,7 @@ data:
         reactions_handler:
         - example_r
   example_livingentity:
-    creator_id: default_factory
+    creator_id: default_activepoint_factory
     type: living_entity
     params:
       health: 20

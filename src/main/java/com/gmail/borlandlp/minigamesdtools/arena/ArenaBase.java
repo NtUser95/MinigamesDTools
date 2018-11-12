@@ -31,9 +31,9 @@ public class ArenaBase {
     protected boolean canItemDrop;
     protected boolean canItemPickup;
     protected boolean hungerDisable;
-    protected boolean denyHealthRegen;
     protected String gameId;
     protected int minPlayersToStart;
+    private boolean regainHealth = true;
 
     protected boolean countdown_disableMoving;
     protected long unix_startTime;
@@ -293,10 +293,6 @@ public class ArenaBase {
         return canItemPickup;
     }
 
-    public boolean isDenyHealthRegen() {
-        return denyHealthRegen;
-    }
-
     public boolean isHungerDisable() {
         return hungerDisable;
     }
@@ -327,10 +323,6 @@ public class ArenaBase {
 
     public void setGameId(String gameId) {
         this.gameId = gameId;
-    }
-
-    public void setDenyHealthRegen(boolean denyHealthRegen) {
-        this.denyHealthRegen = denyHealthRegen;
     }
 
     public void setCountdown_disableMoving(boolean countdown_disableMoving) {
@@ -411,6 +403,14 @@ public class ArenaBase {
 
     public void setJoinConditionsChain(ConditionsChain joinConditionsChain) {
         this.joinConditionsChain = joinConditionsChain;
+    }
+
+    public boolean isRegainHealth() {
+        return regainHealth;
+    }
+
+    public void setRegainHealth(boolean regainHealth) {
+        this.regainHealth = regainHealth;
     }
 
     public enum STATE {

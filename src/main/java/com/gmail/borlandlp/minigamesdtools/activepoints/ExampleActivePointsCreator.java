@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CreatorInfo(creatorId = "default_factory")
+@CreatorInfo(creatorId = "default_activepoint_factory")
 public class ExampleActivePointsCreator implements Creator {
     public ActivePoint create(String activepoint_id, AbstractDataProvider dataProvider) throws Exception {
         ActivePoint activePoint = null;
