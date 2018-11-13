@@ -1,5 +1,6 @@
 package com.gmail.borlandlp.minigamesdtools.lobby;
 
+import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerEnterEvent;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerQuitEvent;
@@ -18,6 +19,32 @@ public class LobbyListener implements Listener {
         this.lobbyController = l;
     }
 
+    // Arena events
+    @EventHandler
+    public void onPLeaveArena(ArenaPlayerQuitEvent event) {
+        Debug.print(Debug.LEVEL.NOTICE, "Handle " + event);
+        ServerLobby serverLobby = MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByPlayer(event.getPlayer());
+        if(serverLobby != null) {
+            try {
+                serverLobby.handlePlayerLeaveArena(event.getPlayer());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            this.lobbyController.getDefaultServerLobby().registerPlayer(event.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void onPJoin(ArenaPlayerEnterEvent event) {
+        Debug.print(Debug.LEVEL.NOTICE, "Handle " + event);
+        ServerLobby serverLobby = MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByPlayer(event.getPlayer());
+        if(serverLobby != null) {
+            serverLobby.setPlayerArena(event.getPlayer(), event.getArena());
+        }
+    }
+
+    // Spigot events
     @EventHandler(ignoreCancelled = true)
     public void onPJoin(PlayerJoinEvent event) {
         if(this.lobbyController.isStartLobbyEnabled()) {
@@ -26,25 +53,6 @@ public class LobbyListener implements Listener {
             } else {
                 MinigamesDTools.getInstance().getLogger().log(Level.WARNING, "Cant find default start_lobby with.");
             }
-        }
-    }
-
-    @EventHandler
-    public void onPLeaveArena(ArenaPlayerQuitEvent event) {
-        ServerLobby serverLobby = MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByPlayer(event.getPlayer());
-        if(serverLobby != null) {
-            serverLobby.spawn(event.getPlayer());
-            serverLobby.setPlayerArena(event.getPlayer(), null);
-        } else {
-            this.lobbyController.getDefaultServerLobby().registerPlayer(event.getPlayer());
-        }
-    }
-
-    @EventHandler
-    public void onPJoin(ArenaPlayerEnterEvent event) {
-        ServerLobby serverLobby = MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByPlayer(event.getPlayer());
-        if(serverLobby != null) {
-            serverLobby.setPlayerArena(event.getPlayer(), event.getArena());
         }
     }
 

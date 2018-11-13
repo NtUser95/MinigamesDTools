@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples;
+package com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.scoreboard;
 
 public class ScoreBoardManager {
    /* private ArenaBase arena = null;

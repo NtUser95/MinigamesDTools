@@ -7,8 +7,8 @@ import com.gmail.borlandlp.minigamesdtools.activepoints.behaviors.custom.Example
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.custom.ItemGiveReactionCreator;
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.custom.TeamIncrementWinTicketsReactionCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.ExampleArenaCreator;
-import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.BossbarExampleCreator;
-import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.ScoreboardExampleCreator;
+import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.bossbar.BossbarExampleCreator;
+import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.scoreboard.ScoreboardExampleCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.scenario.DefaultScenarioChainCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.scenario.simplyteampvp.ExampleScenarioCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.scenario.simplyteampvp.ExampleTwoScenarioCreator;

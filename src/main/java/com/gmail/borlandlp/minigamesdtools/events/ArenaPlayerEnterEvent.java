@@ -32,4 +32,8 @@ public class ArenaPlayerEnterEvent extends Event {
     public static HandlerList getHandlerList() {
         return handlers;
     }
+
+    public String toString() {
+        return "{Event:" + this.getClass().getSimpleName() + " arena:" + this.getArena().getName() + ", player: " + this.getPlayer().getName() + "}";
+    }
 }

@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples;
+package com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.bossbar;
 
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUIProvider;

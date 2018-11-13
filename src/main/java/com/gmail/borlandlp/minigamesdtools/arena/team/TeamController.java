@@ -3,6 +3,8 @@ package com.gmail.borlandlp.minigamesdtools.arena.team;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaPhaseComponent;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaPlayersRelative;
+import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerQuitEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -54,7 +56,15 @@ public class TeamController implements ArenaPhaseComponent {
 
 	@Override
 	public void gameEnded() {
-        this.getArena().getEventAnnouncer().unregister(this.teamListener);
+		this.getArena().getEventAnnouncer().unregister(this.teamListener);
+		ArenaPlayerQuitEvent event;
+		for (TeamProvider team : this.getTeams()) {
+			for (Player player : Objects.requireNonNull(team.getPlayers())) {
+				//team.removePlayer(player);
+				event = new ArenaPlayerQuitEvent(this.getArena(), player);
+				Bukkit.getPluginManager().callEvent(event);
+			}
+		}
 	}
 
 	@Override

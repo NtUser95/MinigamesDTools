@@ -54,27 +54,45 @@ public abstract class ServerLobby {
         this.players.put(p, a);
     }
 
+    private boolean applyHotbar(Player p) {
+        Hotbar hotbar = null;
+        try {
+            hotbar = MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar(this.hotbarID, new DataProvider());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        if(hotbar == null) {
+            Debug.print(Debug.LEVEL.WARNING, "Build of Hotbar[ID:" + this.hotbarID + "] for Player[name:" + p.getName() + "] is null! This is a build error.");
+            return false;
+        } else {
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(hotbar, p);
+        }
+
+        return true;
+    }
+
+    public void handlePlayerLeaveArena(Player p) throws Exception {
+        if(!this.players.containsKey(p)) {
+            throw new Exception("Lobby[ID:" + this.getID() + "] doesn't contain a player:" + p.getName());
+        }
+
+        this.spawn(p);
+        this.applyHotbar(p);
+    }
+
     public boolean registerPlayer(Player p) {
         Debug.print(Debug.LEVEL.NOTICE, "register Player[name:" + p.getName() + "] in ServerLobby[ID:" + this.getID() + "]");
-        if(this.hotbarID != null) {
-            Hotbar hotbar = null;
-            try {
-                hotbar = MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar(this.hotbarID, new DataProvider());
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            if(hotbar == null) {
-                Debug.print(Debug.LEVEL.WARNING, "Build of Hotbar[ID:" + this.hotbarID + "] for Player[name:" + p.getName() + "] is null! This is a build error.");
-                return false;
-            } else {
-                MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(hotbar, p);
-            }
-        }
 
         this.players.put(p, null);
         this.spawn(p);
+
+        if(this.hotbarID != null) {
+            if(!this.applyHotbar(p)) {
+                return false;
+            }
+        }
 
         return true;
     }

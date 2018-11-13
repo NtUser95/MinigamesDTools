@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,6 +51,9 @@ public class ExampleSpectatorLobby extends ArenaLobby implements SpectatorLobby,
     @Override
     public void gameEnded() {
         HandlerList.unregisterAll((Listener) this.listener);
+        for (Player player : new ArrayList<>(this.players)) {
+            this.removePlayer(player);
+        }
     }
 
     @Override

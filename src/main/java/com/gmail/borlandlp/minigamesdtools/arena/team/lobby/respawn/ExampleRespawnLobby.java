@@ -12,10 +12,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ExampleRespawnLobby extends ArenaLobby implements RespawnLobby, PlayerLocker {
     private int secondsWaiting;
@@ -79,7 +76,9 @@ public class ExampleRespawnLobby extends ArenaLobby implements RespawnLobby, Pla
 
     @Override
     public void gameEnded() {
-
+        for (Player player : new ArrayList<>(this.players.keySet())) {
+            this.removePlayer(player);
+        }
     }
 
     // draw inventorygui and other func

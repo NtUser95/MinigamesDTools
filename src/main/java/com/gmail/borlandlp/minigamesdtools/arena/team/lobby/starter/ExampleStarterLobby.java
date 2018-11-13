@@ -7,6 +7,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -70,7 +71,9 @@ public class ExampleStarterLobby extends ArenaLobby implements StarterLobby {
 
     @Override
     public void gameEnded() {
-
+        for (Player player : new ArrayList<>(this.playerList)) {
+            this.removePlayer(player);
+        }
     }
 
     @Override
