@@ -18,19 +18,7 @@ public class TeamListener implements ArenaEventListener {
             priority = ArenaEventPriority.LOWEST
     )
     public void onPlayerDeath(ArenaPlayerDeathLocalEvent event) {
-        TeamProvider teamProvider = this.teamController.getTeamOf(event.getPlayer());
-        ArenaPlayerRespawnLocalEvent arenaPlayerRespawnLocalEvent = new ArenaPlayerRespawnLocalEvent(teamProvider, event.getPlayer());
-        teamProvider.getArena().getEventAnnouncer().announce(arenaPlayerRespawnLocalEvent);
-        if(!arenaPlayerRespawnLocalEvent.isCancelled()) {
-            if(((ArenaLobby)teamProvider.getRespawnLobby()).isEnabled()) {
-                teamProvider.movePlayerTo((ArenaLobby) teamProvider.getRespawnLobby(), event.getPlayer());
-            } else {
-                teamProvider.spawn(event.getPlayer());
-            }
-        } else {
-            teamProvider.setSpectate(event.getPlayer(), true);
-        }
-
+        this.handlePlayerDeath(event.getPlayer());
         Debug.print(Debug.LEVEL.NOTICE, this.getClass().getSimpleName() + "#" + event);
     }
 
@@ -39,20 +27,25 @@ public class TeamListener implements ArenaEventListener {
             priority = ArenaEventPriority.LOWEST
     )
     public void onPlayerKilled(ArenaPlayerKilledLocalEvent event) {
-        TeamProvider teamProvider = this.teamController.getTeamOf(event.getPlayer());
-        ArenaPlayerRespawnLocalEvent arenaPlayerRespawnLocalEvent = new ArenaPlayerRespawnLocalEvent(teamProvider, event.getPlayer());
-        teamProvider.getArena().getEventAnnouncer().announce(arenaPlayerRespawnLocalEvent);
-        if(!arenaPlayerRespawnLocalEvent.isCancelled()) {
+        this.handlePlayerDeath(event.getPlayer());
+        Debug.print(Debug.LEVEL.NOTICE, this.getClass().getSimpleName() + "#" + event);
+    }
+
+    private void handlePlayerDeath(Player p) {
+        TeamProvider teamProvider = this.teamController.getTeamOf(p);
+        ArenaPlayerRespawnRequestLocalEvent arenaPlayerRespawnRequestLocalEvent = new ArenaPlayerRespawnRequestLocalEvent(teamProvider, p);
+        teamProvider.getArena().getEventAnnouncer().announce(arenaPlayerRespawnRequestLocalEvent);
+        if(!arenaPlayerRespawnRequestLocalEvent.isCancelled()) {
             if(((ArenaLobby)teamProvider.getRespawnLobby()).isEnabled()) {
-                teamProvider.movePlayerTo((ArenaLobby) teamProvider.getRespawnLobby(), event.getPlayer());
+                teamProvider.movePlayerTo((ArenaLobby) teamProvider.getRespawnLobby(), p);
             } else {
-                teamProvider.spawn(event.getPlayer());
+                ArenaPlayerRespawnLocalEvent arenaPlayerRespawnLocalEvent = new ArenaPlayerRespawnLocalEvent(teamProvider, p);
+                teamProvider.getArena().getEventAnnouncer().announce(arenaPlayerRespawnLocalEvent);
+                teamProvider.spawn(p);
             }
         } else {
-            teamProvider.setSpectate(event.getPlayer(), true);
+            teamProvider.setSpectate(p, true);
         }
-
-        Debug.print(Debug.LEVEL.NOTICE, this.getClass().getSimpleName() + "#" + event);
     }
 
     @ArenaEventHandler(
@@ -76,19 +69,4 @@ public class TeamListener implements ArenaEventListener {
     public void onPlayerJoin(ArenaPlayerJoinLocalEvent event) {
         event.getTeam().addPlayer(event.getPlayer());
     }
-
-    /*
-    @ArenaEventHandler(
-            ignoreCancelled = true,
-            priority = ArenaEventPriority.LOWEST
-    )
-    public void onPlayerRespawn(ArenaPlayerRespawnLocalEvent event) {
-        if(this.test.contains(event.getPlayer())) {
-            event.setCancelled(true);
-            Debug.print(Debug.LEVEL.NOTICE, "Revoke respawn for " + event.getPlayer().getName());
-        } else {
-            this.test.add(event.getPlayer());
-        }
-    }
-    */
 }

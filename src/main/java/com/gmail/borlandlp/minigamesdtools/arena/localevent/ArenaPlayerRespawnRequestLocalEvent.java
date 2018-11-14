@@ -4,11 +4,12 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
-public class ArenaPlayerRespawnLocalEvent extends ArenaEvent {
+public class ArenaPlayerRespawnRequestLocalEvent extends ArenaEvent implements Cancellable {
     private Player player;
     private TeamProvider teamProvider;
+    private boolean canceled;
 
-    public ArenaPlayerRespawnLocalEvent(TeamProvider t, Player p) {
+    public ArenaPlayerRespawnRequestLocalEvent(TeamProvider t, Player p) {
         this.player = p;
         this.teamProvider = t;
     }
@@ -19,5 +20,15 @@ public class ArenaPlayerRespawnLocalEvent extends ArenaEvent {
 
     public TeamProvider getTeamProvider() {
         return teamProvider;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return this.canceled;
+    }
+
+    @Override
+    public void setCancelled(boolean b) {
+        this.canceled = b;
     }
 }

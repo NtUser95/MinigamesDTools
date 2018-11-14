@@ -15,7 +15,7 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Radar2d {
+public class Radar2d implements Radar {
     private List<Marker> markers = new ArrayList<>();
     private int drawDistance = 30; // blocks
     private Player viewer;
@@ -117,5 +117,15 @@ public class Radar2d {
 
     public Marker getCurrentMarker(Entity entity) {
         return this.markers.stream().filter(m -> m.isOwner(entity)).findFirst().orElse(null);
+    }
+
+    @Override
+    public void onUnload() {
+        this.bossBar.removePlayer(this.getViewer());
+    }
+
+    @Override
+    public void onLoad() {
+
     }
 }
