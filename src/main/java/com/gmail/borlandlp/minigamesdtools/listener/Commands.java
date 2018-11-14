@@ -10,6 +10,8 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
 import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
+import com.gmail.borlandlp.minigamesdtools.gui.other.radar2d.BlockMarker;
+import com.gmail.borlandlp.minigamesdtools.gui.other.radar2d.Radar2d;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaMathHelper;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaUtils;
 import net.minecraft.server.v1_12_R1.*;
@@ -25,6 +27,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.io.File;
@@ -86,6 +89,19 @@ public class Commands implements CommandExecutor {
                       }
                   }
                   bossBar.setTitle(stringBuilder.toString());
+              } else if(args[0].equalsIgnoreCase("test_gui")) {
+
+                  final Radar2d radar2d = new Radar2d(BarStyle.SOLID, BarColor.GREEN);
+                  radar2d.setViewer(player);
+                  radar2d.addMarker(new BlockMarker(player.getWorld().getBlockAt(-126, 65, 248), ChatColor.RED));
+                  radar2d.addMarker(new BlockMarker(player.getWorld().getBlockAt(-136, 65, 248), ChatColor.BLUE));
+
+                  new BukkitRunnable() {
+                      public void run() {
+                          radar2d.draw();
+                      }
+                  }.runTaskTimer(MinigamesDTools.getInstance(), 0, 20);
+
               } else if(args[0].equalsIgnoreCase("lobby")) {
                   MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByID("example_lobby").registerPlayer(player);
               } else if(args[0].equalsIgnoreCase("lobby_leave")) {
