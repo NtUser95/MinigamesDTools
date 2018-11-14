@@ -17,10 +17,6 @@ data:
     gui_provider:
     - 'BossbarExample'
     - 'ScoreboardExample'
-    active_points:
-    - 'example_sphereactivepoint'
-    - 'example_squareactivepoint'
-    - 'example_livingentity'
     interactive_hotbar:
       enabled: false
       hotbar_id: ExampleHeldHotbar
@@ -44,15 +40,6 @@ data:
       - slot=1,id=BOW,amount=1
       - slot=2,id=ARROW,amount=32
       - slot=3,id=GRILLED_PORK,amount=5
-    prize:
-      economy:
-        enabled: true
-        amount: 50
-      items:
-        enabled: false
-        itemPrizes:
-        - id=DIAMOND,amount=1
-        - id=DIAMOND_SWORD,amount=1,enchantments=DAMAGE_ALL:3#FIRE_ASPECT:1
     countdown:
       beforeTeleport:
         duration: 20

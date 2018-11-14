@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.sql;
+package com.gmail.borlandlp.minigamesdtools.database;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

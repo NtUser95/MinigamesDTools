@@ -1,12 +1,9 @@
-package com.gmail.borlandlp.minigamesdtools.sql;
+package com.gmail.borlandlp.minigamesdtools.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
 
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
 import org.bukkit.entity.Player;
@@ -168,7 +165,7 @@ public abstract class Database {
             }
 
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            //plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
             try {
                 if (ps != null)
@@ -176,7 +173,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                //plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
 
@@ -202,7 +199,7 @@ public abstract class Database {
             ps.executeUpdate();
 
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            //plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
             try {
                 if (ps != null)
@@ -210,7 +207,7 @@ public abstract class Database {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
+                //plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionClose(), ex);
             }
         }
         return;

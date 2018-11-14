@@ -34,7 +34,7 @@ import com.gmail.borlandlp.minigamesdtools.listener.Commands;
 import com.gmail.borlandlp.minigamesdtools.listener.Events;
 import com.gmail.borlandlp.minigamesdtools.lobby.LobbyHubController;
 import com.gmail.borlandlp.minigamesdtools.lobby.LobbyCreatorHub;
-import com.gmail.borlandlp.minigamesdtools.sql.SQLite;
+import com.gmail.borlandlp.minigamesdtools.database.SQLite;
 
 import com.gmail.borlandlp.minigamesdtools.test.TestComponents;
 import net.minecraft.server.v1_12_R1.EntityEnderDragon;
@@ -48,7 +48,6 @@ import java.util.logging.Level;
 
 public class MinigamesDTools extends JavaPlugin {
     private static final String prefix = ChatColor.BLUE + "[" + ChatColor.RED + "Arena" + ChatColor.BLUE + "]" + ChatColor.DARK_GREEN;
-    private SQLite dbConnection;
     private ConfigLoader configLoader;
 
     private CustomMinigamesLoader customMinigamesLoader;
@@ -149,9 +148,6 @@ public class MinigamesDTools extends JavaPlugin {
 
         (new TestComponents()).load();
 
-        // переделать инициализацию БД. Это тут вообще с лохматых годов.
-        dbConnection = new SQLite();
-        dbConnection.load();
         Bukkit.getPluginManager().callEvent(new INITIALIZATION_EVENT());
 
         Debug.print(Debug.LEVEL.NOTICE, "##################################################");
@@ -217,10 +213,6 @@ public class MinigamesDTools extends JavaPlugin {
     public ConfigProvider getConfigProvider()
     {
       return this.configManager;
-    }
-
-    public SQLite getDBWrapper() {
-       return dbConnection;
     }
 
     public GUICreatorHub getGuiCreatorHub() {

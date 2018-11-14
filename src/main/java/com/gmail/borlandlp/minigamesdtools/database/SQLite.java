@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.sql;
+package com.gmail.borlandlp.minigamesdtools.database;
 
 import java.io.File;
 import java.io.IOException;
