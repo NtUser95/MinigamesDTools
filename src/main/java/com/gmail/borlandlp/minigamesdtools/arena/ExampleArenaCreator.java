@@ -20,15 +20,13 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.TeamController;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CreatorInfo(creatorId = "default_arena")
 public class ExampleArenaCreator implements Creator {
@@ -104,6 +102,21 @@ public class ExampleArenaCreator implements Creator {
             teamController.addTeam(teamProvider);
         }
         arenaTemplate.setTeamController(teamController);
+
+        // gen colors
+        if( arenaTemplate.getTeamController().getTeams().size() > ChatColor.values().length) {
+            throw new Exception("Max team limit reached! [limit=" + ChatColor.values().length + "]");
+        }
+        List<ChatColor> usedColors = new ArrayList<>();
+        for (TeamProvider team : arenaTemplate.getTeamController().getTeams()) {
+            ChatColor color = null;
+            do {
+                int rnd = new Random().nextInt(ChatColor.values().length - 1);
+                color = ChatColor.values()[rnd];
+            } while(color == null || usedColors.contains(color));
+            usedColors.add(color);
+            team.setColor(color);
+        }
 
         //conditions
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load conditions...");

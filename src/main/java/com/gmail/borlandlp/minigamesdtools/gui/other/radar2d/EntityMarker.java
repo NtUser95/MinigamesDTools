@@ -15,7 +15,7 @@ public class EntityMarker implements Marker {
 
     @Override
     public boolean isOwner(Object object) {
-        return object == this.entity; // link comparison
+        return object instanceof Entity && this.entity.equals((Entity) object);
     }
 
     @Override

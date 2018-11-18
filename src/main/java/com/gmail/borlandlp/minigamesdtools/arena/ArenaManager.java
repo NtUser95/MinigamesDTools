@@ -187,7 +187,7 @@ public class ArenaManager implements APIComponent, ArenaAPI {
         arenaBase.getEventAnnouncer().announce(new ArenaPlayerJoinLocalEvent(player, team));
         Bukkit.getPluginManager().callEvent(new ArenaPlayerEnterEvent(arenaBase, player));
 
-        if(arenaBase.getTeamController().countCurrentPlayers() >= arenaBase.getMinPlayersToStart()) {
+        if(arenaBase.getTeamController().countCurrentPlayers() >= arenaBase.getMinPlayersToStart() && arenaBase.getState() == ArenaBase.STATE.EMPTY) {
             arenaBase.delayedStartArena();
         }
 

@@ -5,6 +5,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.ArenaPhaseComponent;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn.RespawnLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.spectator.SpectatorLobby;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -14,7 +15,11 @@ public interface TeamProvider extends ArenaPhaseComponent {
     boolean containsFreeSlots(int forAmountPlayers);
     void spawn(Player player);
 
+    ChatColor getColor();
+    void setColor(ChatColor c);
+
     boolean friendlyFireAllowed();
+    void setFriendlyFireAllowed(boolean b);
 
     void setArena(ArenaBase arena);
     ArenaBase getArena();

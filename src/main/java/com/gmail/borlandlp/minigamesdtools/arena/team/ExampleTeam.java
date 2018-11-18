@@ -3,6 +3,7 @@ package com.gmail.borlandlp.minigamesdtools.arena.team;
 import java.util.*;
 
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
+import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerRespawnLocalEvent;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.respawn.RespawnLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.spectator.SpectatorLobby;
@@ -15,10 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-/*
-* ToDo:
-* lobbyPlayers - в beforeRoundStarting выпсукать всех, но как быть со зрителями?
-* */
 public class ExampleTeam implements TeamProvider {
    private int maxPlayers;
    private HashMap<String, Player> players = new HashMap<>();
@@ -31,6 +28,7 @@ public class ExampleTeam implements TeamProvider {
    protected boolean manageInventory;
    protected boolean manageArmor;
    protected boolean friendlyFireAllowed;
+   protected ChatColor color;
 
    protected SpectatorLobby spectatorLobby;
    protected RespawnLobby respawnLobby;
@@ -42,12 +40,6 @@ public class ExampleTeam implements TeamProvider {
 
     public void setArena(ArenaBase arenaBase) {
         this.arenaBase = arenaBase;
-    }
-
-    public void prepareToFightAll() {
-        for(Player player : this.getPlayers()) {
-            this.prepareToFight(player);
-        }
     }
 
     public void prepareToFight(Player player) {
@@ -64,58 +56,9 @@ public class ExampleTeam implements TeamProvider {
         player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         player.setFoodLevel(20);
         player.setFireTicks(0);
-        player.setFoodLevel(20);
 
         if(player.isInsideVehicle()) {
             player.leaveVehicle();
-        }
-    }
-
-    public void afterFight() {
-        for(Player player : this.getPlayers()) {
-            if(player == null) {
-                continue;
-            }
-
-            if(player.isInsideVehicle()) {
-                player.leaveVehicle();
-            }
-
-            if(isManageArmor()) {
-                player.getInventory().setArmorContents((ItemStack[])null);
-            }
-            if(isManageInventory()) {
-                player.getInventory().clear();
-            }
-        }
-    }
-
-    public void preparePlayersAfterFight() {
-       if(!this.isManageArmor()) {
-           return;
-       }
-
-        for(Player player : this.getPlayers()) {
-            player.getInventory().clear();
-            player.getInventory().setArmorContents((ItemStack[])null);
-        }
-    }
-
-    public void preparePlayersToGame() {
-        for(Player player : this.getPlayers()) {
-            if(player != null) {
-                this.fromTeleport.put(player.getName(), player.getLocation());
-            }
-        }
-    }
-
-    public void preparePlayersAfterGame() {
-        for(String nickname : this.players.keySet()) {
-            Player player = this.getPlayer(nickname);
-            if(player != null && player.isOnline()) {
-                this.tpUserAtHome(player);
-            }
-            this.fromTeleport.remove(nickname);
         }
     }
 
@@ -127,26 +70,6 @@ public class ExampleTeam implements TeamProvider {
         } else {
             Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "spawn " + nickname);
         }
-    }
-
-    public void doRespawnAndEquipPlayers() {
-       for(Player player : this.getPlayers()) {
-           if(player == null) {
-               continue;
-           }
-
-           this.prepareToFight(player);
-           this.spawn(player);
-       }
-    }
-
-    public void doRespawnAfterDeath(Player player) {
-        if(player == null || ArenaUtils.isNpc(player)) {
-            return;
-        }
-
-        this.prepareToFight(player);
-        this.spawn(player);
     }
 
     public Player getPlayer(String nickname) {
@@ -165,12 +88,29 @@ public class ExampleTeam implements TeamProvider {
                 spawnLoc = (new Random()).nextInt(this.getSpawnPoints().size()-1);
             }
             player.teleport(this.spawnPoints.get(spawnLoc));
+
+            ArenaPlayerRespawnLocalEvent arenaPlayerRespawnLocalEvent = new ArenaPlayerRespawnLocalEvent(this, player);
+            this.getArena().getEventAnnouncer().announce(arenaPlayerRespawnLocalEvent);
         }
+    }
+
+    @Override
+    public ChatColor getColor() {
+        return this.color;
+    }
+
+    @Override
+    public void setColor(ChatColor c) {
+        this.color = c;
     }
 
     @Override
     public boolean friendlyFireAllowed() {
         return this.friendlyFireAllowed;
+    }
+
+    public void setFriendlyFireAllowed(boolean b) {
+       this.friendlyFireAllowed = b;
     }
 
     public void setManageInventory(boolean b) {
@@ -306,27 +246,27 @@ public class ExampleTeam implements TeamProvider {
     }
 
     @Override
-   public boolean addPlayer(Player player) {
-      this.players.put(player.getName(), player);
-      return true;
+    public boolean addPlayer(Player player) {
+       this.players.put(player.getName(), player);
+       return true;
    }
 
-   @Override
-   public boolean removePlayer(Player player) {
+    @Override
+    public boolean removePlayer(Player player) {
        this.players.remove(player.getName());
        return true;
-    }
+   }
 
-   @Override
-   public Set<Player> getPlayers() {
+    @Override
+    public Set<Player> getPlayers() {
        return new HashSet<>(this.players.values());
    }
 
-   public boolean contains(Player player) {
+    public boolean contains(Player player) {
        return this.players.containsKey(player.getName());
    }
 
-   public boolean containsByName(String name) {
+    public boolean containsByName(String name) {
        return this.players.containsKey(name);
    }
 

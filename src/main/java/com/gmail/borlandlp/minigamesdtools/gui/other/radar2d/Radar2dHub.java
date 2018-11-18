@@ -1,7 +1,11 @@
 package com.gmail.borlandlp.minigamesdtools.gui.other.radar2d;
 
+import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
+import com.gmail.borlandlp.minigamesdtools.arena.ArenaBase;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaPhaseComponent;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +13,7 @@ import java.util.Map;
 
 public class Radar2dHub implements ArenaPhaseComponent {
     private Map<Player, Radar> radar2dMap = new HashMap<>();
+    private BukkitTask task;
 
     public Map<Player, Radar> getAll() {
         return new HashMap<>(this.radar2dMap);
@@ -46,11 +51,23 @@ public class Radar2dHub implements ArenaPhaseComponent {
 
     @Override
     public void beforeGameStarting() {
-
+        final Radar2dHub obj = this;
+        this.task = new BukkitRunnable() {
+            public void run() {
+                obj.drawRadars();
+            }
+        }.runTaskTimer(MinigamesDTools.getInstance(), 0, 5);
     }
 
     @Override
     public void gameEnded() {
+        if(this.task != null) {
+            try {
+                this.task.cancel();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         for (Player player : new ArrayList<>(this.radar2dMap.keySet())) {
             try {
                 this.remove(player);
@@ -60,8 +77,7 @@ public class Radar2dHub implements ArenaPhaseComponent {
         }
     }
 
-    @Override
-    public void update() {
+    private void drawRadars() {
         for (Radar radar : this.radar2dMap.values()) {
             try {
                 radar.draw();
@@ -69,6 +85,11 @@ public class Radar2dHub implements ArenaPhaseComponent {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void update() {
+
     }
 
     @Override

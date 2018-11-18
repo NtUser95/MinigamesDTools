@@ -39,8 +39,6 @@ public class TeamListener implements ArenaEventListener {
             if(((ArenaLobby)teamProvider.getRespawnLobby()).isEnabled()) {
                 teamProvider.movePlayerTo((ArenaLobby) teamProvider.getRespawnLobby(), p);
             } else {
-                ArenaPlayerRespawnLocalEvent arenaPlayerRespawnLocalEvent = new ArenaPlayerRespawnLocalEvent(teamProvider, p);
-                teamProvider.getArena().getEventAnnouncer().announce(arenaPlayerRespawnLocalEvent);
                 teamProvider.spawn(p);
             }
         } else {

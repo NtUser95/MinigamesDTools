@@ -38,13 +38,14 @@ public class Radar2d implements Radar {
         String[] strs = new String[(this.radarSize % 2) == 0 ? this.radarSize + 1 : this.radarSize];
 
         for (Marker marker : this.markers) {
-            if(this.viewer.getLocation().distance(marker.getLocation()) > this.drawDistance) {
+            Location viewerLocation = this.viewer.getLocation();
+            if(viewerLocation.distance(marker.getLocation()) > this.drawDistance) {
                 continue;
             }
 
-            Vector hopVec = this.viewer.getLocation().clone().getDirection().multiply(this.drawDistance);
-            Location hopLoc = this.viewer.getLocation().clone().add(hopVec);
-            ArenaMathHelper.Interposition interposition = ArenaMathHelper.getInterpositionOfPoint(this.viewer.getLocation(), hopLoc, marker.getLocation());
+            Vector hopVec = viewerLocation.clone().getDirection().multiply(this.drawDistance);
+            Location hopLoc = viewerLocation.clone().add(hopVec);
+            ArenaMathHelper.Interposition interposition = ArenaMathHelper.getInterpositionOfPoint(viewerLocation, hopLoc, marker.getLocation());
 
             double currentDegreesDiff = ArenaMathHelper.degreesBetweenPlayerAndLocation(this.viewer, marker.getLocation());
             double degreesDiffPercent = (currentDegreesDiff / (maxDegreesDiff * 2D)) * 100D;
