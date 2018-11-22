@@ -4,14 +4,17 @@ import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaComponent;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaEventListener;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaPhaseComponent;
+import com.gmail.borlandlp.minigamesdtools.arena.team.ExampleTeam;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
+import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
+import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 public class HotbarController extends ArenaComponent implements ArenaPhaseComponent {
-    private Hotbar defaultHotbar;
+    private String defaultHotbarId;
     private Listener listener;
     private boolean enabled = false;
 
@@ -23,12 +26,19 @@ public class HotbarController extends ArenaComponent implements ArenaPhaseCompon
         this.enabled = enabled;
     }
 
-    public void setDefaultHotbar(Hotbar defaultH) {
-        this.defaultHotbar = defaultH;
+    public void setDefaultHotbarId(String defaultH) {
+        this.defaultHotbarId = defaultH;
     }
 
-    public Hotbar getDefaultHotbar() {
-        return this.defaultHotbar;
+    public String getDefaultHotbarId() {
+        return this.defaultHotbarId;
+    }
+
+    public Hotbar buildDefaultHotbarFor(Player player) throws Exception {
+        String hotbarID = this.getDefaultHotbarId();
+        return MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar(hotbarID, new DataProvider() {{
+            this.set("player", player);
+        }});
     }
 
     @Override
@@ -54,8 +64,14 @@ public class HotbarController extends ArenaComponent implements ArenaPhaseCompon
 
         for (TeamProvider team : this.getArena().getTeamController().getTeams()) {
             for (Player player : team.getPlayers()) {
-                if(player != null) {
-                    MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getDefaultHotbar(), player);
+                if(player == null) {
+                    continue;
+                }
+
+                try {
+                    MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.buildDefaultHotbarFor(player), player);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

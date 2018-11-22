@@ -8,8 +8,17 @@ import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @CreatorInfo(creatorId = "default_server_lobby")
 public class ExampleLobbyCreator implements Creator {
+    @Override
+    public List<String> getDataProviderRequiredFields() {
+        return new ArrayList<>();
+    }
+
     @Override
     public Object create(String ID, AbstractDataProvider dataProvider) throws Exception {
         ConfigurationSection conf = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.SERVER_LOBBY, ID).getData();

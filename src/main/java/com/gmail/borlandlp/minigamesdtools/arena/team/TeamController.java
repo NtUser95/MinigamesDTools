@@ -6,13 +6,12 @@ import com.gmail.borlandlp.minigamesdtools.arena.ArenaPlayersRelative;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerQuitEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
 
 public class TeamController implements ArenaPhaseComponent {
 	private ArrayList<TeamProvider> teams = new ArrayList<>();
-	private TeamListener teamListener;
+	private ExampleTeamListener exampleTeamListener;
 	private ArenaBase arena;
 
 	public TeamController(ArenaBase arena) {
@@ -37,9 +36,9 @@ public class TeamController implements ArenaPhaseComponent {
 
 	@Override
 	public void onInit() {
-		this.teamListener = new TeamListener(this);
+		this.exampleTeamListener = new ExampleTeamListener(this);
 		try {
-			this.getArena().getEventAnnouncer().register(this.teamListener);
+			this.getArena().getEventAnnouncer().register(this.exampleTeamListener);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -57,7 +56,7 @@ public class TeamController implements ArenaPhaseComponent {
 
 	@Override
 	public void gameEnded() {
-		this.getArena().getEventAnnouncer().unregister(this.teamListener);
+		this.getArena().getEventAnnouncer().unregister(this.exampleTeamListener);
 		ArenaPlayerQuitEvent event;
 		for (TeamProvider team : this.getTeams()) {
 			for (Player player : Objects.requireNonNull(team.getPlayers())) {

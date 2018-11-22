@@ -33,7 +33,7 @@ public class HotbarApiInst implements HotbarAPI, APIComponent {
             public void run() {
                 task.update();
             }
-        }.runTaskTimer(MinigamesDTools.getInstance(), 0, 20);
+        }.runTaskTimer(MinigamesDTools.getInstance(), 0, 10);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class HotbarApiInst implements HotbarAPI, APIComponent {
 
     public void update() {
         for(Player player : new ArrayList<>(this.getAll().keySet())) {
-            if(player != null) {
+            if(player != null && !player.isDead()) {
                 Hotbar hotbar = this.getAll().get(player);
                 ItemStack[] drawData = null;
                 try {
@@ -73,29 +73,6 @@ public class HotbarApiInst implements HotbarAPI, APIComponent {
                     }
                     player.getInventory().setContents(inventory);
                 }
-
-                // TODO: проверить кооректность работы и удалить старый кусок кода
-                /*
-                boolean inventoryChanged = false;
-
-                for(int i = 0; i < 9; i++) {
-                    if((inventory[i] == null && drawData[i] != null) || (inventory[i] != null && drawData[i] == null)) {
-                        inventory[i] = drawData[i];
-                        inventoryChanged = true;
-                    } else if(inventory[i] != null && drawData[i] != null) {
-                        boolean materialChanged = inventory[i].getType() != drawData[i].getType();
-                        boolean amountChanged = inventory[i].getAmount() != drawData[i].getAmount();
-                        if(materialChanged || amountChanged) {
-                            inventory[i] = drawData[i];
-                            inventoryChanged = true;
-                        }
-                    }
-                }
-
-                if(inventoryChanged) {
-                    player.getInventory().setContents(inventory);
-                }
-                */
             }
         }
     }

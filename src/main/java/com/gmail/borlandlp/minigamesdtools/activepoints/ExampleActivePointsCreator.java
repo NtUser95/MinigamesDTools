@@ -30,6 +30,11 @@ import java.util.Map;
 
 @CreatorInfo(creatorId = "default_activepoint_factory")
 public class ExampleActivePointsCreator implements Creator {
+    @Override
+    public List<String> getDataProviderRequiredFields() {
+        return new ArrayList<>();
+    }
+
     public ActivePoint create(String activepoint_id, AbstractDataProvider dataProvider) throws Exception {
         ActivePoint activePoint = null;
         ConfigurationSection activePointConfig = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.ACTIVE_POINT, activepoint_id).getData();

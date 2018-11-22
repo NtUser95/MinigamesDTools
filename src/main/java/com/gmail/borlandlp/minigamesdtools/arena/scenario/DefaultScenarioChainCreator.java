@@ -16,6 +16,11 @@ import java.util.Map;
 @CreatorInfo(creatorId = "default_scenario_chain")
 public class DefaultScenarioChainCreator implements Creator {
     @Override
+    public List<String> getDataProviderRequiredFields() {
+        return new ArrayList<>();
+    }
+
+    @Override
     public ScenarioChainController create(String ID, AbstractDataProvider dataProvider) throws Exception {
         ConfigurationSection configurationSection = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.SCENARIO_CHAIN, ID).getData();
         if(configurationSection == null) {

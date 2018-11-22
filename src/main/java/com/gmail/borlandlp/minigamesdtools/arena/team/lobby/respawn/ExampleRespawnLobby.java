@@ -41,7 +41,7 @@ public class ExampleRespawnLobby extends ArenaLobby implements RespawnLobby, Pla
             MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
         }
         if(this.isHotbarEnabled()) {
-            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getHotbar(), player);
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getHotbarFor(player), player);
         }
     }
 
@@ -55,7 +55,11 @@ public class ExampleRespawnLobby extends ArenaLobby implements RespawnLobby, Pla
             MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
         }
         if(this.getTeamProvider().getArena().getHotbarController().isEnabled()) {
-            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getTeamProvider().getArena().getHotbarController().getDefaultHotbar(), player);
+            try {
+                MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getTeamProvider().getArena().getHotbarController().buildDefaultHotbarFor(player), player);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

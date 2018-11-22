@@ -4,7 +4,6 @@ import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaEventListener;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
-import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class ExampleStarterLobby extends ArenaLobby implements StarterLobby {
             MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
         }
         if(this.isHotbarEnabled()) {
-            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getHotbar(), player);
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getHotbarFor(player), player);
         }
     }
 
@@ -41,7 +40,11 @@ public class ExampleStarterLobby extends ArenaLobby implements StarterLobby {
             MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
         }
         if(this.getTeamProvider().getArena().getHotbarController().isEnabled()) {
-            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getTeamProvider().getArena().getHotbarController().getDefaultHotbar(), player);
+            try {
+                MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getTeamProvider().getArena().getHotbarController().buildDefaultHotbarFor(player), player);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

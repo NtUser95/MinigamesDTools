@@ -24,12 +24,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
 
 @CreatorInfo(creatorId = "default_arena")
 public class ExampleArenaCreator implements Creator {
+    @Override
+    public List<String> getDataProviderRequiredFields() {
+        return new ArrayList<>();
+    }
+
     @Override
     public ArenaBase create(String ID, AbstractDataProvider dataProvider) throws Exception {
         ArenaBase arenaTemplate = new ArenaBase(ID);
@@ -131,18 +135,8 @@ public class ExampleArenaCreator implements Creator {
         hotbarController.setArena(arenaTemplate);
         if(Boolean.parseBoolean(arenaConfig.get("interactive_hotbar.enabled").toString())) {
             String hotbarID = arenaConfig.get("interactive_hotbar.hotbar_id").toString();
-            if(MinigamesDTools.getInstance().getHotbarCreatorHub().containsRouteId2Creator(hotbarID)) {
-                Hotbar hotbar = MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar(hotbarID, new DataProvider());
-                if(hotbar == null) {
-                    throw new Exception("Internal error while building Hotbar[ID:" + hotbarID + "]");
-                } else {
-                    hotbarController.setDefaultHotbar(hotbar);
-                    Debug.print(Debug.LEVEL.NOTICE, "Hotbar is enabled for Arena " + ID);
-                    hotbarController.setEnabled(true);
-                }
-            } else {
-                throw new Exception("cant find creator for hotbar[ID:" + hotbarID + "]");
-            }
+            hotbarController.setDefaultHotbarId(hotbarID);
+            hotbarController.setEnabled(true);
         } else {
             Debug.print(Debug.LEVEL.NOTICE, "Hotbar is disabled for Arena " + ID);
         }

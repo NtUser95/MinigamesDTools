@@ -57,7 +57,9 @@ public abstract class ServerLobby {
     private boolean applyHotbar(Player p) {
         Hotbar hotbar = null;
         try {
-            hotbar = MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar(this.hotbarID, new DataProvider());
+            hotbar = MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar(this.hotbarID, new DataProvider() {{
+                this.set("player", p);
+            }});
         } catch (Exception e) {
             e.printStackTrace();
             return false;

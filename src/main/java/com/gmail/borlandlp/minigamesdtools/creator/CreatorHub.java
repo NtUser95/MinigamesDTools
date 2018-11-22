@@ -2,7 +2,9 @@ package com.gmail.borlandlp.minigamesdtools.creator;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 public abstract class CreatorHub implements ICreatorHub {
@@ -78,13 +80,20 @@ public abstract class CreatorHub implements ICreatorHub {
      * */
     @Override
     public Object create(String itemID, AbstractDataProvider dataProvider) throws Exception {
-        if(!getDataProviderRules().isCorrectProvider(dataProvider)) {
-            throw new Exception("Data provider is incorrect!");
-        } else if(!this.containsRouteId2Creator(itemID)) {
+        if(!this.containsRouteId2Creator(itemID)) {
             throw new Exception("itemID:" + itemID + " isnt registered routeID!");
         }
 
-        return this.routeId2Creator(itemID).create(itemID, dataProvider);
+        Creator creator = this.routeId2Creator(itemID);
+        for (String reqField : creator.getDataProviderRequiredFields()) {
+            if(!dataProvider.contains(reqField)) {
+                creator.getDataProviderRequiredFields().forEach(System.out::println);
+                dataProvider.getKeys().forEach(System.out::println);
+                throw new Exception("Invalid DataProvider. Missing field '" + reqField + "'. itemID:" + itemID);
+            }
+        }
+
+        return creator.create(itemID, dataProvider);
     }
 
     @Override
@@ -100,15 +109,5 @@ public abstract class CreatorHub implements ICreatorHub {
     @Override
     public boolean containsRouteId2Creator(String itemId) {
         return this.route.containsKey(itemId);
-    }
-
-    /*
-    * TODO: перевести на английский
-    * Данный метод вызывается креатором, для валидации полей DataProvider.
-    * Если метод не переопределён потомком - валидация не происходит.
-    * */
-    @Override
-    public RulesProvider getDataProviderRules() {
-        return new RulesProvider();
     }
 }

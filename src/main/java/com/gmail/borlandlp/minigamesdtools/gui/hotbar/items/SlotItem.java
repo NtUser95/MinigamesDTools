@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import java.time.Instant;
 
 public abstract class SlotItem {
-    protected int cooldownTime;
+    protected Long cooldownTime;
     protected ItemStack activeIcon;
     protected ItemStack unactiveIcon;
     protected int amount;
@@ -31,11 +31,11 @@ public abstract class SlotItem {
         this.unactiveIcon = unactiveIcon;
     }
 
-    public int getCooldownTime() {
+    public long getCooldownTime() {
         return cooldownTime;
     }
 
-    public void setCooldownTime(int cooldownTime) {
+    public void setCooldownTime(long cooldownTime) {
         this.cooldownTime = cooldownTime;
     }
 
@@ -80,26 +80,27 @@ public abstract class SlotItem {
     }
 
     public void performClick(Player player) {
-        long cdRemain = Instant.now().getEpochSecond() - this.getLastClickTime();
-        if(cdRemain > this.getCooldownTime()) {
-            this.setLastClickTime(Instant.now().getEpochSecond());
+        long msDiff = (System.nanoTime() - this.getLastClickTime()) / 1000000;
+        if(msDiff > this.getCooldownTime()) {
+            this.setLastClickTime(System.nanoTime());
             boolean result = this.use(player);
             if(result && !this.isInfiniteSlot()) {
                 this.setAmount(this.getAmount() - 1);
             }
         } else {
-            player.sendMessage("DBG:CD->" + (this.getCooldownTime() - cdRemain));//DEBUG
+            player.sendMessage("DBG:CD->" + (msDiff));//DEBUG
         }
     }
 
     public ItemStack getDrawData() {
         ItemStack icon;
-        if((this.getLastClickTime() + this.getCooldownTime()) <= Instant.now().getEpochSecond()) {
+        long msDiff = (System.nanoTime() - this.getLastClickTime()) / 1000000;
+        if(msDiff > this.getCooldownTime()) {
             icon = this.getActiveIcon().clone();
             icon.setAmount(this.getAmount());
         } else {//item in cooldown
             icon = this.getUnactiveIcon().clone();
-            icon.setAmount((int)((this.getLastClickTime() + this.getCooldownTime()) - Instant.now().getEpochSecond()));
+            icon.setAmount(Long.valueOf((this.getCooldownTime() - msDiff) / 1000).intValue());
         }
 
         return icon;

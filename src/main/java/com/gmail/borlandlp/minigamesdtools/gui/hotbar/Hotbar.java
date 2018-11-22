@@ -11,6 +11,16 @@ import java.util.Deque;
 public abstract class Hotbar {
     protected SlotItem[] slots = new SlotItem[9];
     protected Deque<SlotItem> itemsInQueue = new ArrayDeque<>();
+    protected Player player;
+
+    public Hotbar(Player player) {
+        this.player = player;
+    }
+
+    public Hotbar(Player player, SlotItem[] items) {
+        this.player = player;
+        this.slots = items;
+    }
 
     public void addSlot(SlotItem slotItem) {
         this.itemsInQueue.add(slotItem);
@@ -25,17 +35,13 @@ public abstract class Hotbar {
     }
 
     public void update() {
-        for (int i = 0; i < this.slots.length-1; i++) { // use 8 slots. 9 slot - reserved for correct work itemHeldEvent
-            if(this.slots[i] == null && this.itemsInQueue.size() > 0) {
-                this.slots[i] = this.itemsInQueue.poll();
-            }
-        }
+        this.updateSlotsQueue();
     }
 
-    public void performAction(Player player, int slotID) {
-        Debug.print(Debug.LEVEL.NOTICE,"[SkyBattle] performAction slotID:" + slotID + " for player:" + player.getDisplayName());
+    public void performAction(int slotID) {
+        Debug.print(Debug.LEVEL.NOTICE,"[SkyBattle] performAction slotID:" + slotID + " for player:" + this.player.getDisplayName());
         if(slotID < this.slots.length && slotID >= 0 && this.slots[slotID] != null) {
-            this.slots[slotID].performClick(player);
+            this.slots[slotID].performClick(this.player);
             if(this.slots[slotID].getAmount() < 1) {
                 this.slots[slotID] = null;
             }
@@ -51,5 +57,13 @@ public abstract class Hotbar {
         }
 
         return data;
+    }
+
+    private void updateSlotsQueue() {
+        for (int i = 0; i < this.slots.length-1; i++) { // use 8 slots. 9 slot - reserved for correct work itemHeldEvent
+            if(this.slots[i] == null && this.itemsInQueue.size() > 0) {
+                this.slots[i] = this.itemsInQueue.poll();
+            }
+        }
     }
 }

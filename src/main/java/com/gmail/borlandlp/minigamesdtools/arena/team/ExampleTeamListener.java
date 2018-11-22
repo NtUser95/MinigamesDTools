@@ -1,15 +1,18 @@
 package com.gmail.borlandlp.minigamesdtools.arena.team;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
+import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaEventListener;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.*;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
+import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import org.bukkit.entity.Player;
 
-public class TeamListener implements ArenaEventListener {
+public class ExampleTeamListener implements ArenaEventListener {
     private TeamController teamController;
 
-    public TeamListener(TeamController teamController) {
+    public ExampleTeamListener(TeamController teamController) {
         this.teamController = teamController;
     }
 
@@ -58,6 +61,7 @@ public class TeamListener implements ArenaEventListener {
             player.getInventory().clear();
             team.removePlayer(player);
         }
+        MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(event.getPlayer());
     }
 
     @ArenaEventHandler(

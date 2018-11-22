@@ -9,8 +9,16 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CreatorInfo(creatorId = "example_item")
 public class ExampleItemCreator implements Creator {
+    @Override
+    public List<String> getDataProviderRequiredFields() {
+        return new ArrayList<>();
+    }
+
     @Override
     public Object create(String ID, AbstractDataProvider dataProvider) throws Exception {
         ExampleItem slotItem = new ExampleItem();
@@ -18,7 +26,7 @@ public class ExampleItemCreator implements Creator {
 
         ItemStack activeIcon = new ItemStack(Material.getMaterial(configurationSection.get("active_icon").toString()));
         ItemStack unactiveIcon = new ItemStack(Material.getMaterial(configurationSection.get("unactive_icon").toString()));
-        int cooldown = Integer.parseInt(configurationSection.get("cooldown").toString());
+        long cooldown = Long.parseLong(configurationSection.get("cooldown").toString());
         boolean infinite = Boolean.parseBoolean(configurationSection.get("infinite").toString());
         int amount = Integer.parseInt(configurationSection.get("amount").toString());
 

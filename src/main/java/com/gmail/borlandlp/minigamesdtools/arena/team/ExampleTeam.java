@@ -76,10 +76,6 @@ public class ExampleTeam implements TeamProvider {
        return this.players.get(nickname);
     }
 
-    public void removeAllPlayers() {
-       this.players = new HashMap<>();
-    }
-
     @Override
     public void spawn(Player player) {
         if(player != null && !player.isDead()) {

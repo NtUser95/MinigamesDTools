@@ -13,8 +13,16 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CreatorInfo(creatorId = "spectator_switch_target_inventory")
 public class SpectatorSwitchTargetInventoryFactory implements Creator {
+    @Override
+    public List<String> getDataProviderRequiredFields() {
+        return new ArrayList<>();
+    }
+
     @Override
     public DrawableInventory create(String ID, AbstractDataProvider dataProvider) throws Exception {
         DefaultViewInventory inventory = new DefaultViewInventory();

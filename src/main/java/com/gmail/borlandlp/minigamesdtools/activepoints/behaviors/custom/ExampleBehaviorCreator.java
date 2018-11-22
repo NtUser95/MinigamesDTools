@@ -8,8 +8,16 @@ import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CreatorInfo(creatorId = "example_behavior")
 public class ExampleBehaviorCreator implements Creator {
+    @Override
+    public List<String> getDataProviderRequiredFields() {
+        return new ArrayList<>();
+    }
+
     @Override
     public Object create(String Id, AbstractDataProvider dataProvider) throws Exception {
         ExampleBehavior exampleBehavior = new ExampleBehavior();

@@ -9,8 +9,16 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CreatorInfo(creatorId = "show_team_spectator_item")
 public class ShowTeamSpectatorItemCreator implements Creator {
+    @Override
+    public List<String> getDataProviderRequiredFields() {
+        return new ArrayList<>();
+    }
+
     @Override
     public Object create(String ID, AbstractDataProvider dataProvider) throws Exception {
         ShowTeamSpectatorItem slotItem = new ShowTeamSpectatorItem();

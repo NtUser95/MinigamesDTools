@@ -3,7 +3,6 @@ package com.gmail.borlandlp.minigamesdtools.arena.team.lobby.spectator;
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.ArenaEventListener;
-import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobby;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.PlayerLocker;
 import org.bukkit.Bukkit;
@@ -18,16 +17,7 @@ import java.util.Set;
 public class ExampleSpectatorLobby extends ArenaLobby implements SpectatorLobby, PlayerLocker {
     private Set<Player> players = new HashSet<>();
     private boolean enabled_watching;
-    private Hotbar hotbar;
     private ArenaEventListener listener;
-
-    public Hotbar getHotbar() {
-        return hotbar;
-    }
-
-    public void setHotbar(Hotbar hotbar) {
-        this.hotbar = hotbar;
-    }
 
     public boolean isEnabled_watching() {
         return enabled_watching;
@@ -86,7 +76,7 @@ public class ExampleSpectatorLobby extends ArenaLobby implements SpectatorLobby,
             MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
         }
         if(this.isHotbarEnabled()) {
-            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getHotbar(), player);
+            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getHotbarFor(player), player);
         }
     }
 
@@ -102,7 +92,11 @@ public class ExampleSpectatorLobby extends ArenaLobby implements SpectatorLobby,
             MinigamesDTools.getInstance().getHotbarAPI().unbindHotbar(player);
         }
         if(this.getTeamProvider().getArena().getHotbarController().isEnabled()) {
-            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getTeamProvider().getArena().getHotbarController().getDefaultHotbar(), player);
+            try {
+                MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.getTeamProvider().getArena().getHotbarController().buildDefaultHotbarFor(player), player);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

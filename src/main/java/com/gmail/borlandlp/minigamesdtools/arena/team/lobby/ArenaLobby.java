@@ -1,6 +1,8 @@
 package com.gmail.borlandlp.minigamesdtools.arena.team.lobby;
 
+import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
+import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,7 +15,7 @@ public abstract class ArenaLobby {
     protected Location spawnPoint;
     protected boolean enabled;
     protected boolean hotbarEnabled;
-    protected Hotbar hotbar;
+    protected String hotbarId;
 
     public boolean isHotbarEnabled() {
         return hotbarEnabled;
@@ -23,11 +25,19 @@ public abstract class ArenaLobby {
         this.hotbarEnabled = hotbarEnabled;
     }
 
-    public void setHotbar(Hotbar hotbar) {
-        this.hotbar = hotbar;
+    public void setHotbarId(String hotbarId) {
+        this.hotbarId = hotbarId;
     }
 
-    public Hotbar getHotbar() {
+    public Hotbar getHotbarFor(Player player) {
+        Hotbar hotbar = null;
+        try {
+            hotbar = MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar(this.hotbarId, new DataProvider() {{
+                this.set("player", player);
+            }});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return hotbar;
     }
 

@@ -23,7 +23,7 @@ public class HotbarListener implements Listener {
             Hotbar hotbar = this.hotbarAPI.getHotbar(event.getPlayer());
             if(hotbar instanceof HeldHotbar) {
                 event.setCancelled(true);
-                this.hotbarAPI.getHotbar(event.getPlayer()).performAction(event.getPlayer(), event.getNewSlot());
+                this.hotbarAPI.getHotbar(event.getPlayer()).performAction(event.getNewSlot());
             }
         }
     }
@@ -40,20 +40,13 @@ public class HotbarListener implements Listener {
         }
     }
 
-    /*@EventHandler(ignoreCancelled = true)
-    public void onMoveItem(InventoryMoveItemEvent event) {
-        if(this.hotbarAPI.isBindedPlayer(event.getPlayer())) {
-            event.setCancelled(true);
-        }
-    }*/
-
     @EventHandler
     public void onItemInterract(PlayerInteractEvent event) {
         if(event.getItem() != null && this.hotbarAPI.isBindedPlayer(event.getPlayer())) {
             Hotbar hotbar = this.hotbarAPI.getHotbar(event.getPlayer());
             if(hotbar instanceof ItemInterractHotbar) {
                 event.setCancelled(true);
-                this.hotbarAPI.getHotbar(event.getPlayer()).performAction(event.getPlayer(), event.getPlayer().getInventory().getHeldItemSlot());
+                this.hotbarAPI.getHotbar(event.getPlayer()).performAction(event.getPlayer().getInventory().getHeldItemSlot());
             }
         }
     }

@@ -17,7 +17,11 @@ public class HotbarListener implements Listener, ArenaEventListener {
     @ArenaEventHandler
     public void onPlayerJoin(ArenaPlayerJoinLocalEvent event) {
         if(hotbarController.isEnabled()) {
-            MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.hotbarController.getDefaultHotbar(), event.getPlayer());
+            try {
+                MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(this.hotbarController.buildDefaultHotbarFor(event.getPlayer()), event.getPlayer());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

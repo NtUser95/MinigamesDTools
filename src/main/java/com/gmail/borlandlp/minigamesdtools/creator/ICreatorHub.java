@@ -1,5 +1,7 @@
 package com.gmail.borlandlp.minigamesdtools.creator;
 
+import java.util.List;
+
 public interface ICreatorHub {
     void registerCreator(Creator factory) throws Exception;
     void registerRouteId2Creator(String itemID, String creator) throws Exception;
@@ -10,5 +12,4 @@ public interface ICreatorHub {
     boolean containsCreator(String ID);
     boolean containsCreator(Creator creator);
     boolean containsRouteId2Creator(String itemId);
-    RulesProvider getDataProviderRules();
 }
