@@ -21,6 +21,9 @@ import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUICreatorHub;
 import com.gmail.borlandlp.minigamesdtools.gui.inventory.api.InventoryAPI;
 import com.gmail.borlandlp.minigamesdtools.gui.inventory.api.ViewManager;
 import com.gmail.borlandlp.minigamesdtools.gui.inventory.slots.InventoryGuiSlotCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.gun.BulletCreatorHub;
+import com.gmail.borlandlp.minigamesdtools.gun.BulletHandler;
+import com.gmail.borlandlp.minigamesdtools.gun.BulletHandlerApi;
 import com.gmail.borlandlp.minigamesdtools.lobby.LobbyServerAPI;
 import com.gmail.borlandlp.minigamesdtools.nmsentities.EntityAPI;
 import com.gmail.borlandlp.minigamesdtools.nmsentities.EntityController;
@@ -60,6 +63,7 @@ public class MinigamesDTools extends JavaPlugin {
     private InventoryAPI inventoryGUIManger;
     private ActivePointsAPI activePointsAPI;
     private EntityAPI entityAPI;
+    private BulletHandlerApi bulletHandlerApi;
 
     private GUICreatorHub guiCreatorHub;
     private HotbarCreatorHub hotbarCreatorHub;
@@ -76,6 +80,7 @@ public class MinigamesDTools extends JavaPlugin {
     private ChunkLoaderCreator chunkLoaderCreator;
     private ArenaLobbyCreatorHub arenaLobbyCreatorHub;
     private ConditionsCreatorHub conditionsCreatorHub;
+    private BulletCreatorHub bulletCreatorHub;
 
     private static MinigamesDTools plugin;
 
@@ -120,6 +125,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.chunkLoaderCreator = new ChunkLoaderCreator();
         this.inventoryGuiSlotCreatorHub = new InventoryGuiSlotCreatorHub();
         this.conditionsCreatorHub = new ConditionsCreatorHub();
+        this.bulletCreatorHub = new BulletCreatorHub();
 
         this.entityAPI = new EntityController();
         this.inventoryGUICreatorHub = new InventoryGUICreatorHub();
@@ -129,6 +135,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.arenaAPI = new ArenaManager();
         this.hotbarAPI = new HotbarApiInst();
         this.lobbyController = new LobbyHubController();
+        this.bulletHandlerApi = new BulletHandler();
 
         this.apiComponentsController = new APIComponentsController();
         Bukkit.getPluginManager().callEvent(new PRE_INITIALIZATION_EVENT());
@@ -145,6 +152,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.getApiComponentsController().register((APIComponent) this.getEntityAPI());
         this.getApiComponentsController().register((APIComponent) this.getInventoryGUI_API());
         this.getApiComponentsController().register((APIComponent) this.getArenaAPI());
+        this.getApiComponentsController().register(this.getBulletHandlerApi());
 
         (new TestComponents()).load();
 
@@ -305,5 +313,13 @@ public class MinigamesDTools extends JavaPlugin {
 
     public ConfigLoader getConfigLoader() {
         return configLoader;
+    }
+
+    public BulletHandlerApi getBulletHandlerApi() {
+        return bulletHandlerApi;
+    }
+
+    public BulletCreatorHub getBulletCreatorHub() {
+        return bulletCreatorHub;
     }
 }

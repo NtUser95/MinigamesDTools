@@ -1,5 +1,6 @@
 package com.gmail.borlandlp.minigamesdtools.gui.hotbar.items;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,6 +15,7 @@ public abstract class SlotItem {
     protected long lastClickTime;
     protected String name;
     protected boolean infiniteSlot = false;
+    protected Sound useSound;
 
     public String getID() {
         return ID;
@@ -79,16 +81,36 @@ public abstract class SlotItem {
         this.lastClickTime = lastClickTime;
     }
 
+    public Sound getUseSound() {
+        return useSound;
+    }
+
+    public void setUseSound(Sound useSound) {
+        this.useSound = useSound;
+    }
+
+    public long getCooldownRemain() {
+        return this.getLastClickTime() == 0L ? 0L : this.getCooldownTime() - ((System.nanoTime() - this.getLastClickTime()) / 1000000);
+    }
+
+    public boolean inCooldown() {
+        return this.getLastClickTime() != 0L && this.getCooldownRemain() > 0L;
+    }
+
     public void performClick(Player player) {
-        long msDiff = (System.nanoTime() - this.getLastClickTime()) / 1000000;
-        if(msDiff > this.getCooldownTime()) {
+        if(!this.inCooldown()) {
             this.setLastClickTime(System.nanoTime());
             boolean result = this.use(player);
-            if(result && !this.isInfiniteSlot()) {
-                this.setAmount(this.getAmount() - 1);
+            if(result) {
+                if(!this.isInfiniteSlot()) {
+                    this.setAmount(this.getAmount() - 1);
+                }
+                if(this.getUseSound() != null) {
+                    player.getWorld().playSound(player.getLocation(), this.getUseSound(), 1f, 1f);
+                }
             }
         } else {
-            player.sendMessage("DBG:CD->" + (msDiff));//DEBUG
+            player.sendMessage("DBG:CD_REMAIN->" + (this.getCooldownRemain()));//DEBUG
         }
     }
 
@@ -100,7 +122,6 @@ public abstract class SlotItem {
             icon.setAmount(this.getAmount());
         } else {//item in cooldown
             icon = this.getUnactiveIcon().clone();
-            icon.setAmount(Long.valueOf((this.getCooldownTime() - msDiff) / 1000).intValue());
         }
 
         return icon;

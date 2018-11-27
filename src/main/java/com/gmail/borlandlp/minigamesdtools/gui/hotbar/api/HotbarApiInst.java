@@ -6,7 +6,10 @@ import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.HotbarListener;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.HeldHotbar;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.utils.Leveling;
+import net.minecraft.server.v1_12_R1.PacketPlayOutExperience;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +36,7 @@ public class HotbarApiInst implements HotbarAPI, APIComponent {
             public void run() {
                 task.update();
             }
-        }.runTaskTimer(MinigamesDTools.getInstance(), 0, 10);
+        }.runTaskTimer(MinigamesDTools.getInstance(), 0, 5);
     }
 
     @Override
@@ -54,43 +57,16 @@ public class HotbarApiInst implements HotbarAPI, APIComponent {
         for(Player player : new ArrayList<>(this.getAll().keySet())) {
             if(player != null && !player.isDead()) {
                 Hotbar hotbar = this.getAll().get(player);
-                ItemStack[] drawData = null;
                 try {
                     hotbar.update();
-                    drawData = hotbar.getDrawData();
+                    hotbar.draw();
                 } catch (Exception e) {
                     e.printStackTrace();
                     this.unbindHotbar(player);
                     Debug.print(Debug.LEVEL.WARNING, "Player " + player.getName() + " was unbinded due to problems with his hotbar.");
-                    continue;
-                }
-
-                ItemStack[] inventory = player.getInventory().getContents();
-
-                if(!isIdentDrawData(drawData, inventory)) {
-                    for(int i = 0; i < 9; i++) {
-                        inventory[i] = drawData[i];
-                    }
-                    player.getInventory().setContents(inventory);
                 }
             }
         }
-    }
-
-    private boolean isIdentDrawData(ItemStack[] drawData, ItemStack[] inventory) {
-        for(int i = 0; i < 9; i++) {
-            if((inventory[i] == null && drawData[i] != null) || (inventory[i] != null && drawData[i] == null)) {
-                return false;
-            } else if(inventory[i] != null && drawData[i] != null) {
-                boolean materialChanged = inventory[i].getType() != drawData[i].getType();
-                boolean amountChanged = inventory[i].getAmount() != drawData[i].getAmount();
-                if(materialChanged || amountChanged) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     private void clearPlayerHotbar(Player p) {
@@ -107,6 +83,9 @@ public class HotbarApiInst implements HotbarAPI, APIComponent {
         }
 
         this.players.put(player, hotbar);
+
+        PacketPlayOutExperience packet = new PacketPlayOutExperience((float) 0, 0, 0);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
     @Override
@@ -118,6 +97,9 @@ public class HotbarApiInst implements HotbarAPI, APIComponent {
         Debug.print(Debug.LEVEL.NOTICE, "Unbind hotbar for Player[name:" + player.getName() + "]");
         this.clearPlayerHotbar(player);
         this.players.remove(player);
+
+        PacketPlayOutExperience packet = new PacketPlayOutExperience(player.getExp(), player.getTotalExperience(), player.getLevel());
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
     @Override

@@ -1,0 +1,5 @@
+meta_info:
+  pool_id: bullets
+data:
+  ExampleBullet:
+    creator_id: ghost_bullet

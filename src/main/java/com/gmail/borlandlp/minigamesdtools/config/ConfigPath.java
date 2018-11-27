@@ -22,7 +22,8 @@ public enum ConfigPath {
     SERVER_LOBBY(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "lobby.yml"), false, "server_lobby"),
     ADDONS(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "addons"), true, "addons"),
     INVENTORY_GUI(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "inventory_gui.yml"), false, "inventory_gui"),
-    INVENTORY_GUI_SLOT(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "inventory_gui_slot.yml"), false, "inventory_gui_slot");
+    INVENTORY_GUI_SLOT(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "inventory_gui_slot.yml"), false, "inventory_gui_slot"),
+    BULLETS(new File(MinigamesDTools.getInstance().getDataFolder().getAbsoluteFile(), "bullets.yml"), false, "bullets");
 
     private File path;
     private boolean isDir;

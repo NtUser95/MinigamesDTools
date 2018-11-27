@@ -26,6 +26,8 @@ import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.ItemInterractHotbarCr
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.ExampleItemCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.ShowTeamSpectatorItemCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.inventory.DefaultViewInventoryCreator;
+import com.gmail.borlandlp.minigamesdtools.gun.bullet.GhostBulletCreator;
+import com.gmail.borlandlp.minigamesdtools.test.gui.hotbar.slots.ExampleGunCreator;
 import com.gmail.borlandlp.minigamesdtools.test.gui.inventory.slots.ExampleInventorySlotCreator;
 import com.gmail.borlandlp.minigamesdtools.lobby.ExampleLobbyCreator;
 import com.gmail.borlandlp.minigamesdtools.nmsentities.entity.SilentShulker;
@@ -56,6 +58,7 @@ public class TestComponents {
         this.put(ConfigPath.SERVER_LOBBY, MinigamesDTools.getInstance().getLobbyCreatorHub());
         this.put(ConfigPath.CONDITIONS, MinigamesDTools.getInstance().getConditionsCreatorHub());
         this.put(ConfigPath.TEAMS, MinigamesDTools.getInstance().getTeamCreatorHub());
+        this.put(ConfigPath.BULLETS, MinigamesDTools.getInstance().getBulletCreatorHub());
     }};
 
     private void linkCreators(ConfigPath path) {
@@ -83,6 +86,7 @@ public class TestComponents {
         try {
             MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerCreator(new ExampleItemCreator());
             MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerCreator(new ShowTeamSpectatorItemCreator());
+            MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerCreator(new ExampleGunCreator());
 
             this.linkCreators(ConfigPath.HOTBAR_SLOTS);
         } catch (Exception e) {
@@ -216,6 +220,15 @@ public class TestComponents {
             MinigamesDTools.getInstance().getConditionsCreatorHub().registerCreator(new EmptyInventoryConditionCreator());
 
             this.linkCreators(ConfigPath.CONDITIONS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // bullets
+        try {
+            MinigamesDTools.getInstance().getBulletCreatorHub().registerCreator(new GhostBulletCreator());
+
+            this.linkCreators(ConfigPath.BULLETS);
         } catch (Exception e) {
             e.printStackTrace();
         }

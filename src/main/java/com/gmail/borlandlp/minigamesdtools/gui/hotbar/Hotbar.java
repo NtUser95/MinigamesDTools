@@ -2,11 +2,16 @@ package com.gmail.borlandlp.minigamesdtools.gui.hotbar;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.SlotItem;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.utils.Leveling;
+import net.minecraft.server.v1_12_R1.PacketPlayOutExperience;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Hotbar {
     protected SlotItem[] slots = new SlotItem[9];
@@ -57,6 +62,44 @@ public abstract class Hotbar {
         }
 
         return data;
+    }
+
+    public void draw() {
+        ItemStack[] drawData = this.getDrawData();
+        ItemStack[] inventory = this.player.getInventory().getContents();
+
+        int heldSlot = player.getInventory().getHeldItemSlot();
+        if(this.slots[heldSlot] != null && this.slots[heldSlot].inCooldown()) {
+            float percent = ((float)(this.slots[heldSlot].getCooldownTime() - this.slots[heldSlot].getCooldownRemain()) / this.slots[heldSlot].getCooldownTime());
+            int secRemain = (int) (this.slots[heldSlot].getCooldownRemain() / 1000);
+            Leveling.ExperienceContainer value = Leveling.calculateWithPercentage((int) (this.slots[heldSlot].getCooldownRemain() / 1000), percent);
+            PacketPlayOutExperience packet = new PacketPlayOutExperience(percent, (int) value.total_exp, secRemain);
+
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        }
+
+        if(!isIdentDrawData(drawData, inventory)) {
+            for(int i = 0; i < 9; i++) {
+                inventory[i] = drawData[i];
+            }
+            player.getInventory().setContents(inventory);
+        }
+    }
+
+    private boolean isIdentDrawData(ItemStack[] drawData, ItemStack[] inventory) {
+        for(int i = 0; i < 9; i++) {
+            if((inventory[i] == null && drawData[i] != null) || (inventory[i] != null && drawData[i] == null)) {
+                return false;
+            } else if(inventory[i] != null && drawData[i] != null) {
+                boolean materialChanged = inventory[i].getType() != drawData[i].getType();
+                boolean amountChanged = inventory[i].getAmount() != drawData[i].getAmount();
+                if(materialChanged || amountChanged) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private void updateSlotsQueue() {

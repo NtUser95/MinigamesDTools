@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.test.gui.inventory;
+package com.gmail.borlandlp.minigamesdtools.test.gui.inventory.slots;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @CreatorInfo(creatorId = "spectator_switch_target_inventory")
-public class SpectatorSwitchTargetInventoryFactory implements Creator {
+public class SpectatorSwitchTargetInventoryCreator implements Creator {
     @Override
     public List<String> getDataProviderRequiredFields() {
         return new ArrayList<>();

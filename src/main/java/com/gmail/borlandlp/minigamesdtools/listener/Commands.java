@@ -8,9 +8,11 @@ import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
 import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.utils.Leveling;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -51,10 +53,6 @@ public class Commands implements CommandExecutor {
                   MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByID("example_lobby").transferPlayer(player, MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByID("example_lobby2"));
               } catch (Exception e) {
                   e.printStackTrace();
-              }
-            } else if(args[0].equalsIgnoreCase("activepoints")) {
-              for(ActivePoint point : MinigamesDTools.getInstance().getActivePointsAPI().getAllPoints()) {
-                  System.out.print(point.getName());
               }
             } else if (!player.hasPermission("arena.admin")) {
                 player.sendMessage(MinigamesDTools.getPrefix() + " Недостаточно прав для доступа.");
@@ -137,6 +135,13 @@ public class Commands implements CommandExecutor {
                  MinigamesDTools.getInstance().getArenaAPI().arenaLeaveRequest(p);
 
                  return true;
+             } else if(args[0].equalsIgnoreCase("exp")) {
+                int level = Integer.parseInt(args[1]);
+                int perc = Integer.parseInt(args[2]);
+                Leveling.ExperienceContainer value = Leveling.calculateWithPercentage(level, perc);
+                PacketPlayOutExperience packet = new PacketPlayOutExperience((float) (perc / 100F), (int) value.total_exp, level);
+                System.out.println(value.percent_exp + "#" + value.total_exp + "#" + level);
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
              }
 
             p.sendMessage("Wrong command");
