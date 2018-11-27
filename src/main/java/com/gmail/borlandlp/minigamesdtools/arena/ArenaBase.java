@@ -108,7 +108,7 @@ public class ArenaBase {
                     arenaObj.beforeRoundStarting();
                 }
             }
-        }.runTaskTimer(MinigamesDTools.getInstance(), 0, 20);
+        }.runTaskTimer(MinigamesDTools.getInstance(), 10, 10);
     }
 
     protected void delayedStartArena() {
