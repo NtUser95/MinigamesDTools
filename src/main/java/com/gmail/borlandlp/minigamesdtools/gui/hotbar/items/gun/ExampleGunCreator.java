@@ -1,10 +1,11 @@
-package com.gmail.borlandlp.minigamesdtools.test.gui.hotbar.slots;
+package com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.gun;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.gun.ExampleGun;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

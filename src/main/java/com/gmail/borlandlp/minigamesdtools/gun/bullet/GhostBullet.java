@@ -41,7 +41,6 @@ public class GhostBullet extends EntityDragonFireball {
     public void B_() {
         super.B_();
         if(this.inc++ >= 20) {
-            System.out.println(this.locX + "/" + this.locY + "/" + this.locZ + "#" + this.motX + "/" + this.motY + "/" + this.motY);
             this.world.addParticle(EnumParticle.CLOUD, this.locX, this.locY, this.locZ, 1D, 1D, 1D);
             this.inc = 0;
         }

@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.test.gui.hotbar.slots;
+package com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.gun;
 
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;

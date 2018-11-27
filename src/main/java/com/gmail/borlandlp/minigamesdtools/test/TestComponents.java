@@ -27,7 +27,7 @@ import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.ExampleItemCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.ShowTeamSpectatorItemCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.inventory.DefaultViewInventoryCreator;
 import com.gmail.borlandlp.minigamesdtools.gun.bullet.GhostBulletCreator;
-import com.gmail.borlandlp.minigamesdtools.test.gui.hotbar.slots.ExampleGunCreator;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.gun.ExampleGunCreator;
 import com.gmail.borlandlp.minigamesdtools.test.gui.inventory.slots.ExampleInventorySlotCreator;
 import com.gmail.borlandlp.minigamesdtools.lobby.ExampleLobbyCreator;
 import com.gmail.borlandlp.minigamesdtools.nmsentities.entity.SilentShulker;
