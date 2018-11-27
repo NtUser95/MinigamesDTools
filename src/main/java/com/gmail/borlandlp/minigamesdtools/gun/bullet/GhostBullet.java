@@ -2,10 +2,13 @@ package com.gmail.borlandlp.minigamesdtools.gun.bullet;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
+import com.gmail.borlandlp.minigamesdtools.events.BlockDamageByEntityEvent;
 import net.minecraft.server.v1_12_R1.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
@@ -28,12 +31,12 @@ public class GhostBullet extends EntityDragonFireball {
     }
 
     // onImpact
-    protected void a(MovingObjectPosition var1) {
+    protected void a(MovingObjectPosition position) {
         Debug.print(Debug.LEVEL.NOTICE, "GhostBullet explode");
         MinigamesDTools.getInstance().getBulletHandlerApi().removeBullet(this);
-        if (var1.entity == null || !var1.entity.s(this.shooter)) {
+        if (position.entity == null || !position.entity.s(this.shooter)) {
             if (!this.world.isClientSide) {
-                List var2 = this.world.a(EntityLiving.class, this.getBoundingBox().grow(4.0D, 2.0D, 4.0D));
+                List var2 = this.world.a(EntityLiving.class, this.getBoundingBox().grow(1.0D, 1.0D, 1.0D));
                 if (!var2.isEmpty()) {
                     Iterator var4 = var2.iterator();
                     while(var4.hasNext()) {
@@ -42,6 +45,15 @@ public class GhostBullet extends EntityDragonFireball {
                         ((LivingEntity) craftEntity).damage(5D);
                     }
                 }
+
+                Block hitBlock = null;
+                if (position.type == MovingObjectPosition.EnumMovingObjectType.BLOCK) {
+                    BlockPosition blockposition = position.a();
+                    hitBlock = this.bukkitWorld.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+                    LivingEntity livingEntity = ((LivingEntity) this.shooter.getBukkitEntity());
+                    Bukkit.getPluginManager().callEvent(new BlockDamageByEntityEvent(livingEntity, hitBlock, null, true));
+                }
+
                 this.die();
             }
         }

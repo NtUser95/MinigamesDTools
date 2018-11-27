@@ -26,9 +26,9 @@ public class ExampleGun extends SlotItem {
                     player.getLocation().getPitch()
             );
             bullet.f(
-                    player.getLocation().getDirection().getX(),
-                    player.getLocation().getDirection().getY(),
-                    player.getLocation().getDirection().getZ()
+                    player.getLocation().getDirection().getX() * 1.5,
+                    player.getLocation().getDirection().getY() * 1.5,
+                    player.getLocation().getDirection().getZ() * 1.5
             ); // velocity
             bullet.shooter = ((CraftPlayer) player).getHandle();
             player.getWorld().playSound(player.getLocation(), Sound.ENTITY_FIREWORK_BLAST, 1, 1);
