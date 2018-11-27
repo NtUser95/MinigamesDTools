@@ -15,8 +15,8 @@ public interface TeamProvider extends ArenaPhaseComponent {
     boolean containsFreeSlots(int forAmountPlayers);
     void spawn(Player player);
 
-    ChatColor getColor();
-    void setColor(ChatColor c);
+    String getColor();
+    void setColor(String colorName);
 
     boolean friendlyFireAllowed();
     void setFriendlyFireAllowed(boolean b);

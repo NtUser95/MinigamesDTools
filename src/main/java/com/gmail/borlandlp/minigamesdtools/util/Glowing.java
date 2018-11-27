@@ -10,9 +10,9 @@ import java.util.Collection;
 import java.util.List;
 
 public class Glowing {
-    public static void addGlowEffect(Entity entity, String color) {
+    public static void addGlowEffect(Entity entity, String colorName) {
         if (entity != null) {
-            GlowAPI.Color glowColor = GlowAPI.Color.valueOf(color);
+            GlowAPI.Color glowColor = GlowAPI.Color.valueOf(colorName);
             Collection<Player> players = new ArrayList<>(Bukkit.getServer().getOnlinePlayers());
             GlowAPI.setGlowing(entity, glowColor, players);
         }

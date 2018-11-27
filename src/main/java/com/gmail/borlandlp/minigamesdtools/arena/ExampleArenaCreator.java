@@ -19,6 +19,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioChainControlle
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamController;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
 import com.gmail.borlandlp.minigamesdtools.util.ArenaUtils;
+import com.gmail.borlandlp.minigamesdtools.util.Glowing;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -108,18 +109,22 @@ public class ExampleArenaCreator implements Creator {
         arenaTemplate.setTeamController(teamController);
 
         // gen colors
-        if( arenaTemplate.getTeamController().getTeams().size() > ChatColor.values().length) {
-            throw new Exception("Max team limit reached! [limit=" + ChatColor.values().length + "]");
+        /*
+        * GlowAPI contains the last element color "None". We exclude it.
+        * */
+        if( arenaTemplate.getTeamController().getTeams().size() > Glowing.getAvailableColors().size()-1) {
+            throw new Exception("Max team limit reached! [limit=" + (Glowing.getAvailableColors().size()-1) + "]");
         }
-        List<ChatColor> usedColors = new ArrayList<>();
+        List<String> usedColors = new ArrayList<>();
         for (TeamProvider team : arenaTemplate.getTeamController().getTeams()) {
-            ChatColor color = null;
+            ChatColor color;
+            String strColor;
             do {
-                int rnd = new Random().nextInt(ChatColor.values().length - 1);
-                color = ChatColor.values()[rnd];
-            } while(color == null || usedColors.contains(color));
-            usedColors.add(color);
-            team.setColor(color);
+                int rnd = new Random().nextInt(Glowing.getAvailableColors().size() - 2); // exclude last color GlowAPI.Color -> "None"
+                strColor = Glowing.getAvailableColors().get(rnd);
+            } while(usedColors.contains(strColor));
+            usedColors.add(strColor);
+            team.setColor(strColor);
         }
 
         //conditions

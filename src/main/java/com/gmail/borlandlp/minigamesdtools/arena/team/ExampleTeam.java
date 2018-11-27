@@ -28,7 +28,7 @@ public class ExampleTeam implements TeamProvider {
    protected boolean manageInventory;
    protected boolean manageArmor;
    protected boolean friendlyFireAllowed;
-   protected ChatColor color;
+   protected String color;
 
    protected SpectatorLobby spectatorLobby;
    protected RespawnLobby respawnLobby;
@@ -91,13 +91,13 @@ public class ExampleTeam implements TeamProvider {
     }
 
     @Override
-    public ChatColor getColor() {
+    public String getColor() {
         return this.color;
     }
 
     @Override
-    public void setColor(ChatColor c) {
-        this.color = c;
+    public void setColor(String colorName) {
+        this.color = colorName;
     }
 
     @Override
