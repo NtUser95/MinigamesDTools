@@ -16,8 +16,6 @@ public class BulletHandler implements BulletHandlerApi {
     @Override
     public void addBullet(GhostBullet bullet) {
         this.bullets.add(bullet);
-        System.out.println(bullet.locX + "/" + bullet.locY + "/" + bullet.locZ + "#" + bullet.motX + "/" + bullet.motY + "/" + bullet.motY);
-        Debug.print(Debug.LEVEL.NOTICE, "add bullet. total:" + this.bullets.size());
     }
 
     @Override
