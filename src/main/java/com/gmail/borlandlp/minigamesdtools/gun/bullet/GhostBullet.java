@@ -3,6 +3,8 @@ package com.gmail.borlandlp.minigamesdtools.gun.bullet;
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import net.minecraft.server.v1_12_R1.*;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
@@ -13,8 +15,16 @@ import java.util.List;
 
 public class GhostBullet extends EntityDragonFireball {
     private int inc = 0;
+    private World bukkitWorld;
+    private double prevMotX;
+    private double prevMotY;
+    private double prevMotZ;
+    public int maxLivingTicks = 100;
+    public int livedTicks;
+
     public GhostBullet(World world) {
         super(((CraftWorld) world).getHandle());
+        this.bukkitWorld = world;
     }
 
     // onImpact
@@ -34,15 +44,25 @@ public class GhostBullet extends EntityDragonFireball {
                 }
                 this.die();
             }
-
         }
     }
 
     public void B_() {
+        this.prevMotX = this.motX;
+        this.prevMotY = this.motY;
+        this.prevMotZ = this.motZ;
         super.B_();
-        if(this.inc++ >= 20) {
-            this.world.addParticle(EnumParticle.CLOUD, this.locX, this.locY, this.locZ, 1D, 1D, 1D);
+        this.motX = this.prevMotX;
+        this.motY = this.prevMotY;
+        this.motZ = this.prevMotZ;
+
+        if(this.inc++ >= 1) {
+            this.bukkitWorld.spawnParticle(Particle.FIREWORKS_SPARK, new Location(this.bukkitWorld, this.locX, this.locY, this.locZ), 0, 0, 0, 0);
             this.inc = 0;
+        }
+
+        if(++this.livedTicks > this.maxLivingTicks) {
+            this.die();
         }
     }
 }

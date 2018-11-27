@@ -51,6 +51,9 @@ public class BulletHandler implements BulletHandlerApi {
         for (GhostBullet bullet : new ArrayList<>(this.bullets)) {
             try {
                 bullet.B_();// B_() -> update()
+                if(!bullet.isAlive()) {
+                    this.removeBullet(bullet);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

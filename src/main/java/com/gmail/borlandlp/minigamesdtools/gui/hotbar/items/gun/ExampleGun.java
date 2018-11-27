@@ -19,9 +19,9 @@ public class ExampleGun extends SlotItem {
             }});
 
             bullet.setLocation(
-                    player.getLocation().getX(),
-                    player.getLocation().getY(),
-                    player.getLocation().getZ(),
+                    player.getEyeLocation().getX(),
+                    player.getEyeLocation().getY(),
+                    player.getEyeLocation().getZ(),
                     player.getLocation().getYaw(),
                     player.getLocation().getPitch()
             );
@@ -31,7 +31,7 @@ public class ExampleGun extends SlotItem {
                     player.getLocation().getDirection().getZ()
             ); // velocity
             bullet.shooter = ((CraftPlayer) player).getHandle();
-            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_MAGMACUBE_JUMP, 1, 1);
+            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_FIREWORK_BLAST, 1, 1);
 
             MinigamesDTools.getInstance().getBulletHandlerApi().addBullet(bullet);
         } catch (Exception e) {
