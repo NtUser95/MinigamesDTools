@@ -21,10 +21,10 @@ import com.gmail.borlandlp.minigamesdtools.conditions.examples.ExampleConditionC
 import com.gmail.borlandlp.minigamesdtools.config.ConfigEntity;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorHub;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.inventory_gui.InventoryPageOpenRequesterCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.HeldHotbarCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.type.ItemInterractHotbarCreator;
-import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.ExampleItemCreator;
-import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.ShowTeamSpectatorItemCreator;
+import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.example.ExampleItemCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.inventory.DefaultViewInventoryCreator;
 import com.gmail.borlandlp.minigamesdtools.gun.bullet.GhostBulletCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.gun.ExampleGunCreator;
@@ -85,8 +85,8 @@ public class TestComponents {
         // hotbar slots
         try {
             MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerCreator(new ExampleItemCreator());
-            MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerCreator(new ShowTeamSpectatorItemCreator());
             MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerCreator(new ExampleGunCreator());
+            MinigamesDTools.getInstance().getHotbarItemCreatorHub().registerCreator(new InventoryPageOpenRequesterCreator());
 
             this.linkCreators(ConfigPath.HOTBAR_SLOTS);
         } catch (Exception e) {

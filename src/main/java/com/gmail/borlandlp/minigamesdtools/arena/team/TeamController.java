@@ -6,6 +6,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.ArenaPlayersRelative;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerQuitEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 
@@ -87,11 +88,10 @@ public class TeamController implements ArenaPhaseComponent {
 	}
 
 	public TeamProvider getTeam(String teamName) {
-	    if(this.getTeams().stream().anyMatch(team -> team.getName().equals(teamName))) {
-            return this.getTeams().stream().filter(team -> team.getName().equals(teamName)).findFirst().get();
-        } else {
-	        return null;
-        }
+		return this.getTeams().stream()
+				.filter(team -> team.getName().equals(teamName))
+				.findFirst()
+				.orElse(null);
 	}
 
 	public TeamProvider getTeamOf(String nickname) {

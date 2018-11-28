@@ -10,24 +10,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/*
+* ToDo: Отказаться от рефлексии для использования кастомного поведения для энтити?
+* */
 public final class NMSUtil {
-
     public static void registerEntity(final String name, final int id, final Class<? extends Entity> nmsClass,
                                       final Class<? extends Entity> customClass) {
         try {
             final List<Map<?, ?>> dataMaps = new ArrayList<Map<?, ?>>();
             for (Field f : EntityTypes.class.getDeclaredFields()) {
-                if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
+                if (f.getType().equals(Map.class)) {
                     f.setAccessible(true);
                     dataMaps.add((Map<?, ?>) f.get(null));
                 }
             }
             EntityTypes.b.a(id, new MinecraftKey(name), customClass);
             for (Field f : BiomeBase.class.getDeclaredFields()) {
-                if (f.getType().getSimpleName().equals(BiomeBase.class.getSimpleName())) {
+                /*
+                 * Viva64 report
+                 * https://www.viva64.com/ru/w/v6054/
+                 * */
+                //if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
+                if (f.getType().equals(BiomeBase.class)) {
                     if (f.get(null) != null) {
                         for (Field list : BiomeBase.class.getDeclaredFields()) {
-                            if (list.getType().getSimpleName().equals(List.class.getSimpleName())) {
+                            if (list.getType().equals(List.class)) {
                                 list.setAccessible(true);
                                 @SuppressWarnings("unchecked")
                                 List<BiomeBase.BiomeMeta> metaList = (List<BiomeBase.BiomeMeta>) list.get(f.get(null));
@@ -52,17 +59,22 @@ public final class NMSUtil {
         try {
             final List<Map<?, ?>> dataMaps = new ArrayList<Map<?, ?>>();
             for (Field f : EntityTypes.class.getDeclaredFields()) {
-                if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
+                /*
+                * Viva64 report
+                * https://www.viva64.com/ru/w/v6054/
+                * */
+                //if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
+                if (f.getType().equals(Map.class)) {
                     f.setAccessible(true);
                     dataMaps.add((Map<?, ?>) f.get(null));
                 }
             }
             EntityTypes.b.a(id, new MinecraftKey(name), customClass);
             for (Field f : BiomeBase.class.getDeclaredFields()) {
-                if (f.getType().getSimpleName().equals(BiomeBase.class.getSimpleName())) {
+                if (f.getType().equals(BiomeBase.class)) {
                     if (f.get(null) != null) {
                         for (Field list : BiomeBase.class.getDeclaredFields()) {
-                            if (list.getType().getSimpleName().equals(List.class.getSimpleName())) {
+                            if (list.getType().equals(List.class)) {
                                 list.setAccessible(true);
                                 @SuppressWarnings("unchecked")
                                 List<BiomeBase.BiomeMeta> metaList = (List<BiomeBase.BiomeMeta>) list.get(f.get(null));

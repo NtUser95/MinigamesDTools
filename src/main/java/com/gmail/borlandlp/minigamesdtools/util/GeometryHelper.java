@@ -31,11 +31,14 @@ public class GeometryHelper {
         return new GeneratedBlockSchema(boundBlocks, fillerBlocks);
     }
 
+    /*
+    * ToDo: Hollow isnt used.
+    * */
     public static List<Location> generateCylinder(Location centerBlock, int radius, boolean hollow) {
         int cx = centerBlock.getBlockX();
         int cy = centerBlock.getBlockY();
         int cz = centerBlock.getBlockZ();
-        World w = centerBlock.getWorld();
+
         int rSquared = radius * radius;
         List<Location> blocks = new ArrayList<>();
 

@@ -170,7 +170,8 @@ public class ArenaManager implements APIComponent, ArenaAPI {
         }
 
         TeamController teamControl = arenaBase.getTeamController();
-        if(teamControl.getTeams().stream().noneMatch(t -> t.containsFreeSlots(1))) {
+        TeamProvider team = teamControl.getTeams().stream().filter(t -> t.containsFreeSlots(1)).findFirst().orElse(null);
+        if(team == null) {
             player.sendMessage(" Арена " + arenaName + " заполнена");
             return false;
         }
@@ -181,8 +182,6 @@ public class ArenaManager implements APIComponent, ArenaAPI {
             result.getErrId().forEach(player::sendMessage);
             return false;
         }
-
-        TeamProvider team = teamControl.getTeams().stream().filter(t -> t.containsFreeSlots(1)).findFirst().get();
 
         arenaBase.getEventAnnouncer().announce(new ArenaPlayerJoinLocalEvent(player, team));
         Bukkit.getPluginManager().callEvent(new ArenaPlayerEnterEvent(arenaBase, player));

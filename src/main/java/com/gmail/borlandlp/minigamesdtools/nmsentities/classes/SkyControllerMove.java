@@ -4,6 +4,8 @@ package com.gmail.borlandlp.minigamesdtools.nmsentities.classes;
 import net.minecraft.server.v1_12_R1.*;
 
 public class SkyControllerMove extends net.minecraft.server.v1_12_R1.ControllerMove {
+    public SkyControllerMove.Operation h;
+
     public SkyControllerMove(EntityInsentient entityInsentient) {
         super(entityInsentient);
     }
@@ -68,6 +70,5 @@ public class SkyControllerMove extends net.minecraft.server.v1_12_R1.ControllerM
         } else {
             this.a.n(0.0F);
         }
-
     }
 }

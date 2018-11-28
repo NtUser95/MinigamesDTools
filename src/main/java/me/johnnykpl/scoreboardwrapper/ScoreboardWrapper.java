@@ -94,10 +94,10 @@ public class ScoreboardWrapper {
      */
     @Override
     public String toString() {
-        String out = "";
+        StringBuilder out = new StringBuilder();
         int i = 0;
         for (String string : modifies)
-            out += -(i + 1) + ")-> " + string + ";\n";
-        return out;
+            out.append(-(++i)).append(")-> ").append(string).append(";\n");
+        return out.toString();
     }
 }

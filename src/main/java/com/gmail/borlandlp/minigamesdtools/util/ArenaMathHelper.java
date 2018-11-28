@@ -30,7 +30,7 @@ public class ArenaMathHelper {
     public static double getAngle(double x1, double y1, double x2, double y2) {
         double t = (x1*x2+y1*y2) / (Math.sqrt(x1*x1+y1*y1) * Math.sqrt(x2*x2+y2*y2));
         if (t < -1) {
-            t =- 1;
+            t = -1;
         } else if(t > 1) {
             t = 1;
         }

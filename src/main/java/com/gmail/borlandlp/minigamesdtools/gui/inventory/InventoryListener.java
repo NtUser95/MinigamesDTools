@@ -39,7 +39,7 @@ public class InventoryListener implements Listener {
         if(drawableInventory != null) {
             MinigamesDTools.getInstance().getInventoryGUI_API().show(drawableInventory, event.getPlayer());
         } else {
-            Debug.print(Debug.LEVEL.NOTICE, "Internal error. DrawableInventory cant by null.");
+            Debug.print(Debug.LEVEL.NOTICE, "Internal error. DrawableInventory cant be null.");
         }
     }
 
@@ -57,15 +57,15 @@ public class InventoryListener implements Listener {
             priority = EventPriority.LOW
     )
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
-        if(MinigamesDTools.getInstance().getInventoryGUI_API().isView(((Player)event.getPlayer()))) {
-            MinigamesDTools.getInstance().getInventoryGUI_API().close((Player)event.getPlayer());
+        if(MinigamesDTools.getInstance().getInventoryGUI_API().isView((event.getPlayer()))) {
+            MinigamesDTools.getInstance().getInventoryGUI_API().close(event.getPlayer());
         }
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerKickEvent(PlayerQuitEvent event) {
-        if(MinigamesDTools.getInstance().getInventoryGUI_API().isView(((Player)event.getPlayer()))) {
-            MinigamesDTools.getInstance().getInventoryGUI_API().close((Player)event.getPlayer());
+        if(MinigamesDTools.getInstance().getInventoryGUI_API().isView((event.getPlayer()))) {
+            MinigamesDTools.getInstance().getInventoryGUI_API().close(event.getPlayer());
         }
     }
 
@@ -104,7 +104,7 @@ public class InventoryListener implements Listener {
                 slot.performClick((Player) event.getWhoClicked());
             }
 
-        } else if(((Player)event.getWhoClicked()).getOpenInventory() != null && MinigamesDTools.getInstance().getInventoryGUI_API().isView((Player) event.getWhoClicked()) && event.isShiftClick()) {
+        } else if((event.getWhoClicked()).getOpenInventory() != null && MinigamesDTools.getInstance().getInventoryGUI_API().isView((Player) event.getWhoClicked()) && event.isShiftClick()) {
             event.setCancelled(true);
         }
     }

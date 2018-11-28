@@ -10,9 +10,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
+import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class Events implements Listener {
@@ -95,7 +97,6 @@ public class Events implements Listener {
 
     @EventHandler
     public void onEntityDamageEvent(EntityDamageByEntityEvent event) {
-        Debug.print(Debug.LEVEL.NOTICE, event.toString());
         if(!(event.getEntity() instanceof Player)) {
             return;
         }
@@ -137,7 +138,6 @@ public class Events implements Listener {
 
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
-        Debug.print(Debug.LEVEL.NOTICE, event.toString());
         if(event.getEntity() != null) {
             Player player = event.getEntity();
             ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf(player);
@@ -226,16 +226,7 @@ public class Events implements Listener {
         ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf(event.getPlayer());
         if(arena != null && !arena.isCanItemDrop() && arena.getState() != ArenaBase.STATE.EMPTY) {
             event.setCancelled(true);
-        }/* else if(team == null && event.getItemDrop().getItemStack().getItemMeta().hasDisplayName()) {
-            if(event.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals("[arena]")) {
-                event.getPlayer().sendMessage(MinigamesDTools.getPrefix() + ChatColor.RED + " С арены запрещено выносить вещи. Ваш предмет был заменён на землю.");
-                event.getItemDrop().setItemStack(new ItemStack(Material.DIRT));
-                for(Enchantment enchantment : event.getItemDrop().getItemStack().getEnchantments().keySet()) {
-                    event.getItemDrop().getItemStack().removeEnchantment(enchantment);
-                }
-                event.getItemDrop().getItemStack().setItemMeta((ItemMeta)null);
-            }
-        }*/
+        }
     }
 
     @EventHandler
@@ -253,7 +244,14 @@ public class Events implements Listener {
     @EventHandler
     public void onPlayerDamage(PlayerItemDamageEvent event) {
         ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf(event.getPlayer());
-        if(arena != null && arena.getState() == ArenaBase.STATE.PAUSED || arena.getState() == ArenaBase.STATE.COUNTDOWN) {
+        if(arena == null) {
+            return;
+        }
+
+        ArenaBase.STATE arenaState = arena.getState();
+        if(arenaState == null) {
+            Debug.print(Debug.LEVEL.WARNING, "Detected invalid null state for arena[name:" + arena.getName() + "]");
+        } else if(arenaState == ArenaBase.STATE.PAUSED || arenaState == ArenaBase.STATE.COUNTDOWN) {
             event.getPlayer().sendMessage(MinigamesDTools.getPrefix() + " Нельзя бить участника арены во время её старта или паузы.");
             event.setCancelled(true);
         }
@@ -289,6 +287,18 @@ public class Events implements Listener {
         ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf((Player) event.getEntity());
         if(arena != null && !arena.isRegainHealth()) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(
+            priority = EventPriority.HIGHEST,
+            ignoreCancelled = true
+    )
+    public void WeatherChangeEvent(WeatherChangeEvent event) {
+        if (event.toWeatherState()) {
+            event.setCancelled(true);
+            event.getWorld().setWeatherDuration(0);
+            event.getWorld().setThundering(false);
         }
     }
 }

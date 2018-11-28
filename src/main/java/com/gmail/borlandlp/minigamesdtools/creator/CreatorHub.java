@@ -85,11 +85,12 @@ public abstract class CreatorHub implements ICreatorHub {
         }
 
         Creator creator = this.routeId2Creator(itemID);
-        for (String reqField : creator.getDataProviderRequiredFields()) {
-            if(!dataProvider.contains(reqField)) {
-                creator.getDataProviderRequiredFields().forEach(System.out::println);
-                dataProvider.getKeys().forEach(System.out::println);
-                throw new Exception("Invalid DataProvider. Missing field '" + reqField + "'. itemID:" + itemID);
+        List<String> reqFields = creator.getDataProviderRequiredFields();
+        if(reqFields != null) {
+            for (String reqField : creator.getDataProviderRequiredFields()) {
+                if(!dataProvider.contains(reqField)) {
+                    throw new Exception("Invalid DataProvider. Missing field '" + reqField + "'. itemID:" + itemID);
+                }
             }
         }
 
