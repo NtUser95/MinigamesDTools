@@ -50,7 +50,7 @@ public class Events implements Listener {
             return;
         }
 
-        if((arena.isCountdown_disableMoving() && arena.getState() == ArenaBase.STATE.COUNTDOWN) || arena.getState() == ArenaBase.STATE.PAUSED) {
+        if((arena.getGameRules().beforeFightDisableMoving && arena.getState() == ArenaBase.STATE.COUNTDOWN) || arena.getState() == ArenaBase.STATE.PAUSED) {
             if(event.getFrom().getX() != event.getTo().getX() || event.getFrom().getY() != event.getTo().getY() || event.getFrom().getZ() != event.getTo().getZ() ) {
                 event.getPlayer().teleport(event.getFrom());
             }
@@ -159,7 +159,7 @@ public class Events implements Listener {
         if(event.getEntity() instanceof Player) {
             Player player = (Player)event.getEntity();
             ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf(player);
-            if(arena != null && arena.getState() != ArenaBase.STATE.EMPTY && arena.isHungerDisable()) {
+            if(arena != null && arena.getState() != ArenaBase.STATE.EMPTY && arena.getGameRules().hungerDisable) {
                 event.setCancelled(true);
             }
         }
@@ -224,7 +224,7 @@ public class Events implements Listener {
     @EventHandler
     public void onPlayerDrop(PlayerDropItemEvent event) {
         ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf(event.getPlayer());
-        if(arena != null && !arena.isCanItemDrop() && arena.getState() != ArenaBase.STATE.EMPTY) {
+        if(arena != null && !arena.getGameRules().playerCanItemDrop && arena.getState() != ArenaBase.STATE.EMPTY) {
             event.setCancelled(true);
         }
     }
@@ -236,7 +236,7 @@ public class Events implements Listener {
         }
 
         ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf((Player) event.getEntity());
-        if(arena != null && !arena.isCanItemPickup() && arena.getState() != ArenaBase.STATE.EMPTY) {
+        if(arena != null && !arena.getGameRules().playerCanItemPickup && arena.getState() != ArenaBase.STATE.EMPTY) {
             event.setCancelled(true);
         }
     }
@@ -285,7 +285,7 @@ public class Events implements Listener {
         if(!(event.getEntity() instanceof Player)) return;
 
         ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf((Player) event.getEntity());
-        if(arena != null && !arena.isRegainHealth()) {
+        if(arena != null && !arena.getGameRules().playerCanRegainHealth) {
             event.setCancelled(true);
         }
     }

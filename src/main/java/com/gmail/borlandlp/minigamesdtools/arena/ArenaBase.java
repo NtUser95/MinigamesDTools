@@ -23,27 +23,14 @@ public class ArenaBase {
     protected String name;
     protected boolean enabled;
     protected ArenaBase.STATE state = STATE.EMPTY;
-    protected int roundTime;
-    protected int maxRounds;
     protected int currentRound = 1;
-    protected double awardEcons = 0D;
-    protected int arenaCost;
-    protected boolean canItemDrop;
-    protected boolean canItemPickup;
-    protected boolean hungerDisable;
     protected String gameId;
-    protected int minPlayersToStart;
-    private boolean regainHealth = true;
 
-    protected boolean countdown_disableMoving;
-    protected long unix_startTime;
+    protected long game_unix_startTime;
+    protected long round_unix_startTime;
     protected BukkitTask schedulerTask;
     protected BukkitTask countdownTask;
     protected long countdown_startTime;
-    protected int countdown_time;
-    protected BukkitTask preCountdownTask;
-    protected long preCountdown_startTime;
-    protected int preCountdown_time;
 
     protected long delayedCountdown_startTime;
     protected long delayedCountdown_waitTime = 5;
@@ -62,10 +49,6 @@ public class ArenaBase {
     protected ConditionsChain joinConditionsChain;
 
     private boolean initialized = false;
-
-    public ArenaBase(String name) {
-        this.name = name;
-    }
 
     public void forceDisable() {
         this.gameEnded(true);
@@ -142,6 +125,7 @@ public class ArenaBase {
     }
 
     protected void beforeGameStarting() {
+        this.game_unix_startTime = Instant.now().getEpochSecond();
         this.getPhaseComponentController().announceNewPhase(PhaseComponentController.ArenaPhase.GAME_STARTING);
     }
 
@@ -155,9 +139,9 @@ public class ArenaBase {
         this.countdownTask = new BukkitRunnable() {
             public void run() {
                 int inc = (int)(Instant.now().getEpochSecond() - (int) arenaBaseObject.countdown_startTime);
-                if(inc > arenaBaseObject.countdown_time) {
+                if(inc > arenaBaseObject.getGameRules().beforeRoundStartingWaitDuration) {
                     arenaBaseObject.state = STATE.IN_PROGRESS;
-                    arenaBaseObject.setStartTime(Instant.now().getEpochSecond());
+                    arenaBaseObject.round_unix_startTime = Instant.now().getEpochSecond();
                     arenaBaseObject.countdownTask.cancel();
                 }
             }
@@ -174,6 +158,7 @@ public class ArenaBase {
 
     protected void gameEnded(boolean force) {
         this.setState(STATE.ENDED);
+        this.game_unix_startTime = 0;
 
         if(this.schedulerTask != null) this.schedulerTask.cancel();
         if(this.countdownTask != null) this.countdownTask.cancel();
@@ -195,16 +180,8 @@ public class ArenaBase {
         return hotbarController;
     }
 
-    public void setHotbarController(HotbarController hotbarController) {
-        this.hotbarController = hotbarController;
-    }
-
     public ChunkLoaderController getChunkLoaderController() {
         return chunkLoaderController;
-    }
-
-    public void setChunkLoaderController(ChunkLoaderController chunkLoaderController) {
-        this.chunkLoaderController = chunkLoaderController;
     }
 
     public EventAnnouncer getEventAnnouncer() {
@@ -215,40 +192,28 @@ public class ArenaBase {
         return gameId;
     }
 
-    public void setScenarioChainController(ScenarioChainController scenarioChainController) {
-        this.scenarioChainController = scenarioChainController;
-    }
-
     public ScenarioChainController getScenarioChainController() {
         return scenarioChainController;
+    }
+
+    public GameRules getGameRules() {
+        return gameRules;
     }
 
     public GUIController getGuiController() {
         return guiController;
     }
 
-    public void setGuiController(GUIController guiController) {
-        this.guiController = guiController;
+    public long getGameStartTime() {
+        return this.game_unix_startTime;
     }
 
-    public double getAwardEcons() {
-        return this.awardEcons;
-    }
-
-    public void setStartTime(long time) {
-        this.unix_startTime = time;
-    }
-
-    public long getStartTime() {
-        return this.unix_startTime;
+    public long getRoundStartTime() {
+        return round_unix_startTime;
     }
 
     public int getTimeLeft() {
-        return (int)(this.roundTime - (Instant.now().getEpochSecond() - this.getStartTime()));
-    }
-
-    public int getMaxRounds() {
-        return this.maxRounds;
+        return (int)(this.getGameRules().roundTIme - (Instant.now().getEpochSecond() - this.getRoundStartTime()));
     }
 
     public int getCurrentRound() {
@@ -271,111 +236,11 @@ public class ArenaBase {
         return this.state;
     }
 
-    public int getCost() {
-        return this.arenaCost;
-    }
-
     public void setState(ArenaBase.STATE state) { this.state = state; }
 
     public TeamController getTeamController() { return this.teamController; }
 
     public String getName() { return this.name; }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isCanItemDrop() {
-        return canItemDrop;
-    }
-
-    public boolean isCanItemPickup() {
-        return canItemPickup;
-    }
-
-    public boolean isHungerDisable() {
-        return hungerDisable;
-    }
-
-    public void setArenaCost(int arenaCost) {
-        this.arenaCost = arenaCost;
-    }
-
-    public void setRoundTime(int roundTime) {
-        this.roundTime = roundTime;
-    }
-
-    public void setPreCountdownTask(BukkitTask preCountdownTask) {
-        this.preCountdownTask = preCountdownTask;
-    }
-
-    public void setPreCountdown_time(int preCountdown_time) {
-        this.preCountdown_time = preCountdown_time;
-    }
-
-    public void setMaxRounds(int maxRounds) {
-        this.maxRounds = maxRounds;
-    }
-
-    public void setHungerDisable(boolean hungerDisable) {
-        this.hungerDisable = hungerDisable;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public void setCountdown_disableMoving(boolean countdown_disableMoving) {
-        this.countdown_disableMoving = countdown_disableMoving;
-    }
-
-    public void setCountdown_time(int countdown_time) {
-        this.countdown_time = countdown_time;
-    }
-
-    public void setCanItemDrop(boolean canItemDrop) {
-        this.canItemDrop = canItemDrop;
-    }
-
-    public void setCanItemPickup(boolean canItemPickup) {
-        this.canItemPickup = canItemPickup;
-    }
-
-    public void setAwardEcons(double a) {
-        awardEcons = a;
-    }
-
-    public void setTeamController(TeamController t) {
-        teamController = t;
-    }
-
-    public boolean isCountdown_disableMoving() {
-        return countdown_disableMoving;
-    }
-
-    public int getPreCountdown_time() {
-        return preCountdown_time;
-    }
-
-    public long getCountdown_startTime() {
-        return countdown_startTime;
-    }
-
-    public long getPreCountdown_startTime() {
-        return preCountdown_startTime;
-    }
-
-    public long getUnix_startTime() {
-        return unix_startTime;
-    }
-
-    public int getRoundTime() {
-        return roundTime;
-    }
-
-    public int getArenaCost() {
-        return arenaCost;
-    }
 
     public PhaseComponentController getPhaseComponentController() {
         return phaseComponentController;
@@ -385,32 +250,8 @@ public class ArenaBase {
         return handlersController;
     }
 
-    public int getMinPlayersToStart() {
-        return minPlayersToStart;
-    }
-
-    public void setMinPlayersToStart(int minPlayersToStart) {
-        this.minPlayersToStart = minPlayersToStart;
-    }
-
-    public GameRules getArenaRules() {
-        return this.gameRules;
-    }
-
     public ConditionsChain getJoinConditionsChain() {
         return joinConditionsChain;
-    }
-
-    public void setJoinConditionsChain(ConditionsChain joinConditionsChain) {
-        this.joinConditionsChain = joinConditionsChain;
-    }
-
-    public boolean isRegainHealth() {
-        return regainHealth;
-    }
-
-    public void setRegainHealth(boolean regainHealth) {
-        this.regainHealth = regainHealth;
     }
 
     public enum STATE {
@@ -420,5 +261,59 @@ public class ArenaBase {
         PAUSED,
         EMPTY,
         ENDED
+    }
+
+    public static Builder newBuilder() {
+        return new ArenaBase().new Builder();
+    }
+
+    public class Builder {
+        private Builder() {
+
+        }
+
+        public void setJoinConditionsChain(ConditionsChain joinConditionsChain) {
+            ArenaBase.this.joinConditionsChain = joinConditionsChain;
+        }
+
+        public void setTeamController(TeamController t) {
+            ArenaBase.this.teamController = t;
+        }
+
+        public void setGameId(String gameId) {
+            ArenaBase.this.gameId = gameId;
+        }
+
+        public void setName(String name) {
+            ArenaBase.this.name = name;
+        }
+
+        public void setHotbarController(HotbarController hotbarController) {
+            ArenaBase.this.hotbarController = hotbarController;
+        }
+
+        public void setChunkLoaderController(ChunkLoaderController chunkLoaderController) {
+            ArenaBase.this.chunkLoaderController = chunkLoaderController;
+        }
+
+        public void setScenarioChainController(ScenarioChainController scenarioChainController) {
+            ArenaBase.this.scenarioChainController = scenarioChainController;
+        }
+
+        public void setGuiController(GUIController guiController) {
+            ArenaBase.this.guiController = guiController;
+        }
+
+        public void setGameRules(GameRules rules) {
+            ArenaBase.this.gameRules = rules;
+        }
+
+        public ArenaBase getArena() {
+            return ArenaBase.this;
+        }
+
+        public ArenaBase build() {
+            return ArenaBase.this;
+        }
     }
 }

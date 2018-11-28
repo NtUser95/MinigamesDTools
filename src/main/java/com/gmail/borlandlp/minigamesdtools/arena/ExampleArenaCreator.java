@@ -11,7 +11,6 @@ import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
-import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.hotbar.HotbarController;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUIController;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUIProvider;
@@ -37,30 +36,16 @@ public class ExampleArenaCreator implements Creator {
 
     @Override
     public ArenaBase create(String ID, AbstractDataProvider dataProvider) throws Exception {
-        ArenaBase arenaTemplate = new ArenaBase(ID);
+        //ArenaBase arenaTemplate = new ArenaBase();
         String debugPrefix = "[" + ID + "] ";
+        ConfigurationSection arenaConfig = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.ARENA_FOLDER, ID).getData();
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " started loading...");
 
-        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load options...");
-        ConfigurationSection arenaConfig = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.ARENA_FOLDER, ID).getData();
-        arenaTemplate.setEnabled(arenaConfig.get("enabled").toString().equalsIgnoreCase("true"));
-        arenaTemplate.setRoundTime(Integer.parseInt(arenaConfig.get("roundTime").toString()));
-        arenaTemplate.setMaxRounds(Integer.parseInt(arenaConfig.get("maxRounds").toString()));
-        arenaTemplate.setArenaCost(Integer.parseInt(arenaConfig.get("eco.arenaCost").toString()));
-        arenaTemplate.setCanItemDrop(Boolean.parseBoolean(arenaConfig.get("playerItemDrop").toString()));
-        arenaTemplate.setCanItemPickup(Boolean.parseBoolean(arenaConfig.get("playerItemPickUp").toString()));
-        arenaTemplate.setCountdown_time(Integer.parseInt(arenaConfig.get("countdown.beforeFight.duration").toString()));
-        arenaTemplate.setPreCountdown_time(Integer.parseInt(arenaConfig.get("countdown.beforeTeleport.duration").toString()));
-        arenaTemplate.setCountdown_disableMoving(Boolean.parseBoolean(arenaConfig.get("countdown.beforeFight.disableMoving").toString()));
-        arenaTemplate.setHungerDisable(Boolean.parseBoolean(arenaConfig.get("playerHungerDisable").toString()));
-        arenaTemplate.setMinPlayersToStart(Integer.parseInt(arenaConfig.get("min_players_to_start").toString()));
-        if(arenaConfig.contains("regain_health")) {
-            arenaTemplate.setRegainHealth(arenaConfig.get("regain_health").toString().equalsIgnoreCase("true"));
-        }
+        ArenaBase.Builder builder = ArenaBase.newBuilder();
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load chunkLoaders...");
         ChunkLoaderController chunkLoaderController = new ChunkLoaderController();
-        chunkLoaderController.setArena(arenaTemplate);
+        chunkLoaderController.setArena(builder.getArena());
         Map<String, ChunksLoader> chunksLoaderMap = new HashMap<>();
         if(arenaConfig.contains("chunk_loaders")) {
             for (String loaderName : arenaConfig.getConfigurationSection("chunk_loaders").getKeys(false)) {
@@ -81,42 +66,67 @@ public class ExampleArenaCreator implements Creator {
         } else {
             Debug.print(Debug.LEVEL.NOTICE, "ArenaConfig does not contain a field 'ChunkLoaders' -> Skipping it.");
         }
-        arenaTemplate.setChunkLoaderController(chunkLoaderController);
+        builder.setChunkLoaderController(chunkLoaderController);
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load GUIController...");
         GUIController guiController = new GUIController();
-        guiController.setArena(arenaTemplate);
+        guiController.setArena(builder.getArena());
         for (String GUI_ID : arenaConfig.getStringList("gui_provider")) {
             GUIProvider guiProvider = MinigamesDTools.getInstance().getGuiCreatorHub().createGuiProvider(GUI_ID, new DataProvider());
-            guiProvider.setArena(arenaTemplate);
+            guiProvider.setArena(builder.getArena());
             guiController.addProvider(guiProvider);
         }
-        arenaTemplate.setGuiController(guiController);
+        builder.setGuiController(guiController);
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load ScenarioChain...");
         AbstractDataProvider abstractDataProvider = new DataProvider();
-        abstractDataProvider.set("arena_instance", arenaTemplate);
+        abstractDataProvider.set("arena_instance", builder.getArena());
         ScenarioChainController scenarioChainController = MinigamesDTools.getInstance().getScenarioChainCreatorHub().createChain(arenaConfig.get("scenarios_chain").toString(), abstractDataProvider);
-        arenaTemplate.setScenarioChainController(scenarioChainController);
+        builder.setScenarioChainController(scenarioChainController);
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load teams...");
-        TeamController teamController = new TeamController(arenaTemplate);
+        TeamController teamController = new TeamController(builder.getArena());
         for(String teamID : arenaConfig.getStringList("teams")) {
             TeamProvider teamProvider = MinigamesDTools.getInstance().getTeamCreatorHub().createTeam(teamID, new DataProvider());
-            teamProvider.setArena(arenaTemplate);
+            teamProvider.setArena(builder.getArena());
             teamController.addTeam(teamProvider);
         }
-        arenaTemplate.setTeamController(teamController);
+        builder.setTeamController(teamController);
+
+        //conditions
+        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load conditions...");
+        List<AbstractCondition> conditions = new ArrayList<>();
+        for (String conditionId : arenaConfig.getStringList("join_conditions")) {
+            conditions.add(MinigamesDTools.getInstance().getConditionsCreatorHub().createCondition(conditionId, new DataProvider()));
+        }
+        builder.setJoinConditionsChain(new ConditionsChain(conditions));
+
+        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load hotbar...");
+        HotbarController hotbarController = new HotbarController();
+        hotbarController.setArena(builder.getArena());
+        if(Boolean.parseBoolean(arenaConfig.get("interactive_hotbar.enabled").toString())) {
+            String hotbarID = arenaConfig.get("interactive_hotbar.hotbar_id").toString();
+            hotbarController.setDefaultHotbarId(hotbarID);
+            hotbarController.setEnabled(true);
+        } else {
+            Debug.print(Debug.LEVEL.NOTICE, "Hotbar is disabled for Arena " + ID);
+        }
+        builder.setHotbarController(hotbarController);
+
+        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "generate random ID...");
+        builder.setGameId(ArenaUtils.generateRandID().substring(0, 14));
+
+        builder.setName(ID);
 
         // gen colors
         /*
-        * GlowAPI contains the last element color "None". We exclude it.
-        * */
-        if( arenaTemplate.getTeamController().getTeams().size() > Glowing.getAvailableColors().size()-1) {
+         * GlowAPI contains the last element color "None". We exclude it.
+         * */
+        if( builder.getArena().getTeamController().getTeams().size() > Glowing.getAvailableColors().size()-1) {
             throw new Exception("Max team limit reached! [limit=" + (Glowing.getAvailableColors().size()-1) + "]");
         }
         List<String> usedColors = new ArrayList<>();
-        for (TeamProvider team : arenaTemplate.getTeamController().getTeams()) {
+        for (TeamProvider team : builder.getArena().getTeamController().getTeams()) {
             ChatColor color;
             String strColor;
             do {
@@ -127,28 +137,26 @@ public class ExampleArenaCreator implements Creator {
             team.setColor(strColor);
         }
 
-        //conditions
-        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load conditions...");
-        List<AbstractCondition> conditions = new ArrayList<>();
-        for (String conditionId : arenaConfig.getStringList("join_conditions")) {
-            conditions.add(MinigamesDTools.getInstance().getConditionsCreatorHub().createCondition(conditionId, new DataProvider()));
+        // <GameRules>
+        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load options...");
+        GameRules gameRules = new GameRules();
+        gameRules.roundTIme = Integer.parseInt(arenaConfig.get("roundTime").toString());
+        gameRules.maxRounds = Integer.parseInt(arenaConfig.get("maxRounds").toString());
+        gameRules.playerCanItemDrop = Boolean.parseBoolean(arenaConfig.get("playerItemDrop").toString());
+        gameRules.playerCanItemPickup = Boolean.parseBoolean(arenaConfig.get("playerItemPickUp").toString());
+        gameRules.beforeRoundStartingWaitDuration = Integer.parseInt(arenaConfig.get("countdown.beforeFight.duration").toString());
+        gameRules.beforeArenaTeleportWaitDuration = Integer.parseInt(arenaConfig.get("countdown.beforeTeleport.duration").toString());
+        gameRules.beforeFightDisableMoving = Boolean.parseBoolean(arenaConfig.get("countdown.beforeFight.disableMoving").toString());
+        gameRules.hungerDisable = Boolean.parseBoolean(arenaConfig.get("playerHungerDisable").toString());
+        gameRules.minPlayersToStart = Integer.parseInt(arenaConfig.get("min_players_to_start").toString());
+        if(arenaConfig.contains("regain_health")) {
+            gameRules.playerCanRegainHealth = arenaConfig.get("regain_health").toString().equalsIgnoreCase("true");
         }
-        arenaTemplate.setJoinConditionsChain(new ConditionsChain(conditions));
+        builder.setGameRules(gameRules);
+        // </GameRules>
 
-        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load hotbar...");
-        HotbarController hotbarController = new HotbarController();
-        hotbarController.setArena(arenaTemplate);
-        if(Boolean.parseBoolean(arenaConfig.get("interactive_hotbar.enabled").toString())) {
-            String hotbarID = arenaConfig.get("interactive_hotbar.hotbar_id").toString();
-            hotbarController.setDefaultHotbarId(hotbarID);
-            hotbarController.setEnabled(true);
-        } else {
-            Debug.print(Debug.LEVEL.NOTICE, "Hotbar is disabled for Arena " + ID);
-        }
-        arenaTemplate.setHotbarController(hotbarController);
-
-        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "generate random ID...");
-        arenaTemplate.setGameId(ArenaUtils.generateRandID().substring(0, 14));
+        ArenaBase arenaTemplate = builder.build();
+        arenaTemplate.setEnabled(arenaConfig.get("enabled").toString().equalsIgnoreCase("true"));
 
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "register phase components...");
         // register
