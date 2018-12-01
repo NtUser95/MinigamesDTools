@@ -8,7 +8,7 @@ public class GameRules {
     public boolean beforeFightDisableMoving = true;
     public int minPlayersToStart = 2;
     public int maxRounds = 2;
-    public int roundTIme = 60;
+    public int roundTime = 60;
     public int beforeRoundStartingWaitDuration = 10;
     public int beforeArenaTeleportWaitDuration = 10;
 }

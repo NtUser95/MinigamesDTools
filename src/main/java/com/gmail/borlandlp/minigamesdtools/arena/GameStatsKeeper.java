@@ -5,6 +5,4 @@ import java.util.Map;
 
 public class GameStatsKeeper {
     private Map<String, Object> data = new Hashtable<>();
-
-
 }

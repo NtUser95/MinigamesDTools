@@ -24,4 +24,14 @@ public class TeamIncrementWinTicketsReaction extends Reaction {
     public void performIntersection(Entity reactionInitiator) {
         Debug.print(Debug.LEVEL.NOTICE, "TeamIncrementWinTicketsReaction->performIntersection(" + reactionInitiator.getName() + ")");
     }
+
+    @Override
+    public void performInteraction(Entity reactionInitiator) {
+
+    }
+
+    @Override
+    public String toString() {
+        return "{Reaction type=TeamIncrementWinTicketsReaction}";
+    }
 }

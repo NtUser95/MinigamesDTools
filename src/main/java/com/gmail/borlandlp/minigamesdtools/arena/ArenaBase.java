@@ -213,7 +213,7 @@ public class ArenaBase {
     }
 
     public int getTimeLeft() {
-        return (int)(this.getGameRules().roundTIme - (Instant.now().getEpochSecond() - this.getRoundStartTime()));
+        return (int)(this.getGameRules().roundTime - (Instant.now().getEpochSecond() - this.getRoundStartTime()));
     }
 
     public int getCurrentRound() {

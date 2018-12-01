@@ -1,6 +1,6 @@
 .git/
 .idea/
-minigamedtools/
+.PVS-Studio/
 out/
 target/
 *.iml

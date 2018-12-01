@@ -7,6 +7,7 @@ import com.gmail.borlandlp.minigamesdtools.events.ActivePointDamagedEvent;
 import com.gmail.borlandlp.minigamesdtools.events.ActivePointDestroyedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -22,6 +23,7 @@ public abstract class ActivePoint {
     private boolean damageable;
     private boolean performDamage;
     private boolean performEntityIntersection;
+    private boolean performInteraction;
     private Location location;
     private boolean spawned = false;
     private List<Behavior> behavior;
@@ -79,6 +81,14 @@ public abstract class ActivePoint {
         return performEntityIntersection;
     }
 
+    public boolean isPerformInteraction() {
+        return performInteraction;
+    }
+
+    public void setPerformInteraction(boolean performInteraction) {
+        this.performInteraction = performInteraction;
+    }
+
     public void setPerformEntityIntersection(boolean performEntityIntersection) {
         this.performEntityIntersection = performEntityIntersection;
     }
@@ -91,8 +101,13 @@ public abstract class ActivePoint {
         return this.getReactions().get(reactionReason);
     }
 
+    @Deprecated
     public void setReactions(Map<ReactionReason, List<Reaction>> reactions) {
         this.reactions = reactions;
+    }
+
+    public void setReaction(ReactionReason reason, List<Reaction> reactions) {
+        this.reactions.put(reason, reactions);
     }
 
     public boolean isPerformDamage() {
@@ -103,10 +118,7 @@ public abstract class ActivePoint {
         this.performDamage = performDamage;
     }
 
-    /*
-    * Возвращает
-    * */
-    public void performDamage(LivingEntity entity, double damage) {
+    public void performDamage(Entity entity, double damage) {
         if(!this.isPerformDamage()) {
             return;
         }
@@ -132,13 +144,23 @@ public abstract class ActivePoint {
         }
     }
 
-    public void performIntersect(LivingEntity entity) {
+    public void performIntersect(Entity entity) {
         if(!this.isPerformEntityIntersection()) {
             return;
         }
 
         for(Reaction reaction : this.getReactions().get(ReactionReason.INTERSECT)) {
             reaction.performIntersection(entity);
+        }
+    }
+
+    public void performInteract(Entity entity) {
+        if(!this.isPerformInteraction()) {
+            return;
+        }
+
+        for(Reaction reaction : this.getReactions().get(ReactionReason.INTERACT)) {
+            reaction.performInteraction(entity);
         }
     }
 
@@ -150,4 +172,16 @@ public abstract class ActivePoint {
     public abstract void spawn();
     public abstract void despawn();
     public abstract double getHealth();
+
+    public String toString() {
+        return new StringBuilder().append("{ActivePoint")
+                .append(" name=").append(this.name)
+                .append(" type=").append(getClass().getSimpleName())
+                .append(" hp=").append(this.getHealth())
+                .append(" location=").append(this.location)
+                .append(" performDamage=").append(this.performDamage)
+                .append(" performInteract=").append(this.performInteraction)
+                .append(" performIntersection=").append(this.performEntityIntersection)
+                .append("}").toString();
+    }
 }

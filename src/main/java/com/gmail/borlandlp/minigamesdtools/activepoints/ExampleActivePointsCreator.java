@@ -107,36 +107,67 @@ public class ExampleActivePointsCreator implements Creator {
         activePoint.setName(activepoint_id);
 
         //load reactions
-        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " Start load damage reactions");
-        activePoint.setDamageable(Boolean.parseBoolean(activePointConfig.get("params.is_damagable").toString()));
-        activePoint.setPerformDamage(Boolean.parseBoolean(activePointConfig.get("reactions.check_damage.enabled").toString()));
-        Map<ReactionReason, List<Reaction>> reactions = new HashMap<>();
-        List<Reaction> damageHandlers = new ArrayList<>();
-        for (String handler_name : activePointConfig.getStringList("reactions.check_damage.reactions_handler")) {
-            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "load damage reaction " + handler_name);
+        if(activePointConfig.contains("reactions.check_damage.enabled")) {
+            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " Start load damage reactions");
 
-            AbstractDataProvider rDataProvider = new DataProvider();
-            rDataProvider.set("active_point_instance", activePoint);
+            boolean damageable = Boolean.parseBoolean(activePointConfig.get("params.is_damagable").toString());
+            boolean performDamage = Boolean.parseBoolean(activePointConfig.get("reactions.check_damage.enabled").toString());
+            activePoint.setDamageable(damageable);
+            activePoint.setPerformDamage(performDamage);
 
-            damageHandlers.add(MinigamesDTools.getInstance().getReactionCreatorHub().createReaction(handler_name, rDataProvider));
+            List<Reaction> damageHandlers = new ArrayList<>();
+            for (String handler_name : activePointConfig.getStringList("reactions.check_damage.reactions_handler")) {
+                Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "load damage reaction " + handler_name);
+                AbstractDataProvider rDataProvider = new DataProvider();
+                rDataProvider.set("active_point_instance", activePoint);
+                damageHandlers.add(MinigamesDTools.getInstance().getReactionCreatorHub().createReaction(handler_name, rDataProvider));
+            }
+            activePoint.setReaction(ReactionReason.DAMAGE, damageHandlers);
+            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Done load damage reactions for" + activepoint_id);
+        } else {
+            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Not found a damage reactions.");
+            activePoint.setPerformDamage(false);
         }
-        reactions.put(ReactionReason.DAMAGE, damageHandlers);
-        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Done load damage reactions");
 
-        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Start load intersect reactions");
-        activePoint.setPerformEntityIntersection(Boolean.parseBoolean(activePointConfig.get("reactions.check_intersect.enabled").toString()));
-        List<Reaction> intersectHandlers = new ArrayList<>();
-        for (String handler_name : activePointConfig.getStringList("reactions.check_intersect.reactions_handler")) {
-            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "load intersect reaction " + handler_name);
+        if(activePointConfig.contains("reactions.check_intersect.enabled")) {
+            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Start load intersect reactions");
+            boolean isPerformIntersect = Boolean.parseBoolean(activePointConfig.get("reactions.check_intersect.enabled").toString());
+            activePoint.setPerformEntityIntersection(isPerformIntersect);
 
-            AbstractDataProvider rDataProvider = new DataProvider();
-            rDataProvider.set("active_point_instance", activePoint);
+            List<Reaction> intersectHandlers = new ArrayList<>();
+            for (String handler_name : activePointConfig.getStringList("reactions.check_intersect.reactions_handler")) {
+                Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "load intersect reaction " + handler_name);
+                AbstractDataProvider rDataProvider = new DataProvider();
+                rDataProvider.set("active_point_instance", activePoint);
+                intersectHandlers.add(MinigamesDTools.getInstance().getReactionCreatorHub().createReaction(handler_name, rDataProvider));
+            }
 
-            intersectHandlers.add(MinigamesDTools.getInstance().getReactionCreatorHub().createReaction(handler_name, rDataProvider));
+            activePoint.setReaction(ReactionReason.INTERSECT, intersectHandlers);
+            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Done load intersect reactions for" + activepoint_id);
+        } else {
+            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Not found an intersect reactions.");
+            activePoint.setPerformEntityIntersection(false);
         }
-        reactions.put(ReactionReason.INTERSECT, intersectHandlers);
-        activePoint.setReactions(reactions);
-        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Done load intersect reactions");
+
+        if(activePointConfig.contains("reactions.check_interact.enabled")) {
+            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Start load interact reactions");
+            boolean isPerformInteract = Boolean.parseBoolean(activePointConfig.get("reactions.check_interact.enabled").toString());
+            activePoint.setPerformInteraction(isPerformInteract);
+
+            List<Reaction> interactHandlers = new ArrayList<>();
+            for (String handler_name : activePointConfig.getStringList("reactions.check_interact.reactions_handler")) {
+                Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "load interact reaction " + handler_name);
+                AbstractDataProvider rDataProvider = new DataProvider();
+                rDataProvider.set("active_point_instance", activePoint);
+                interactHandlers.add(MinigamesDTools.getInstance().getReactionCreatorHub().createReaction(handler_name, rDataProvider));
+            }
+
+            activePoint.setReaction(ReactionReason.INTERACT, interactHandlers);
+            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Done load interact reactions for " + activepoint_id);
+        } else {
+            Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Not found an interact reactions.");
+            activePoint.setPerformInteraction(false);
+        }
 
         //behavior
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "Start load behaviors");

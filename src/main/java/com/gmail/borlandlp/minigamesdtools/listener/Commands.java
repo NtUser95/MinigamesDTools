@@ -45,9 +45,9 @@ public class Commands implements CommandExecutor {
             Player p = (Player) sender;
 
             if(args[0].equalsIgnoreCase("lobby")) {
-              MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByID("example_lobby").registerPlayer(player);
+              MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByID("spawn_lobby").registerPlayer(player);
             } else if(args[0].equalsIgnoreCase("lobby_leave")) {
-              MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByID("example_lobby").unregisterPlayer(player);
+              MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByID("spawn_lobby").unregisterPlayer(player);
             } else if(args[0].equalsIgnoreCase("lobby_transfer")) {
               try {
                   MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByID("example_lobby").transferPlayer(player, MinigamesDTools.getInstance().getLobbyHubAPI().getLobbyByID("example_lobby2"));

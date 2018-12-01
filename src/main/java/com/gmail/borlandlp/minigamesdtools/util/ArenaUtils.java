@@ -1,8 +1,5 @@
 package com.gmail.borlandlp.minigamesdtools.util;
 
-import com.gmail.borlandlp.minigamesdtools.arena.ArenaEventListener;
-import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaEventHandler;
-import com.sun.istack.internal.NotNull;
 import net.minecraft.server.v1_12_R1.ChatMessageType;
 import net.minecraft.server.v1_12_R1.IChatBaseComponent;
 import net.minecraft.server.v1_12_R1.PacketPlayOutChat;
@@ -63,7 +60,7 @@ public class ArenaUtils {
         return (Entity)sortDifferences.keySet().toArray()[0];
     }
 
-    public static Location str2Loc(@NotNull String[] str) {
+    public static Location str2Loc(String[] str) {
         double x = Integer.parseInt(str[0]);
         double y = Integer.parseInt(str[1]);
         double z = Integer.parseInt(str[2]);
@@ -79,7 +76,7 @@ public class ArenaUtils {
         return loc;
     }
 
-    public static String[] loc2Str(@NotNull Location loc) {
+    public static String[] loc2Str(Location loc) {
         List<String> strs = new ArrayList<>();
         strs.add(loc.getBlockX() + "");
         strs.add(loc.getBlockY() + "");

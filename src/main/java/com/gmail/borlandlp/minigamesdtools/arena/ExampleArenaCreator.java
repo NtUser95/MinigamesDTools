@@ -140,7 +140,7 @@ public class ExampleArenaCreator implements Creator {
         // <GameRules>
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " load options...");
         GameRules gameRules = new GameRules();
-        gameRules.roundTIme = Integer.parseInt(arenaConfig.get("roundTime").toString());
+        gameRules.roundTime = Integer.parseInt(arenaConfig.get("roundTime").toString());
         gameRules.maxRounds = Integer.parseInt(arenaConfig.get("maxRounds").toString());
         gameRules.playerCanItemDrop = Boolean.parseBoolean(arenaConfig.get("playerItemDrop").toString());
         gameRules.playerCanItemPickup = Boolean.parseBoolean(arenaConfig.get("playerItemPickUp").toString());

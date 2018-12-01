@@ -1,11 +1,13 @@
 package com.gmail.borlandlp.minigamesdtools.activepoints;
 
 import com.gmail.borlandlp.minigamesdtools.events.BlockDamageByEntityEvent;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -18,13 +20,40 @@ public class ActivePointsListener implements Listener {
     private Map<String, String> playersPosCache = new HashMap<>();//nickname -> coordX + "" + coordY + "" + coordZ
     private ActivePointController controller;
 
-    private Map<LivingEntity, Long> damageCooldowns = new Hashtable<>();
-    private Map<LivingEntity, Long> intersectionCooldowns = new Hashtable<>();
+    //ToDO: all cooldowns to pattern chain-of-responsibility
+    private Map<Entity, Long> damageCooldowns = new HashMap<>();
+    private Map<Entity, Long> intersectionCooldowns = new HashMap<>();
+    private Map<Entity, Long> interactCooldowns = new HashMap<>();
+
     private long damageCd_Ms = 500; // 0.5 sec
     private long intersectionCd_Ms = 1000; // 1 sec
+    private long interactCd_Ms = 750;
 
     public ActivePointsListener(ActivePointController controller) {
         this.controller = controller;
+    }
+
+    @EventHandler(
+            priority = EventPriority.MONITOR
+    )
+    public void onInteract(PlayerInteractEvent event) {
+        if(event.getClickedBlock() == null) return;
+
+        if(!this.interactCooldowns.containsKey(event.getPlayer())) {
+            this.interactCooldowns.put(event.getPlayer(), System.nanoTime());
+        } else {
+            long msDiff = (System.nanoTime() - this.interactCooldowns.get(event.getPlayer())) / 1000000;
+            if(msDiff <= this.interactCd_Ms) {
+                return;
+            } else {
+                this.interactCooldowns.put(event.getPlayer(), System.nanoTime());
+            }
+        }
+
+        ActivePoint activePoint = this.controller.getStaticPointsCache().get(event.getClickedBlock().getLocation());
+        if(activePoint != null && activePoint.isPerformInteraction()) {
+            activePoint.performInteract(event.getPlayer());
+        }
     }
 
     @EventHandler(

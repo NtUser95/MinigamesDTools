@@ -15,4 +15,14 @@ public class ItemGiveReaction extends Reaction {
     public void performIntersection(Entity reactionInitiator) {
         Debug.print(Debug.LEVEL.NOTICE, "ItemGiveReaction->performIntersection(" + reactionInitiator.getName() + ")");
     }
+
+    @Override
+    public void performInteraction(Entity reactionInitiator) {
+        Debug.print(Debug.LEVEL.NOTICE, "ItemGiveReaction->performInteraction(" + reactionInitiator.getName() + ")");
+    }
+
+    @Override
+    public String toString() {
+        return "{Reaction type=ItemGive}";
+    }
 }
