@@ -273,10 +273,10 @@ public class Events implements Listener {
         /*if(event.getMessage().equalsIgnoreCase("arena")) return;
         else if(event.getMessage().equalsIgnoreCase("skill")) return;
 
-        ExampleTeam team = (ExampleTeam)MinigamesDTools.getInstance().getArenaAPI().getCacheManager().get(event.getPlayer());
+        ExampleTeam team = (ExampleTeam)MinigamesDTools.getInstance().getArenaAPI().getCacheManager().get(event.getLeader());
         if(team != null && (team.getArenaTemplate().getState() == ArenaBase.STATE.COUNTDOWN || team.getArenaTemplate().getState() == ArenaBase.STATE.IN_PROGRESS)) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage("[TW_ARENA] Запрещён ввод команд во время игры.");
+            event.getLeader().sendMessage("[TW_ARENA] Запрещён ввод команд во время игры.");
         }*/
     }
 

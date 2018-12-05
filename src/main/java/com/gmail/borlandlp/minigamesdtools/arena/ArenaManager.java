@@ -11,6 +11,7 @@ import com.gmail.borlandlp.minigamesdtools.arena.exceptions.ArenaAlreadyAddedExc
 import com.gmail.borlandlp.minigamesdtools.arena.exceptions.ArenaAlreadyInitializedException;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerJoinLocalEvent;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerLeaveLocalEvent;
+import com.gmail.borlandlp.minigamesdtools.party.MgParty;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamController;
 import com.gmail.borlandlp.minigamesdtools.arena.team.TeamProvider;
 import com.gmail.borlandlp.minigamesdtools.conditions.PlayerCheckResult;
@@ -97,20 +98,20 @@ public class ArenaManager implements APIComponent, ArenaAPI {
 
     @Override
     public void addArena(ArenaBase arena) throws ArenaAlreadyAddedException {
-       for(ArenaBase qArena : this.getArenas()) {
-           if(qArena.getName().equalsIgnoreCase(arena.getName())) {
-               String msg = "Arena[name:" + arena.getName() + "] with a similar name is already registered.";
-               throw new ArenaAlreadyAddedException(msg);
-           }
-       }
+        for(ArenaBase qArena : this.getArenas()) {
+            if(qArena.getName().equalsIgnoreCase(arena.getName())) {
+                String msg = "Arena[name:" + arena.getName() + "] with a similar name is already registered.";
+                throw new ArenaAlreadyAddedException(msg);
+            }
+        }
 
-       this.mArenas.put(arena.getName(), arena);
-   }
+        this.mArenas.put(arena.getName(), arena);
+    }
 
     @Override
     public void removeArena(String arenaName) {
         this.mArenas.remove(arenaName);
-   }
+    }
 
     public ArenaBase getArenaOf(Player player) {
         for (ArenaBase arenaBase : this.getEnabledArenas()) {
@@ -129,22 +130,25 @@ public class ArenaManager implements APIComponent, ArenaAPI {
         return null;
     }
 
-   public ArenaBase getArena(String arenaName) {
+    public ArenaBase getArena(String arenaName) {
        return this.mArenas.get(arenaName);
    }
 
-   public ArrayList<ArenaBase> getArenas() {
+    public ArrayList<ArenaBase> getArenas() {
       return new ArrayList<>(this.mArenas.values());
    }
 
-   public ArrayList<ArenaBase> getEnabledArenas() {
-       return this.getArenas().stream().filter(ArenaBase::isEnabled).collect(Collectors.toCollection(ArrayList::new));
-   }
+    @Override
+    public ArrayList<ArenaBase> getEnabledArenas() {
+        return this.getArenas().stream().filter(ArenaBase::isEnabled).collect(Collectors.toCollection(ArrayList::new));
+    }
 
-   public ArrayList<ArenaBase> getDisabledArenas() {
-      return this.getArenas().stream().filter(x -> !x.isEnabled()).collect(Collectors.toCollection(ArrayList::new));
-   }
+    @Override
+    public ArrayList<ArenaBase> getDisabledArenas() {
+        return this.getArenas().stream().filter(x -> !x.isEnabled()).collect(Collectors.toCollection(ArrayList::new));
+    }
 
+    @Override
     public void arenaLeaveRequest(Player player) {
         ArenaBase arena = this.getArenaOf(player);
         if(arena != null) {
@@ -164,7 +168,8 @@ public class ArenaManager implements APIComponent, ArenaAPI {
         }
     }
 
-   public boolean arenaJoinRequest(String arenaName, Player player) {
+    /*@Override
+    public boolean arenaJoinRequest(String arenaName, MgParty player) {
         ArenaBase arenaBase = this.getArena(arenaName);
         if(arenaBase == null) {
             player.sendMessage(MinigamesDTools.getPrefix() + " Арены [" + arenaName + "] не существует.");
@@ -193,8 +198,41 @@ public class ArenaManager implements APIComponent, ArenaAPI {
         }
 
         return true;
-   }
+    }*/
 
+    @Override
+    public boolean arenaJoinRequest(String arenaName, Player player) {
+        ArenaBase arenaBase = this.getArena(arenaName);
+        if(arenaBase == null) {
+            player.sendMessage(MinigamesDTools.getPrefix() + " Арены [" + arenaName + "] не существует.");
+            return false;
+        }
+
+        TeamController teamControl = arenaBase.getTeamController();
+        TeamProvider team = teamControl.getTeams().stream().filter(t -> t.containsFreeSlots(1)).findFirst().orElse(null);
+        if(team == null) {
+            player.sendMessage(" Арена " + arenaName + " заполнена");
+            return false;
+        }
+
+        // TODO: Приделать конвертацию ID в Broadcaster
+        PlayerCheckResult result = this.playerCanJoin(arenaBase, player);
+        if(result.getResult() == PlayerCheckResult.CheckResult.DENIED) {
+            result.getErrId().forEach(player::sendMessage);
+            return false;
+        }
+
+        arenaBase.getEventAnnouncer().announce(new ArenaPlayerJoinLocalEvent(player, team));
+        Bukkit.getPluginManager().callEvent(new ArenaPlayerEnterEvent(arenaBase, player));
+
+        if(arenaBase.getTeamController().countCurrentPlayers() >= arenaBase.getGameRules().minPlayersToStart && arenaBase.getState() == ArenaBase.STATE.EMPTY) {
+            arenaBase.delayedStartArena();
+        }
+
+        return true;
+    }
+
+   @Override
    public void disableArena(String arenaName) {
        ArenaBase arena = this.getArena(arenaName);
        if(arena != null) {
@@ -203,6 +241,7 @@ public class ArenaManager implements APIComponent, ArenaAPI {
        }
    }
 
+   @Override
    public void enableArena(String arenaName) {
         ArenaBase arena = this.getArena(arenaName);
         if(arena != null) {

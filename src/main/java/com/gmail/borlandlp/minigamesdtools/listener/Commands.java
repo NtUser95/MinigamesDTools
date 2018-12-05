@@ -9,6 +9,7 @@ import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.utils.Leveling;
+import com.gmail.borlandlp.minigamesdtools.party.Party;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,7 +39,7 @@ public class Commands implements CommandExecutor {
           Player player = (Player) sender;
 
          if(sender instanceof ConsoleCommandSender) {
-             sender.sendMessage("Вы не игрок!");
+             sender.sendMessage("ur not player!");
              return true;
          } else {
 
@@ -118,24 +119,36 @@ public class Commands implements CommandExecutor {
                 }
 
                 return true;
-             } else if(args[0].equalsIgnoreCase("hotbar")) {
+            } else if(args[0].equalsIgnoreCase("hotbar")) {
                   try {
                       Hotbar hotbar = MinigamesDTools.getInstance().getHotbarCreatorHub().createHotbar("example_skyhotbar", new DataProvider());
                       MinigamesDTools.getInstance().getHotbarAPI().bindHotbar(hotbar, p);
                   } catch (Exception e) {
                       e.printStackTrace();
                   }
-              } else if(args[0].equalsIgnoreCase("dbg_stop")) {
+            } else if(args[0].equalsIgnoreCase("dbg_stop")) {
                  p.sendMessage("===arena_stop===");
                  p.sendMessage("stopped" + args[1]);
                  MinigamesDTools.getInstance().getArenaAPI().getArena(args[1]).forceDisable();
 
                  return true;
-             } else if(args[0].equalsIgnoreCase("leave")) {
+            } else if(args[0].equalsIgnoreCase("leave")) {
                  MinigamesDTools.getInstance().getArenaAPI().arenaLeaveRequest(p);
 
                  return true;
-             }
+            } else if(args[0].equalsIgnoreCase("party_create")) {
+                Party party = MinigamesDTools.getInstance().getPartyAPI().createParty(player);
+                MinigamesDTools.getInstance().getPartyAPI().addParty(party);
+
+                return true;
+            } else if(args[0].equalsIgnoreCase("party_join")) {
+                MinigamesDTools.getInstance().getPartyAPI().getPartyOf(args[1]).addPlayer(p);
+                return true;
+            } else if(args[0].equalsIgnoreCase("party_members")) {
+                System.out.print(MinigamesDTools.getInstance().getPartyAPI().getPartyOf(player));
+
+                return true;
+            }
 
             p.sendMessage("Wrong command");
             return true;

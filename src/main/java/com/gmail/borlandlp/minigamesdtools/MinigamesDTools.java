@@ -39,6 +39,8 @@ import com.gmail.borlandlp.minigamesdtools.lobby.LobbyHubController;
 import com.gmail.borlandlp.minigamesdtools.lobby.LobbyCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.database.SQLite;
 
+import com.gmail.borlandlp.minigamesdtools.party.PartyAPI;
+import com.gmail.borlandlp.minigamesdtools.party.PartyManager;
 import com.gmail.borlandlp.minigamesdtools.test.TestComponents;
 import net.minecraft.server.v1_12_R1.EntityEnderDragon;
 import net.minecraft.server.v1_12_R1.EntityShulker;
@@ -64,6 +66,7 @@ public class MinigamesDTools extends JavaPlugin {
     private ActivePointsAPI activePointsAPI;
     private EntityAPI entityAPI;
     private BulletHandlerApi bulletHandlerApi;
+    private PartyAPI partyAPI;
 
     private GUICreatorHub guiCreatorHub;
     private HotbarCreatorHub hotbarCreatorHub;
@@ -136,6 +139,8 @@ public class MinigamesDTools extends JavaPlugin {
         this.hotbarAPI = new HotbarApiInst();
         this.lobbyController = new LobbyHubController();
         this.bulletHandlerApi = new BulletHandler();
+        this.partyAPI = new PartyManager();
+
 
         this.apiComponentsController = new APIComponentsController();
         Bukkit.getPluginManager().callEvent(new PRE_INITIALIZATION_EVENT());
@@ -153,6 +158,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.getApiComponentsController().register((APIComponent) this.getInventoryGUI_API());
         this.getApiComponentsController().register((APIComponent) this.getArenaAPI());
         this.getApiComponentsController().register(this.getBulletHandlerApi());
+        this.getApiComponentsController().register((APIComponent) this.getPartyAPI());
 
         (new TestComponents()).load();
 
@@ -321,5 +327,9 @@ public class MinigamesDTools extends JavaPlugin {
 
     public BulletCreatorHub getBulletCreatorHub() {
         return bulletCreatorHub;
+    }
+
+    public PartyAPI getPartyAPI() {
+        return partyAPI;
     }
 }
