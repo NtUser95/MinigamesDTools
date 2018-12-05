@@ -2,6 +2,7 @@ package com.gmail.borlandlp.minigamesdtools.arena;
 
 import com.gmail.borlandlp.minigamesdtools.arena.exceptions.ArenaAlreadyAddedException;
 import com.gmail.borlandlp.minigamesdtools.conditions.PlayerCheckResult;
+import com.gmail.borlandlp.minigamesdtools.party.Party;
 import org.bukkit.entity.Player;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigProvider;
 
@@ -94,6 +95,14 @@ public interface ArenaAPI {
      * @return - true if the player passed all the checks and successfully entered the game arena.
      */
     boolean arenaJoinRequest(String arenaName, Player player);
+
+    /**
+     * Sends a single player entry request.
+     * @param arenaName - arenaName
+     * @param party - {@link Party}
+     * @return - true if the party passed all the checks and successfully entered the game arena.
+     */
+    boolean arenaJoinRequest(String arenaName, Party party);
 
     /**
      * Makes the arena inaccessible for players.

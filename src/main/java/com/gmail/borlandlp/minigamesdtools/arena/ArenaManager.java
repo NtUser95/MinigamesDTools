@@ -20,6 +20,7 @@ import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerEnterEvent;
 import com.gmail.borlandlp.minigamesdtools.events.ArenaPlayerQuitEvent;
+import com.gmail.borlandlp.minigamesdtools.party.Party;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -168,50 +169,59 @@ public class ArenaManager implements APIComponent, ArenaAPI {
         }
     }
 
-    /*@Override
-    public boolean arenaJoinRequest(String arenaName, MgParty player) {
+    @Override
+    public boolean arenaJoinRequest(String arenaName, Party party) {
         ArenaBase arenaBase = this.getArena(arenaName);
         if(arenaBase == null) {
-            player.sendMessage(MinigamesDTools.getPrefix() + " Арены [" + arenaName + "] не существует.");
+            party.getLeader().sendMessage(MinigamesDTools.getPrefix() + " Arena " + arenaName + " does not exist.");
             return false;
         }
 
         TeamController teamControl = arenaBase.getTeamController();
-        TeamProvider team = teamControl.getTeams().stream().filter(t -> t.containsFreeSlots(1)).findFirst().orElse(null);
+        TeamProvider team = teamControl.getTeams().stream()
+                .filter(t -> t.containsFreeSlots(party.getPlayers().size()))
+                .findFirst()
+                .orElse(null);
         if(team == null) {
-            player.sendMessage(" Арена " + arenaName + " заполнена");
+            party.getLeader().sendMessage("Arena " + arenaName + " is full");
             return false;
         }
 
-        // TODO: Приделать конвертацию ID в Broadcaster
-        PlayerCheckResult result = this.playerCanJoin(arenaBase, player);
-        if(result.getResult() == PlayerCheckResult.CheckResult.DENIED) {
-            result.getErrId().forEach(player::sendMessage);
-            return false;
+        PlayerCheckResult result = null;
+        for (Player player : party.getPlayers()) {
+            result = this.playerCanJoin(arenaBase, player);
+            if(result.getResult() == PlayerCheckResult.CheckResult.DENIED) {
+                String msg = "A member of your party(" + player.getName() + ") does not meet the conditions of the gaming arena for the following reasons.";
+                party.getLeader().sendMessage(msg);
+                result.getErrId().forEach(party.getLeader()::sendMessage);
+                return false;
+            }
         }
 
-        arenaBase.getEventAnnouncer().announce(new ArenaPlayerJoinLocalEvent(player, team));
-        Bukkit.getPluginManager().callEvent(new ArenaPlayerEnterEvent(arenaBase, player));
+        for (Player player : party.getPlayers()) {
+            arenaBase.getEventAnnouncer().announce(new ArenaPlayerJoinLocalEvent(player, team));
+            Bukkit.getPluginManager().callEvent(new ArenaPlayerEnterEvent(arenaBase, player));
+        }
 
         if(arenaBase.getTeamController().countCurrentPlayers() >= arenaBase.getGameRules().minPlayersToStart && arenaBase.getState() == ArenaBase.STATE.EMPTY) {
             arenaBase.delayedStartArena();
         }
 
         return true;
-    }*/
+    }
 
     @Override
     public boolean arenaJoinRequest(String arenaName, Player player) {
         ArenaBase arenaBase = this.getArena(arenaName);
         if(arenaBase == null) {
-            player.sendMessage(MinigamesDTools.getPrefix() + " Арены [" + arenaName + "] не существует.");
+            player.sendMessage(MinigamesDTools.getPrefix() + " Arena " + arenaName + " does not exist.");
             return false;
         }
 
         TeamController teamControl = arenaBase.getTeamController();
         TeamProvider team = teamControl.getTeams().stream().filter(t -> t.containsFreeSlots(1)).findFirst().orElse(null);
         if(team == null) {
-            player.sendMessage(" Арена " + arenaName + " заполнена");
+            player.sendMessage("Arena " + arenaName + " is full");
             return false;
         }
 
