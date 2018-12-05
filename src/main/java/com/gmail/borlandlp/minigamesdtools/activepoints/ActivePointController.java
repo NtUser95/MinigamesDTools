@@ -35,7 +35,8 @@ public class ActivePointController implements APIComponent, ActivePointsAPI {
         }.runTaskTimer(MinigamesDTools.getInstance(), 0, 20);
 
         // load default activepoints
-        for(ConfigEntity configEntity : MinigamesDTools.getInstance().getConfigProvider().getPoolContents(ConfigPath.ACTIVE_POINT)) {
+        List<ConfigEntity> poolContents = MinigamesDTools.getInstance().getConfigProvider().getPoolContents(ConfigPath.ACTIVE_POINT);
+        for(ConfigEntity configEntity : poolContents) {
             Debug.print(Debug.LEVEL.NOTICE,"[ActivePointController] load activePoint " + configEntity.getID());
             ActivePoint activePoint = null;
             try {
@@ -74,8 +75,13 @@ public class ActivePointController implements APIComponent, ActivePointsAPI {
     }
 
     @Override
-    public void unregisterPoint(ActivePoint point) {
+    public void unregisterPoint(ActivePoint point) throws Exception {
+        if(this.activatedPoints.contains(point)) {
+            throw new Exception("The active point must be deactivated before calling this function.");
+        }
+
         this.allPoints.remove(point);
+        point.setActivePointController(null);
         Debug.print(Debug.LEVEL.NOTICE,"[ActivePointController] unregister activePoint: " + point.getName() + " for controller.");
     }
 
@@ -104,6 +110,11 @@ public class ActivePointController implements APIComponent, ActivePointsAPI {
     @Override
     public StaticPointsCache getStaticPointsCache() {
         return staticPointsCache;
+    }
+
+    @Override
+    public List<ActivePoint> getAllActivatedPoints() {
+        return new ArrayList<>(this.activatedPoints);
     }
 
     @Override

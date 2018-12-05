@@ -19,6 +19,7 @@ public class APIComponentsController {
             switch (phase) {
                 case PLUGIN_LOAD: component.onLoad(); break;
                 case PLUGIN_UNLOAD: component.onUnload(); break;
+                default: throw new Exception("Invalid phase name:" + phase.name());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
