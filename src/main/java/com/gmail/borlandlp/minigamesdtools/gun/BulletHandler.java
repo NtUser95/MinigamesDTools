@@ -43,6 +43,10 @@ public class BulletHandler implements BulletHandlerApi {
         if(this.task != null && !this.task.isCancelled()) {
             this.task.cancel();
         }
+
+        for (GhostBullet bullet : this.bullets) {
+            bullet.die();
+        }
     }
 
     private void update() {

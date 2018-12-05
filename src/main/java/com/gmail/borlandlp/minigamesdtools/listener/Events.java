@@ -38,7 +38,7 @@ public class Events implements Listener {
         if(arena.getState() == ArenaBase.STATE.COUNTDOWN || arena.getState() == ArenaBase.STATE.PAUSED) {
             ItemStack oldItem = event.getPlayer().getInventory().getItemInMainHand().clone();
             event.getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-            event.getPlayer().sendMessage(MinigamesDTools.getPrefix() + " Дождитесь старта матча!");
+            event.getPlayer().sendMessage("{match_hsnt_started_yet}");
             Bukkit.getScheduler().scheduleSyncDelayedTask(MinigamesDTools.getInstance(), () -> event.getPlayer().getInventory().setItemInMainHand(oldItem), 1L);
         }
     }
@@ -52,7 +52,7 @@ public class Events implements Listener {
 
         if((arena.getGameRules().beforeFightDisableMoving && arena.getState() == ArenaBase.STATE.COUNTDOWN) || arena.getState() == ArenaBase.STATE.PAUSED) {
             if(event.getFrom().getX() != event.getTo().getX() || event.getFrom().getY() != event.getTo().getY() || event.getFrom().getZ() != event.getTo().getZ() ) {
-                event.getPlayer().teleport(event.getFrom());
+                event.setCancelled(true);
             }
         }
     }
@@ -112,7 +112,7 @@ public class Events implements Listener {
                 if(arena.getTeamController().getPlayersRelative(player, (Player) event.getDamager()) == ArenaPlayersRelative.TEAMMATE) {
                     if(!arena.getTeamController().getTeamOf(player).friendlyFireAllowed()) {
                         event.setCancelled(true);
-                        event.getDamager().sendMessage("attack_teammate_msg");
+                        event.getDamager().sendMessage("{attack_teammate_msg}");
                         return;
                     }
                 }
@@ -252,7 +252,7 @@ public class Events implements Listener {
         if(arenaState == null) {
             Debug.print(Debug.LEVEL.WARNING, "Detected invalid null state for arena[name:" + arena.getName() + "]");
         } else if(arenaState == ArenaBase.STATE.PAUSED || arenaState == ArenaBase.STATE.COUNTDOWN) {
-            event.getPlayer().sendMessage(MinigamesDTools.getPrefix() + " Нельзя бить участника арены во время её старта или паузы.");
+            event.getPlayer().sendMessage("{damage_reject_while_cooldown_msg}");
             event.setCancelled(true);
         }
     }
@@ -263,7 +263,7 @@ public class Events implements Listener {
         if(arena != null && (arena.getState() == ArenaBase.STATE.COUNTDOWN || arena.getState() == ArenaBase.STATE.PAUSED)) {
             if(event.getFrom().distance(event.getTo()) > 1.0D) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage("[TW_ARENA] запрещена телепортация.");
+                event.getPlayer().sendMessage("{teleport_reject_msg}");
             }
         }
     }

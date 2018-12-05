@@ -46,10 +46,9 @@ public class GhostBullet extends EntityDragonFireball {
                     }
                 }
 
-                Block hitBlock = null;
                 if (position.type == MovingObjectPosition.EnumMovingObjectType.BLOCK) {
                     BlockPosition blockposition = position.a();
-                    hitBlock = this.bukkitWorld.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+                    Block hitBlock = this.bukkitWorld.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
                     LivingEntity livingEntity = ((LivingEntity) this.shooter.getBukkitEntity());
                     Bukkit.getPluginManager().callEvent(new BlockDamageByEntityEvent(livingEntity, hitBlock, null, true));
                 }
@@ -76,5 +75,10 @@ public class GhostBullet extends EntityDragonFireball {
         if(++this.livedTicks > this.maxLivingTicks) {
             this.die();
         }
+    }
+
+    @Override
+    public void die() {
+        super.die();
     }
 }
