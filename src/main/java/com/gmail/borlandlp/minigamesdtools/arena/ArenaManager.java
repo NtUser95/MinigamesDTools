@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.gmail.borlandlp.minigamesdtools.APIComponent;
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
+import com.gmail.borlandlp.minigamesdtools.arena.exceptions.ArenaAlreadyAddedException;
 import com.gmail.borlandlp.minigamesdtools.arena.exceptions.ArenaAlreadyInitializedException;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerJoinLocalEvent;
 import com.gmail.borlandlp.minigamesdtools.arena.localevent.ArenaPlayerLeaveLocalEvent;
@@ -95,10 +96,11 @@ public class ArenaManager implements APIComponent, ArenaAPI {
     }
 
     @Override
-    public void addArena(ArenaBase arena) throws Exception {
+    public void addArena(ArenaBase arena) throws ArenaAlreadyAddedException {
        for(ArenaBase qArena : this.getArenas()) {
            if(qArena.getName().equalsIgnoreCase(arena.getName())) {
-               throw new Exception("error adding arena '" + arena.getName() + "', reason: arena with a similar name is already registered.");
+               String msg = "Arena[name:" + arena.getName() + "] with a similar name is already registered.";
+               throw new ArenaAlreadyAddedException(msg);
            }
        }
 

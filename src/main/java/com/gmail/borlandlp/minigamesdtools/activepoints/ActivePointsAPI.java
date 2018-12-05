@@ -24,7 +24,7 @@ public interface ActivePointsAPI {
     void deactivatePoint(ActivePoint point);
 
     /**
-     * @return - returns cache of used blocks for active points
+     * @return - returns cache of used blocks for activated points
      */
     StaticPointsCache getStaticPointsCache();
 
