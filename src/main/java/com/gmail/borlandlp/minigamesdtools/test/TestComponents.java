@@ -2,10 +2,11 @@ package com.gmail.borlandlp.minigamesdtools.test;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
-import com.gmail.borlandlp.minigamesdtools.activepoints.ExampleActivePointsCreator;
 import com.gmail.borlandlp.minigamesdtools.activepoints.behaviors.custom.ExampleBehaviorCreator;
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.custom.ItemGiveReactionCreator;
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.custom.TeamIncrementWinTicketsReactionCreator;
+import com.gmail.borlandlp.minigamesdtools.activepoints.type.block.PrimitivePointCreator;
+import com.gmail.borlandlp.minigamesdtools.activepoints.type.entity.PrimitiveEntityCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.ExampleArenaCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.bossbar.BossbarExampleCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.scoreboard.ScoreboardExampleCreator;
@@ -147,7 +148,8 @@ public class TestComponents {
 
         // active_point
         try {
-            MinigamesDTools.getInstance().getActivePointsCreatorHub().registerCreator(new ExampleActivePointsCreator());
+            MinigamesDTools.getInstance().getActivePointsCreatorHub().registerCreator(new PrimitiveEntityCreator());
+            MinigamesDTools.getInstance().getActivePointsCreatorHub().registerCreator(new PrimitivePointCreator());
 
             this.linkCreators(ConfigPath.ACTIVE_POINT);
         } catch (Exception e) {

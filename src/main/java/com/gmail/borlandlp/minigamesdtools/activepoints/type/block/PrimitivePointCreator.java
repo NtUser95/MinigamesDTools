@@ -1,42 +1,35 @@
-package com.gmail.borlandlp.minigamesdtools.activepoints;
+package com.gmail.borlandlp.minigamesdtools.activepoints.type.block;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
+import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePoint;
 import com.gmail.borlandlp.minigamesdtools.activepoints.behaviors.Behavior;
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.Reaction;
 import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.ReactionReason;
-import com.gmail.borlandlp.minigamesdtools.activepoints.type.BossEntity;
-import com.gmail.borlandlp.minigamesdtools.activepoints.type.SphereBlockPoint;
-import com.gmail.borlandlp.minigamesdtools.activepoints.type.SquareBlockPoint;
-import com.gmail.borlandlp.minigamesdtools.activepoints.type.StaticBlockPoint;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
-import com.gmail.borlandlp.minigamesdtools.nmsentities.entity.SkyDragon;
-import com.gmail.borlandlp.minigamesdtools.nmsentities.entity.SkyZombie;
-import net.minecraft.server.v1_12_R1.EntityInsentient;
-import net.minecraft.server.v1_12_R1.Vec3D;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@CreatorInfo(creatorId = "default_activepoint_factory")
-public class ExampleActivePointsCreator implements Creator {
+@CreatorInfo(creatorId = "primitive_point_creator")
+public class PrimitivePointCreator implements Creator {
     @Override
     public List<String> getDataProviderRequiredFields() {
         return new ArrayList<>();
     }
 
+    @Override
     public ActivePoint create(String activepoint_id, AbstractDataProvider dataProvider) throws Exception {
-        ActivePoint activePoint = null;
+        PrimitiveBlockPoint activePoint = null;
         ConfigurationSection activePointConfig = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.ACTIVE_POINT, activepoint_id).getData();
 
         //init by type
@@ -45,63 +38,42 @@ public class ExampleActivePointsCreator implements Creator {
         }
 
         String debugPrefix = "[" + activepoint_id + "] ";
-        String pointType = activePointConfig.get("type").toString();
-        if (pointType.equals("static_block")) {
-            String formOfPoint = activePointConfig.get("params.form").toString();
-            if (formOfPoint.equals("sphere")) {
-                activePoint = new SphereBlockPoint();
-            } else if (formOfPoint.equals("square")) {
-                activePoint = new SquareBlockPoint();
-            } else {
-                throw new Exception("invalid form for ActivePoint[ID:" + activepoint_id + "]");
-            }
-
-            World world = Bukkit.getWorld(activePointConfig.get("params.location.world").toString());
-            int x = Integer.parseInt(activePointConfig.get("params.location.x").toString());
-            int y = Integer.parseInt(activePointConfig.get("params.location.y").toString());
-            int z = Integer.parseInt(activePointConfig.get("params.location.z").toString());
-            activePoint.setLocation(new Location(world, x, y, z));
-            ((StaticBlockPoint) activePoint).setRadius(Integer.parseInt(activePointConfig.get("params.radius").toString()));
-            ((StaticBlockPoint) activePoint).setHollow(Boolean.parseBoolean(activePointConfig.get("params.hollow").toString()));
-            ((StaticBlockPoint) activePoint).setDirection(activePointConfig.get("params.location.direction").toString());
-            ((StaticBlockPoint) activePoint).setHealth(Double.parseDouble(activePointConfig.get("params.health").toString()));
-
-        } else if (pointType.equals("living_entity")) {
-
-            activePoint = new BossEntity();
-
-            World world = Bukkit.getWorld(activePointConfig.get("params.location.world").toString());
-            int x = Integer.parseInt(activePointConfig.get("params.location.x").toString());
-            int y = Integer.parseInt(activePointConfig.get("params.location.y").toString());
-            int z = Integer.parseInt(activePointConfig.get("params.location.z").toString());
-            activePoint.setLocation(new Location(world, x, y, z));
-
-            String entityName = activePointConfig.get("params.type").toString();
-            EntityInsentient entityInsentient = null;
-            if (entityName.equals("sky_zombie")) {
-                entityInsentient = new SkyZombie(world);
-            } else if (entityName.equals("sky_dragon")) {
-                entityInsentient = new SkyDragon(world);
-            } else {
-                throw new Exception("invalid entity type '" + entityName + "' for ActivePoint[ID:" + activepoint_id + "]");
-            }
-
-            ((BossEntity) activePoint).setClassTemplate(entityInsentient);
-            entityInsentient.setHealth(Integer.parseInt(activePointConfig.get("params.health").toString()));
-            List<Vec3D> vec3DS = new ArrayList<>();
-            for (String str : activePointConfig.getStringList("params.move_paths")) {
-                String[] splitted = str.split(":");
-                if (splitted.length == 3) {
-                    vec3DS.add(new Vec3D(Double.parseDouble(splitted[0]), Double.parseDouble(splitted[1]), Double.parseDouble(splitted[2])));
-                } else {
-                    Debug.print(Debug.LEVEL.NOTICE, "Invalid move_path 'str' for ActivePoint[ID:" + activepoint_id + "]. ");
-                }
-            }
-            ((BossEntity) activePoint).setMovePaths(vec3DS.toArray(new Vec3D[vec3DS.size()]));
-
+        String formOfPoint = activePointConfig.get("params.form").toString();
+        if (formOfPoint.equals("sphere")) {
+            activePoint = new SphereBlockPoint();
+        } else if (formOfPoint.equals("flat_sphere")) {
+            activePoint = new FlatSpherePoint();
+        } else if (formOfPoint.equals("square")) {
+            activePoint = new SquareBlockPoint();
+        } else if (formOfPoint.equals("flat_square")) {
+            activePoint = new FlatSquarePoint();
         } else {
-            throw new Exception("invalid type for ActivePoint[ID:" + activepoint_id + "]");
+            throw new Exception("invalid form for ActivePoint[ID:" + activepoint_id + "]");
         }
+
+        World world = Bukkit.getWorld(activePointConfig.get("params.location.world").toString());
+        int x = Integer.parseInt(activePointConfig.get("params.location.x").toString());
+        int y = Integer.parseInt(activePointConfig.get("params.location.y").toString());
+        int z = Integer.parseInt(activePointConfig.get("params.location.z").toString());
+        activePoint.setLocation(new Location(world, x, y, z));
+        activePoint.setRadius(Integer.parseInt(activePointConfig.get("params.radius").toString()));
+        activePoint.setHollow(Boolean.parseBoolean(activePointConfig.get("params.hollow").toString()));
+        activePoint.setDirection(activePointConfig.get("params.location.direction").toString());
+        activePoint.setHealth(Double.parseDouble(activePointConfig.get("params.health").toString()));
+
+        String borderStr = activePointConfig.get("params.border_material").toString();
+        Material borderMaterial = Material.getMaterial(borderStr);
+        if(borderMaterial == null) {
+            throw new Exception("border_material " + borderStr + " for ActivePoint " + activepoint_id + " not found!");
+        }
+        activePoint.setBorderMaterial(borderMaterial);
+
+        String fillerStr = activePointConfig.get("params.filler_material").toString();
+        Material fillerMaterial = Material.getMaterial(fillerStr);
+        if(fillerMaterial == null) {
+            throw new Exception("filler_material " + fillerStr + " for ActivePoint " + activepoint_id + " not found!");
+        }
+        activePoint.setFillerMaterial(fillerMaterial);
 
         //load other
         activePoint.setName(activepoint_id);

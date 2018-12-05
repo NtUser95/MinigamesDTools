@@ -135,13 +135,6 @@ public class Commands implements CommandExecutor {
                  MinigamesDTools.getInstance().getArenaAPI().arenaLeaveRequest(p);
 
                  return true;
-             } else if(args[0].equalsIgnoreCase("exp")) {
-                int level = Integer.parseInt(args[1]);
-                int perc = Integer.parseInt(args[2]);
-                Leveling.ExperienceContainer value = Leveling.calculateWithPercentage(level, perc);
-                PacketPlayOutExperience packet = new PacketPlayOutExperience((float) (perc / 100F), (int) value.total_exp, level);
-                System.out.println(value.percent_exp + "#" + value.total_exp + "#" + level);
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
              }
 
             p.sendMessage("Wrong command");

@@ -13,17 +13,37 @@ public class GeometryHelper {
         int cx = centerBlock.getBlockX();
         int cy = centerBlock.getBlockY();
         int cz = centerBlock.getBlockZ();
-        List<Location> boundBlocks = new ArrayList<>();
+        List<Location> borderBlocks = new ArrayList<>();
         List<Location> fillerBlocks = new ArrayList<>();
 
         for (int x = cx - radius; x <= cx + radius; x++) {
             for (int y = cy - radius; y <= cy + radius; y++) {
                 for (int z = cz - radius; z <= cz + radius; z++) {
                     if (y == cy + radius || y == cy - radius || x == cx + radius || x == cx - radius || z == cz + radius || z == cz - radius) {
-                        boundBlocks.add(new Location(centerBlock.getWorld(), x, y, z));
+                        borderBlocks.add(new Location(centerBlock.getWorld(), x, y, z));
                     } else if(!hollow) {
                         fillerBlocks.add(new Location(centerBlock.getWorld(), x, y, z));
                     }
+                }
+            }
+        }
+
+        return new GeneratedBlockSchema(borderBlocks, fillerBlocks);
+    }
+
+    public static GeneratedBlockSchema generateFlatSquare(Location centerBlock, int radius, boolean hollow) {
+        int cx = centerBlock.getBlockX();
+        int cy = centerBlock.getBlockY();
+        int cz = centerBlock.getBlockZ();
+        List<Location> boundBlocks = new ArrayList<>();
+        List<Location> fillerBlocks = new ArrayList<>();
+
+        for (int x = cx - radius; x <= cx + radius; x++) {
+            for (int z = cz - radius; z <= cz + radius; z++) {
+                if (x == cx + radius || x == cx - radius || z == cz + radius || z == cz - radius) {
+                    boundBlocks.add(new Location(centerBlock.getWorld(), x, cy, z));
+                } else if(!hollow) {
+                    fillerBlocks.add(new Location(centerBlock.getWorld(), x, cy, z));
                 }
             }
         }
@@ -56,7 +76,7 @@ public class GeometryHelper {
     }
 
     public static GeneratedBlockSchema generateSphere(Location centerBlock, int radius, boolean hollow) {
-        List<Location> boundBlocks = new ArrayList<>();
+        List<Location> borderBlocks = new ArrayList<>();
         List<Location> fillerBlock = new ArrayList<>();
 
         int bx = centerBlock.getBlockX();
@@ -67,20 +87,20 @@ public class GeometryHelper {
             for(int y = by - radius; y <= by + radius; y++) {
                 for(int z = bz - radius; z <= bz + radius; z++) {
                     double distance = ((bx-x) * (bx-x) + ((bz-z) * (bz-z)) + ((by-y) * (by-y)));
-                    if(distance < radius * radius && !(hollow && distance < ((radius - 1) * (radius - 1)))) {
-                        boundBlocks.add(new Location(centerBlock.getWorld(), x, y, z));
-                    }  else if(distance < radius * radius && !(distance < ((radius - 1) * (radius - 1)))) {
-                        fillerBlock.add(new Location(centerBlock.getWorld(), x, centerBlock.getBlockY(), z));
+                    if(distance < radius * radius && distance >= ((radius - 1) * (radius - 1))) {
+                        borderBlocks.add(new Location(centerBlock.getWorld(), x, y, z));
+                    } else if(!hollow && distance < ((radius - 1) * (radius - 1))) {
+                        fillerBlock.add(new Location(centerBlock.getWorld(), x, y, z));
                     }
                 }
             }
         }
 
-        return new GeneratedBlockSchema(boundBlocks, fillerBlock);
+        return new GeneratedBlockSchema(borderBlocks, fillerBlock);
     }
 
     public static GeneratedBlockSchema generateFlatSphere(Location centerBlock, BlockFace direction, int radius, boolean hollow) {
-        List<Location> boundBlocks = new ArrayList<Location>();
+        List<Location> borderBlocks = new ArrayList<>();
         List<Location> fillerBlocks = new ArrayList<>();
 
         if(direction == BlockFace.DOWN || direction == BlockFace.UP) {
@@ -90,9 +110,9 @@ public class GeometryHelper {
             for(int x = bx - radius; x <= bx + radius; x++) {
                 for(int z = bz - radius; z <= bz + radius; z++) {
                     double distance = ((bx-x) * (bx-x) + ((bz-z) * (bz-z)));
-                    if(distance < radius * radius && !(hollow && distance < ((radius - 1) * (radius - 1)))) {
-                        boundBlocks.add(new Location(centerBlock.getWorld(), x, centerBlock.getBlockY(), z));
-                    } else if(distance < radius * radius && !(distance < ((radius - 1) * (radius - 1)))) {
+                    if(distance < radius * radius && distance >= ((radius - 1) * (radius - 1))) {
+                        borderBlocks.add(new Location(centerBlock.getWorld(), x, centerBlock.getBlockY(), z));
+                    } else if(!hollow && distance < ((radius - 1) * (radius - 1))) {
                         fillerBlocks.add(new Location(centerBlock.getWorld(), x, centerBlock.getBlockY(), z));
                     }
                 }
@@ -104,9 +124,9 @@ public class GeometryHelper {
             for(int y = by - radius; y <= by + radius; y++) {
                 for(int z = bz - radius; z <= bz + radius; z++) {
                     double distance = ((by-y) * (by-y) + ((bz-z) * (bz-z)));
-                    if(distance < radius * radius && !(hollow && distance < ((radius - 1) * (radius - 1)))) {
-                        boundBlocks.add(new Location(centerBlock.getWorld(), z, y, centerBlock.getBlockZ()));
-                    } else if(distance < radius * radius && !(distance < ((radius - 1) * (radius - 1)))) {
+                    if(distance < radius * radius && distance >= ((radius - 1) * (radius - 1))) {
+                        borderBlocks.add(new Location(centerBlock.getWorld(), z, y, centerBlock.getBlockZ()));
+                    } else if(!hollow && distance < ((radius - 1) * (radius - 1))) {
                         fillerBlocks.add(new Location(centerBlock.getWorld(), z, y, centerBlock.getBlockZ()));
                     }
                 }
@@ -118,15 +138,15 @@ public class GeometryHelper {
             for(int y = by - radius; y <= by + radius; y++) {
                 for(int z = bz - radius; z <= bz + radius; z++) {
                     double distance = ((by-y) * (by-y) + ((bz-z) * (bz-z)));
-                    if(distance < radius * radius && !(hollow && distance < ((radius - 1) * (radius - 1)))) {
-                        boundBlocks.add(new Location(centerBlock.getWorld(), centerBlock.getBlockX(), y, z));
-                    } else if(distance < radius * radius && !(distance < ((radius - 1) * (radius - 1)))) {
+                    if(distance < radius * radius && distance >= ((radius - 1) * (radius - 1))) {
+                        borderBlocks.add(new Location(centerBlock.getWorld(), centerBlock.getBlockX(), y, z));
+                    } else if(!hollow && distance < ((radius - 1) * (radius - 1))) {
                         fillerBlocks.add(new Location(centerBlock.getWorld(), centerBlock.getBlockX(), y, z));
                     }
                 }
             }
         }
 
-        return new GeneratedBlockSchema(boundBlocks, fillerBlocks);
+        return new GeneratedBlockSchema(borderBlocks, fillerBlocks);
     }
 }

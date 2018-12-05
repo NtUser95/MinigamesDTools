@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.activepoints.type;
+package com.gmail.borlandlp.minigamesdtools.activepoints.type.block;
 
 import com.gmail.borlandlp.minigamesdtools.activepoints.BuildSchema;
 import com.gmail.borlandlp.minigamesdtools.util.GeometryHelper;
@@ -10,18 +10,14 @@ import org.bukkit.block.BlockFace;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FlatSpherePoint extends StaticBlockPoint {
+public class FlatSpherePoint extends PrimitiveBlockPoint {
     @Override
     public BuildSchema getBuildSchema() {
         BlockFace direction = BlockFace.valueOf(this.getDirection());
         GeneratedBlockSchema generatedBlockSchema = GeometryHelper.generateFlatSphere(this.getLocation(), direction, this.getRadius(), this.isHollow());
         Map<Location, Material> blocks = new HashMap<>();
-        for(Location location : generatedBlockSchema.getBoundBlocks()) {
-            blocks.put(location, Material.DIRT);
-        }
-        for(Location location : generatedBlockSchema.getFilledBlocks()) {
-            blocks.put(location, Material.STONE);
-        }
+        generatedBlockSchema.getBorderBlocks().forEach(location -> blocks.put(location, this.getBorderMaterial()));
+        generatedBlockSchema.getFillerBlocks().forEach(location -> blocks.put(location, this.getFillerMaterial()));
 
         return new BuildSchema(blocks);
     }

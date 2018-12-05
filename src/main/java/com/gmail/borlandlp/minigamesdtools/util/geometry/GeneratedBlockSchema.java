@@ -6,25 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GeneratedBlockSchema {
-    private List<Location> boundBlocks;
-    private List<Location> filledBlocks;
+    private List<Location> borderBlocks;
+    private List<Location> fillerBlocks;
 
-    public GeneratedBlockSchema(List<Location> boundBlocks, List<Location> filledBlocks) {
-        this.boundBlocks = boundBlocks;
-        this.filledBlocks = filledBlocks;
+    public GeneratedBlockSchema(List<Location> borderBlocks, List<Location> fillerBlocks) {
+        this.borderBlocks = borderBlocks;
+        this.fillerBlocks = fillerBlocks;
     }
 
-    public List<Location> getBoundBlocks() {
-        return boundBlocks;
+    public List<Location> getBorderBlocks() {
+        return this.borderBlocks;
     }
 
-    public List<Location> getFilledBlocks() {
-        return filledBlocks;
+    public List<Location> getFillerBlocks() {
+        return this.fillerBlocks;
     }
 
     public List<Location> getAllBlocks() {
-        List<Location> copyBound = new ArrayList<>(this.boundBlocks);//clone Dolly!
-        copyBound.addAll(this.filledBlocks);
+        List<Location> copyBound = new ArrayList<>(this.borderBlocks);//clone Dolly!
+        copyBound.addAll(this.fillerBlocks);
         return copyBound;
     }
 }

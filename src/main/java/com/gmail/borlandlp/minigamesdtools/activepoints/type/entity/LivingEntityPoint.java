@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.activepoints.type;
+package com.gmail.borlandlp.minigamesdtools.activepoints.type.entity;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;

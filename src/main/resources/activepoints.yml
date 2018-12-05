@@ -3,11 +3,13 @@ meta_info:
 data:
   example_sphereactivepoint:
     creator_id: default_activepoint_factory
-    type: static_block
+    type: primitive_block_point
     params:
       is_damagable: false
       form: sphere
       hollow: true
+      filler_material: DIRT
+      border_material: GLASS
       radius: 5
       health: 20
       location:
@@ -29,11 +31,13 @@ data:
         - example_r
   example_squareactivepoint:
     creator_id: default_activepoint_factory
-    type: static_block
+    type: primitive_block_point
     params:
       is_damagable: false
       form: square
       hollow: false
+      filler_material: STONE
+      border_material: GRASS
       radius: 5
       health: 20
       location:

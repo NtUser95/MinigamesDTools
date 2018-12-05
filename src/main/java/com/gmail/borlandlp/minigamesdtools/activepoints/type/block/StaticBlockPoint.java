@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.activepoints.type;
+package com.gmail.borlandlp.minigamesdtools.activepoints.type.block;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePoint;
@@ -14,7 +14,6 @@ public abstract class StaticBlockPoint extends ActivePoint {
     private List<Location> usedBlocks = new ArrayList<>();
     private String direction;
     private int radius;
-    private boolean hollow;
     private double health;
 
     public double getHealth() {
@@ -23,14 +22,6 @@ public abstract class StaticBlockPoint extends ActivePoint {
 
     public void setHealth(double health) {
         this.health = health;
-    }
-
-    public boolean isHollow() {
-        return hollow;
-    }
-
-    public void setHollow(boolean hollow) {
-        this.hollow = hollow;
     }
 
     public int getRadius() {
@@ -60,7 +51,11 @@ public abstract class StaticBlockPoint extends ActivePoint {
     public void spawn() {
         Map<Location, Material> buildSchema = this.getBuildSchema().getSchema();
         for(Location location : buildSchema.keySet()) {
-            location.getWorld().getBlockAt(location).setType(buildSchema.get(location));
+            try {
+                location.getWorld().getBlockAt(location).setType(buildSchema.get(location));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             this.getActivePointController().getStaticPointsCache().add(location, this);
         }
         Debug.print(Debug.LEVEL.NOTICE, "spawn static point " + this.getName() + ". size:" + buildSchema.keySet().size());
