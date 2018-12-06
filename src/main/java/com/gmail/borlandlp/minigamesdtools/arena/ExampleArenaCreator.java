@@ -4,13 +4,12 @@ import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunkLoaderController;
 import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunksLoader;
+import com.gmail.borlandlp.minigamesdtools.arena.commands.ArenaCommandWatcher;
+import com.gmail.borlandlp.minigamesdtools.arena.commands.CommandWatcherCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.conditions.AbstractCondition;
 import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsChain;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
-import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
-import com.gmail.borlandlp.minigamesdtools.creator.Creator;
-import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
-import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
+import com.gmail.borlandlp.minigamesdtools.creator.*;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.hotbar.HotbarController;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUIController;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.GUIProvider;
@@ -26,6 +25,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @CreatorInfo(creatorId = "default_arena")
 public class ExampleArenaCreator implements Creator {
@@ -36,7 +36,6 @@ public class ExampleArenaCreator implements Creator {
 
     @Override
     public ArenaBase create(String ID, AbstractDataProvider dataProvider) throws Exception {
-        //ArenaBase arenaTemplate = new ArenaBase();
         String debugPrefix = "[" + ID + "] ";
         ConfigurationSection arenaConfig = MinigamesDTools.getInstance().getConfigProvider().getEntity(ConfigPath.ARENA_FOLDER, ID).getData();
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + " started loading...");
@@ -166,6 +165,28 @@ public class ExampleArenaCreator implements Creator {
         arenaTemplate.getPhaseComponentController().register(arenaTemplate.getGuiController());
         arenaTemplate.getPhaseComponentController().register(arenaTemplate.getHotbarController());
         arenaTemplate.getPhaseComponentController().register(arenaTemplate.getHandlersController());
+
+        Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "try init command watcher...");
+        // ArenaCommandWatcher
+        if(arenaConfig.contains("commands")) {
+            AbstractDataProvider cDataProvider = new DataProvider();
+            cDataProvider.set("arena_instance", arenaTemplate);
+
+            List<String[]> blacklisted = new ArrayList<>();
+            arenaConfig.getStringList("commands.blacklist").forEach(e -> blacklisted.add(e.split(" ")));
+            cDataProvider.set("blacklist_rules", blacklisted);
+
+            List<String[]> whitelisted = new ArrayList<>();
+            arenaConfig.getStringList("commands.whitelist").forEach(e -> whitelisted.add(e.split(" ")));
+            cDataProvider.set("whitelist_rules", whitelisted);
+
+            String handlerID = arenaConfig.get("commands.handler").toString();
+            CommandWatcherCreatorHub creatorHub = MinigamesDTools.getInstance().getCommandWatcherCreatorHub();
+            ArenaCommandWatcher watcher = creatorHub.createCommandWatcher(handlerID, cDataProvider);
+
+            arenaTemplate.getPhaseComponentController().register(watcher);
+        }
+
         Debug.print(Debug.LEVEL.NOTICE, debugPrefix + "loading is done!");
 
         return arenaTemplate;

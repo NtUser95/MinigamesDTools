@@ -269,19 +269,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent event) {
-        /*if(event.getMessage().equalsIgnoreCase("arena")) return;
-        else if(event.getMessage().equalsIgnoreCase("skill")) return;
-
-        ExampleTeam team = (ExampleTeam)MinigamesDTools.getInstance().getArenaAPI().getCacheManager().get(event.getLeader());
-        if(team != null && (team.getArenaTemplate().getState() == ArenaBase.STATE.COUNTDOWN || team.getArenaTemplate().getState() == ArenaBase.STATE.IN_PROGRESS)) {
-            event.setCancelled(true);
-            event.getLeader().sendMessage("[TW_ARENA] Запрещён ввод команд во время игры.");
-        }*/
-    }
-
-    @EventHandler
-    public void onCommand(EntityRegainHealthEvent event) {
+    public void onRegain(EntityRegainHealthEvent event) {
         if(!(event.getEntity() instanceof Player)) return;
 
         ArenaBase arena = MinigamesDTools.getInstance().getArenaAPI().getArenaOf((Player) event.getEntity());

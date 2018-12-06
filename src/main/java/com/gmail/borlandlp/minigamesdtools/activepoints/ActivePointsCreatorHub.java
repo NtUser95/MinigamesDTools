@@ -7,5 +7,4 @@ public class ActivePointsCreatorHub extends CreatorHub {
     public ActivePoint createActivePoint(String ID, AbstractDataProvider dataProvider) throws Exception {
         return (ActivePoint) this.create(ID, dataProvider);
     }
-
 }

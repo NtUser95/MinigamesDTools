@@ -8,6 +8,12 @@ data:
     type: teamdeathmatch
     onlyPartyCanJoin: true
     min_players_to_start: 2
+    commands:
+      handler: default_command_watcher
+      blacklist:
+        - '*'
+      whitelist:
+        - 'leave'
     join_conditions:
     - 'EmptyInventoryCondition'
     - 'ExampleCondition'

@@ -77,7 +77,7 @@ public class MgParty implements Party {
     }
 
     public String toString() {
-        String memebrs = this.members.keySet().stream().map(Object::toString).collect(Collectors.joining("|"));
-        return "{Party leader=" + this.leader.getName() + ", members=" + memebrs + ", maxSize=" + this.maxSize + "}";
+        String members = this.members.keySet().stream().map(Object::toString).collect(Collectors.joining("|"));
+        return "{Party leader=" + this.leader.getName() + ", members=" + members + ", maxSize=" + this.maxSize + "}";
     }
 }

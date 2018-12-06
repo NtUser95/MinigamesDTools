@@ -148,6 +148,10 @@ public class Commands implements CommandExecutor {
                 System.out.print(MinigamesDTools.getInstance().getPartyAPI().getPartyOf(player));
 
                 return true;
+            } else if(args[0].equalsIgnoreCase("geo")) {
+                MinigamesDTools.getInstance().getGeoIpApi().requestGeoData(player);
+
+                return true;
             }
 
             p.sendMessage("Wrong command");

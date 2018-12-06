@@ -8,6 +8,7 @@ import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.custom.TeamIncr
 import com.gmail.borlandlp.minigamesdtools.activepoints.type.block.PrimitivePointCreator;
 import com.gmail.borlandlp.minigamesdtools.activepoints.type.entity.PrimitiveEntityCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.ExampleArenaCreator;
+import com.gmail.borlandlp.minigamesdtools.arena.commands.DefaultWatcherCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.bossbar.BossbarExampleCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.gui.providers.examples.scoreboard.ScoreboardExampleCreator;
 import com.gmail.borlandlp.minigamesdtools.arena.scenario.DefaultScenarioChainCreator;
@@ -44,23 +45,25 @@ import java.util.List;
 import java.util.Map;
 
 public class TestComponents {
-    private Map<ConfigPath, CreatorHub> hubs = new Hashtable<ConfigPath, CreatorHub>() {{
-        this.put(ConfigPath.HOTBAR_SLOTS, MinigamesDTools.getInstance().getHotbarItemCreatorHub());
-        this.put(ConfigPath.HOTBAR, MinigamesDTools.getInstance().getHotbarCreatorHub());
-        this.put(ConfigPath.SCENARIO_CHAIN, MinigamesDTools.getInstance().getScenarioChainCreatorHub());
-        this.put(ConfigPath.SCENARIO, MinigamesDTools.getInstance().getScenarioCreatorHub());
-        this.put(ConfigPath.ACTIVE_POINT_REACTIONS, MinigamesDTools.getInstance().getReactionCreatorHub());
-        this.put(ConfigPath.ACTIVE_POINT_BEHAVIORS, MinigamesDTools.getInstance().getBehaviorCreatorHub());
-        this.put(ConfigPath.ACTIVE_POINT, MinigamesDTools.getInstance().getActivePointsCreatorHub());
-        this.put(ConfigPath.ARENA_LOBBY, MinigamesDTools.getInstance().getArenaLobbyCreatorHub());
-        this.put(ConfigPath.INVENTORY_GUI, MinigamesDTools.getInstance().getInventoryGUICreatorHub());
-        this.put(ConfigPath.INVENTORY_GUI_SLOT, MinigamesDTools.getInstance().getInventoryGuiSlotCreatorHub());
-        this.put(ConfigPath.ARENA_FOLDER, MinigamesDTools.getInstance().getArenaCreatorHub());
-        this.put(ConfigPath.SERVER_LOBBY, MinigamesDTools.getInstance().getLobbyCreatorHub());
-        this.put(ConfigPath.CONDITIONS, MinigamesDTools.getInstance().getConditionsCreatorHub());
-        this.put(ConfigPath.TEAMS, MinigamesDTools.getInstance().getTeamCreatorHub());
-        this.put(ConfigPath.BULLETS, MinigamesDTools.getInstance().getBulletCreatorHub());
-    }};
+    private Map<ConfigPath, CreatorHub> hubs = new Hashtable<>();
+
+    {
+        hubs.put(ConfigPath.HOTBAR_SLOTS, MinigamesDTools.getInstance().getHotbarItemCreatorHub());
+        hubs.put(ConfigPath.HOTBAR, MinigamesDTools.getInstance().getHotbarCreatorHub());
+        hubs.put(ConfigPath.SCENARIO_CHAIN, MinigamesDTools.getInstance().getScenarioChainCreatorHub());
+        hubs.put(ConfigPath.SCENARIO, MinigamesDTools.getInstance().getScenarioCreatorHub());
+        hubs.put(ConfigPath.ACTIVE_POINT_REACTIONS, MinigamesDTools.getInstance().getReactionCreatorHub());
+        hubs.put(ConfigPath.ACTIVE_POINT_BEHAVIORS, MinigamesDTools.getInstance().getBehaviorCreatorHub());
+        hubs.put(ConfigPath.ACTIVE_POINT, MinigamesDTools.getInstance().getActivePointsCreatorHub());
+        hubs.put(ConfigPath.ARENA_LOBBY, MinigamesDTools.getInstance().getArenaLobbyCreatorHub());
+        hubs.put(ConfigPath.INVENTORY_GUI, MinigamesDTools.getInstance().getInventoryGUICreatorHub());
+        hubs.put(ConfigPath.INVENTORY_GUI_SLOT, MinigamesDTools.getInstance().getInventoryGuiSlotCreatorHub());
+        hubs.put(ConfigPath.ARENA_FOLDER, MinigamesDTools.getInstance().getArenaCreatorHub());
+        hubs.put(ConfigPath.SERVER_LOBBY, MinigamesDTools.getInstance().getLobbyCreatorHub());
+        hubs.put(ConfigPath.CONDITIONS, MinigamesDTools.getInstance().getConditionsCreatorHub());
+        hubs.put(ConfigPath.TEAMS, MinigamesDTools.getInstance().getTeamCreatorHub());
+        hubs.put(ConfigPath.BULLETS, MinigamesDTools.getInstance().getBulletCreatorHub());
+    }
 
     private void linkCreators(ConfigPath path) {
         List<ConfigEntity> keys = MinigamesDTools.getInstance().getConfigProvider().getPoolContents(path);
@@ -231,6 +234,15 @@ public class TestComponents {
             MinigamesDTools.getInstance().getBulletCreatorHub().registerCreator(new GhostBulletCreator());
 
             this.linkCreators(ConfigPath.BULLETS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // ArenaCommandWatcher
+        try {
+            MinigamesDTools.getInstance().getCommandWatcherCreatorHub().registerCreator(new DefaultWatcherCreator());
+
+            MinigamesDTools.getInstance().getCommandWatcherCreatorHub().registerRouteId2Creator("default_command_watcher", "default_command_watcher");
         } catch (Exception e) {
             e.printStackTrace();
         }

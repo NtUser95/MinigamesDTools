@@ -1,6 +1,5 @@
 package com.gmail.borlandlp.minigamesdtools.gun;
 
-import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.gun.bullet.GhostBullet;
 import org.bukkit.scheduler.BukkitRunnable;

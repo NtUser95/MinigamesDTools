@@ -7,12 +7,15 @@ import com.gmail.borlandlp.minigamesdtools.activepoints.reaction.ReactionCreator
 import com.gmail.borlandlp.minigamesdtools.arena.*;
 import com.gmail.borlandlp.minigamesdtools.activepoints.ActivePointsCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.arena.chunkloader.ChunkLoaderCreator;
+import com.gmail.borlandlp.minigamesdtools.arena.commands.CommandWatcherCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.arena.scenario.ScenarioChainCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.arena.team.lobby.ArenaLobbyCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.conditions.ConditionsCreatorHub;
 import com.gmail.borlandlp.minigamesdtools.config.*;
 import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException;
 import com.gmail.borlandlp.minigamesdtools.events.sponge.*;
+import com.gmail.borlandlp.minigamesdtools.geoip.GeoIp;
+import com.gmail.borlandlp.minigamesdtools.geoip.GeoIpApi;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.*;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarAPI;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.api.HotbarApiInst;
@@ -47,6 +50,7 @@ import net.minecraft.server.v1_12_R1.EntityShulker;
 import net.minecraft.server.v1_12_R1.EntityZombie;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -67,6 +71,7 @@ public class MinigamesDTools extends JavaPlugin {
     private EntityAPI entityAPI;
     private BulletHandlerApi bulletHandlerApi;
     private PartyAPI partyAPI;
+    private GeoIpApi geoIpApi;
 
     private GUICreatorHub guiCreatorHub;
     private HotbarCreatorHub hotbarCreatorHub;
@@ -84,6 +89,7 @@ public class MinigamesDTools extends JavaPlugin {
     private ArenaLobbyCreatorHub arenaLobbyCreatorHub;
     private ConditionsCreatorHub conditionsCreatorHub;
     private BulletCreatorHub bulletCreatorHub;
+    private CommandWatcherCreatorHub commandWatcherCreatorHub;
 
     private static MinigamesDTools plugin;
 
@@ -129,6 +135,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.inventoryGuiSlotCreatorHub = new InventoryGuiSlotCreatorHub();
         this.conditionsCreatorHub = new ConditionsCreatorHub();
         this.bulletCreatorHub = new BulletCreatorHub();
+        this.commandWatcherCreatorHub = new CommandWatcherCreatorHub();
 
         this.entityAPI = new EntityController();
         this.inventoryGUICreatorHub = new InventoryGUICreatorHub();
@@ -140,6 +147,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.lobbyController = new LobbyHubController();
         this.bulletHandlerApi = new BulletHandler();
         this.partyAPI = new PartyManager();
+        this.geoIpApi = new GeoIp();
 
 
         this.apiComponentsController = new APIComponentsController();
@@ -159,6 +167,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.getApiComponentsController().register((APIComponent) this.getArenaAPI());
         this.getApiComponentsController().register(this.getBulletHandlerApi());
         this.getApiComponentsController().register((APIComponent) this.getPartyAPI());
+        this.getApiComponentsController().register((APIComponent) this.getGeoIpApi());
 
         (new TestComponents()).load();
 
@@ -331,5 +340,13 @@ public class MinigamesDTools extends JavaPlugin {
 
     public PartyAPI getPartyAPI() {
         return partyAPI;
+    }
+
+    public GeoIpApi getGeoIpApi() {
+        return geoIpApi;
+    }
+
+    public CommandWatcherCreatorHub getCommandWatcherCreatorHub() {
+        return commandWatcherCreatorHub;
     }
 }

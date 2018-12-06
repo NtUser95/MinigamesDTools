@@ -10,3 +10,5 @@ data:
     start_lobby:
       move_on_server_join: true
       id: example_lobby
+    geoip:
+      key: KEY_CODE
