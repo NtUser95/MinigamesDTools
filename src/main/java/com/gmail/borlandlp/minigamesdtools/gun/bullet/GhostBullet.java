@@ -19,9 +19,6 @@ import java.util.List;
 public class GhostBullet extends EntityDragonFireball {
     private int inc = 0;
     private World bukkitWorld;
-    private double prevMotX;
-    private double prevMotY;
-    private double prevMotZ;
     public int maxLivingTicks = 100;
     public int livedTicks;
 
@@ -59,13 +56,13 @@ public class GhostBullet extends EntityDragonFireball {
     }
 
     public void B_() {
-        this.prevMotX = this.motX;
-        this.prevMotY = this.motY;
-        this.prevMotZ = this.motZ;
+        double prevMotX = this.motX;
+        double prevMotY = this.motY;
+        double prevMotZ = this.motZ;
         super.B_();
-        this.motX = this.prevMotX;
-        this.motY = this.prevMotY;
-        this.motZ = this.prevMotZ;
+        this.motX = prevMotX;
+        this.motY = prevMotY;
+        this.motZ = prevMotZ;
 
         if(this.inc++ >= 1) {
             this.bukkitWorld.spawnParticle(Particle.FIREWORKS_SPARK, new Location(this.bukkitWorld, this.locX, this.locY, this.locZ), 0, 0, 0, 0);
