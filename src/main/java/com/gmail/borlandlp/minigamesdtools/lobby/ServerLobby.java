@@ -7,6 +7,7 @@ import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,13 +26,7 @@ public abstract class ServerLobby {
         }
     }
 
-    public boolean transferPlayer(Player p, ServerLobby l) throws Exception {
-        if(p == null) {
-            throw new Exception("Player is null. Cant transfer from ServerLobby[ID:" + this.getID() + "]");
-        } else if(l == null) {
-            throw new Exception("Target lobby is null. Cant tranfser Player[name:" + p.getName() + "] from ServerLobby[ID:" + this.getID() + "]");
-        }
-
+    public boolean transferPlayer(@NotNull Player p, @NotNull ServerLobby l) throws Exception {
         Debug.print(Debug.LEVEL.NOTICE, "transfer Player[name:" + p.getName() + "] from ServerLobby[ID:" + this.getID() + "] to ServerLobby[ID:" + l.getID() + "]");
 
         if(this.unregisterPlayer(p)) {
@@ -84,7 +79,7 @@ public abstract class ServerLobby {
         this.applyHotbar(p);
     }
 
-    public boolean registerPlayer(Player p) {
+    public boolean registerPlayer(@NotNull Player p) {
         Debug.print(Debug.LEVEL.NOTICE, "register Player[name:" + p.getName() + "] in ServerLobby[ID:" + this.getID() + "]");
 
         this.players.put(p, null);
@@ -99,7 +94,7 @@ public abstract class ServerLobby {
         return true;
     }
 
-    public boolean unregisterPlayer(Player p) {
+    public boolean unregisterPlayer(@NotNull Player p) {
         Debug.print(Debug.LEVEL.NOTICE, "unregister Player[name:" + p.getName() + "] in ServerLobby[ID:" + this.getID() + "]");
         if(this.hotbarID != null) {
             try {

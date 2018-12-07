@@ -17,30 +17,7 @@ public class ExampleScenario extends ScenarioAbstract {
 
     @Override
     public void update() {
-                /*
-        for (ExampleTeam team : this.getArena().getTeamController().getTeams()) {
-            for (String nickname : team.getSourcePlayers().keySet()) {
-                Player player = team.getSourcePlayers().get(nickname);
-                if (player == null || !player.isOnline()) {
-                    //timeout
-                    if (this.getArena().leaversInFight.containsKey(nickname)) {
-                        this.getArena().leaversInFight.put(nickname, this.getArena().leaversInFight.get(nickname) + 1);
-                    } else {
-                        this.getArena().leaversInFight.put(nickname, 1);
-                        this.getArena().broadcastMessage(nickname + " вышел с сервера во время матча, даём ему 30 секунд на возвращение..", false);
-                    }
 
-                    if (this.getArena().leaversInFight.containsKey(nickname) && this.getArena().leaversInFight.get(nickname) > 30) {
-                        try {
-                            this.playerKilled(nickname);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-        */
     }
 
     @Override
@@ -56,22 +33,22 @@ public class ExampleScenario extends ScenarioAbstract {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            MinigamesDTools.getInstance().getActivePointsAPI().activatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_sphereactivepoint"));
+            MinigamesDTools.getInstance().getActivePointsAPI().activatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_squareactivepoint"));
+            MinigamesDTools.getInstance().getActivePointsAPI().activatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_livingentity"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void gameEnded() {
         try {
             MinigamesDTools.getInstance().getActivePointsAPI().deactivatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_sphereactivepoint"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            MinigamesDTools.getInstance().getActivePointsAPI().deactivatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_squareactivepoint"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             MinigamesDTools.getInstance().getActivePointsAPI().deactivatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_livingentity"));
+            MinigamesDTools.getInstance().getActivePointsAPI().deactivatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_squareactivepoint"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,21 +58,7 @@ public class ExampleScenario extends ScenarioAbstract {
 
     @Override
     public void beforeRoundStarting() {
-        try {
-            MinigamesDTools.getInstance().getActivePointsAPI().activatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_sphereactivepoint"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            MinigamesDTools.getInstance().getActivePointsAPI().activatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_squareactivepoint"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            MinigamesDTools.getInstance().getActivePointsAPI().activatePoint(MinigamesDTools.getInstance().getActivePointsAPI().searchPointByID("example_livingentity"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override

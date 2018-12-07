@@ -1,12 +1,18 @@
 package com.gmail.borlandlp.minigamesdtools.geoip;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GeoData {
     public String ip;
-    public String hostname;
-    public String type;
-    public String countryCode;
-    public String langCode; // ru, en, de...
-    public String current_time; // 2018-03-29T07:35:08-07:00
-    public boolean isProxy;
-    public boolean isTor;
+    public String type; // ipv4, ipv6
+    public String continentCode; // Europe..
+    public String continentName;
+    public String countryCode; // EN, RU..
+    public String countryName; // United Kingdom, Russia..
+
+    public String locGeonameId;
+    public String locCapital; // London, Moscow..
+
+    public List<LangData> languages = new ArrayList<>();
 }

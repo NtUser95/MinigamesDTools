@@ -1,37 +1,26 @@
 package com.gmail.borlandlp.minigamesdtools.geoip;
 
 import com.gmail.borlandlp.minigamesdtools.APIComponent;
+import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
 import com.gmail.borlandlp.minigamesdtools.config.ConfigPath;
-import com.gmail.borlandlp.minigamesdtools.util.HttpUtils;
+import com.gmail.borlandlp.minigamesdtools.geoip.ipstack.IpstackRequestBuilder;
+import com.gmail.borlandlp.minigamesdtools.geoip.ipstack.IpstackResponse;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 public class GeoIp implements GeoIpApi, APIComponent {
     private String apiKey;
 
     public GeoData requestGeoData(Player p) {
         String ip = p.getAddress().getHostName();
-
-        String response = null;
-        try {
-            response = HttpUtils.doGetRequest("http://api.ipstack.com/" + ip + "?access_key=" + apiKey);
-        } catch (Exception e) {
-            e.printStackTrace();
+        IpstackResponse response = new IpstackRequestBuilder().setApiKey(this.apiKey).setIp(ip).doRequest();
+        if(!response.isSuccessful()) {
+            Debug.print(Debug.LEVEL.WARNING, "GeoIPRequest error msg:" + response.getError().getErrMessage());
             return null;
+        } else {
+            return response.getData();
         }
-
-        JSONObject json = null;
-        try {
-            json = (JSONObject) (new JSONParser().parse(response));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     @Override
