@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.test.gui.inventory.slots;
+package com.gmail.borlandlp.minigamesdtools.gui.inventory.slots;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.gui.inventory.slots.AbstractSlot;

@@ -40,17 +40,14 @@ import com.gmail.borlandlp.minigamesdtools.listener.Commands;
 import com.gmail.borlandlp.minigamesdtools.listener.Events;
 import com.gmail.borlandlp.minigamesdtools.lobby.LobbyHubController;
 import com.gmail.borlandlp.minigamesdtools.lobby.LobbyCreatorHub;
-import com.gmail.borlandlp.minigamesdtools.database.SQLite;
 
 import com.gmail.borlandlp.minigamesdtools.party.PartyAPI;
 import com.gmail.borlandlp.minigamesdtools.party.PartyManager;
-import com.gmail.borlandlp.minigamesdtools.test.TestComponents;
 import net.minecraft.server.v1_12_R1.EntityEnderDragon;
 import net.minecraft.server.v1_12_R1.EntityShulker;
 import net.minecraft.server.v1_12_R1.EntityZombie;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -169,7 +166,7 @@ public class MinigamesDTools extends JavaPlugin {
         this.getApiComponentsController().register((APIComponent) this.getPartyAPI());
         this.getApiComponentsController().register((APIComponent) this.getGeoIpApi());
 
-        (new TestComponents()).load();
+        (new DefaultCreatorsLoader()).load();
 
         Bukkit.getPluginManager().callEvent(new INITIALIZATION_EVENT());
 

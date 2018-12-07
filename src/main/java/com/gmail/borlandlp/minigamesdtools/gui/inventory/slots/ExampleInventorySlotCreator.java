@@ -1,8 +1,9 @@
-package com.gmail.borlandlp.minigamesdtools.test.gui.inventory.slots;
+package com.gmail.borlandlp.minigamesdtools.gui.inventory.slots;
 
 import com.gmail.borlandlp.minigamesdtools.creator.AbstractDataProvider;
 import com.gmail.borlandlp.minigamesdtools.creator.Creator;
 import com.gmail.borlandlp.minigamesdtools.creator.CreatorInfo;
+import com.gmail.borlandlp.minigamesdtools.gui.inventory.slots.ExampleInventorySlot;
 import com.gmail.borlandlp.minigamesdtools.gui.inventory.slots.InventorySlot;
 
 import java.util.ArrayList;

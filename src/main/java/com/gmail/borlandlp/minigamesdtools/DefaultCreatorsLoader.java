@@ -1,4 +1,4 @@
-package com.gmail.borlandlp.minigamesdtools.test;
+package com.gmail.borlandlp.minigamesdtools;
 
 import com.gmail.borlandlp.minigamesdtools.Debug;
 import com.gmail.borlandlp.minigamesdtools.MinigamesDTools;
@@ -30,7 +30,7 @@ import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.example.ExampleItemC
 import com.gmail.borlandlp.minigamesdtools.gui.inventory.DefaultViewInventoryCreator;
 import com.gmail.borlandlp.minigamesdtools.gun.bullet.GhostBulletCreator;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.items.gun.ExampleGunCreator;
-import com.gmail.borlandlp.minigamesdtools.test.gui.inventory.slots.ExampleInventorySlotCreator;
+import com.gmail.borlandlp.minigamesdtools.gui.inventory.slots.ExampleInventorySlotCreator;
 import com.gmail.borlandlp.minigamesdtools.lobby.ExampleLobbyCreator;
 import com.gmail.borlandlp.minigamesdtools.nmsentities.entity.SilentShulker;
 import com.gmail.borlandlp.minigamesdtools.nmsentities.entity.SkyDragon;
@@ -44,7 +44,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class TestComponents {
+public class DefaultCreatorsLoader {
     private Map<ConfigPath, CreatorHub> hubs = new Hashtable<>();
 
     {
