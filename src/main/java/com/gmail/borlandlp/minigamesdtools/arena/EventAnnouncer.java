@@ -10,15 +10,8 @@ import java.util.*;
 public class EventAnnouncer {
     private Map<Class<? extends ArenaEvent>, List<RegisteredArenaListener>> listeners = new HashMap<>();
 
-    public void register(ArenaEventListener listener) throws Exception {
-        Method[] publicMethods = listener.getClass().getMethods();
-        Method[] privateMethods = listener.getClass().getDeclaredMethods();
-        HashSet methods = new HashSet<Method>(publicMethods.length + privateMethods.length, 1.0F);
-
-        methods.addAll(Arrays.asList(publicMethods));
-        methods.addAll(Arrays.asList(privateMethods));
-
-        for (Object IMethod : methods) {
+    public void register(ArenaEventListener listener) {
+        for (Object IMethod : getObjectMethods(listener)) {
             ArenaEventHandler annClass = ((Method)IMethod).getAnnotation(ArenaEventHandler.class);
             if(((Method) IMethod).getGenericParameterTypes().length == 1 && annClass != null) {
                 Class argEventClazz = null;
@@ -29,25 +22,34 @@ public class EventAnnouncer {
                     e.printStackTrace();
                 }
                 if(argEventClazz == null) {
-                    throw new Exception("Internal error. Cant found class " + (((Method)IMethod).getGenericParameterTypes()[0]).getTypeName() + " for " + listener.getClass().getSimpleName());
+                    String parameterClass = (((Method)IMethod).getGenericParameterTypes()[0]).getTypeName();
+                    String listenerClass = listener.getClass().getSimpleName();
+                    String msg = "Internal error. Cant found class " + parameterClass + " for " + listenerClass;
+                    Debug.print(Debug.LEVEL.WARNING, msg);
+                    continue;
                 }
 
-                List<RegisteredArenaListener> handlers = this.getListeners().getOrDefault(argEventClazz, new ArrayList<>());
-                handlers.add(new RegisteredArenaListener(listener, (Method) IMethod, annClass.ignoreCancelled(), annClass.priority()));
-                this.listeners.put(argEventClazz, handlers);
-
-                // debug
-                StringBuilder str = new StringBuilder();
-                str.append("register listener:").append(listener.getClass().getSimpleName())
-                        .append(" method:").append(((Method) IMethod).getName())
-                        .append(" eventClass:").append(argEventClazz.getSimpleName())
-                        .append(" ignoreCanceled:").append(annClass.ignoreCancelled())
-                        .append(" priority:").append(annClass.priority())
-                        .append(" total_class_listeners:").append(handlers.size());
-
-                Debug.print(Debug.LEVEL.NOTICE, str.toString());
+                registerListener(argEventClazz, listener, annClass, (Method) IMethod);
             }
         }
+    }
+
+    private void registerListener(Class argEventClazz, ArenaEventListener listener, ArenaEventHandler annClass, Method method) {
+        List<RegisteredArenaListener> handlers = this.getListenersOf(argEventClazz);
+        RegisteredArenaListener rListener = new RegisteredArenaListener(listener, method, annClass.ignoreCancelled(), annClass.priority());
+        handlers.add(rListener);
+        this.listeners.put(argEventClazz, handlers);
+    }
+
+    private Set<Method> getObjectMethods(Object obj) {
+        Method[] publicMethods = obj.getClass().getMethods();
+        Method[] privateMethods = obj.getClass().getDeclaredMethods();
+        Set<Method> methods = new HashSet<>(publicMethods.length + privateMethods.length, 1.0F);
+
+        methods.addAll(Arrays.asList(publicMethods));
+        methods.addAll(Arrays.asList(privateMethods));
+
+        return methods;
     }
 
     public void unregister(ArenaEventListener listener) {
@@ -60,16 +62,22 @@ public class EventAnnouncer {
         return this.listeners;
     }
 
+    public List<RegisteredArenaListener> getListenersOf(Class<? extends ArenaEvent> clazz) {
+        return this.getListeners().getOrDefault(clazz, new ArrayList<>());
+    }
+
     public <T extends ArenaEvent> void announce(T event) {
         if(!this.getListeners().containsKey(event.getClass())) {
             return;
         }
 
         for (ArenaEventPriority priority : ArenaEventPriority.values()) { // highest, high, normal, low, lowest...
-            for(RegisteredArenaListener registeredArenaListener : this.getListeners().get(event.getClass())) {
-                if(registeredArenaListener.getPriority() != priority) {
-                    continue;
-                } else if(event instanceof Cancellable && ((Cancellable) event).isCancelled() && registeredArenaListener.isIgnoreCanceled()) {
+            for(RegisteredArenaListener registeredArenaListener : this.getListenersOf(event.getClass())) {
+
+                boolean isValidPriority = registeredArenaListener.getPriority() == priority;
+                boolean hasCanceled = event instanceof Cancellable && ((Cancellable) event).isCancelled();
+                boolean isCanceled = hasCanceled && !registeredArenaListener.isIgnoreCanceled();
+                if(!isValidPriority || isCanceled) {
                     continue;
                 }
 
