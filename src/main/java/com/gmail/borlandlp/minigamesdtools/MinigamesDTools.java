@@ -146,7 +146,6 @@ public class MinigamesDTools extends JavaPlugin {
         this.partyAPI = new PartyManager();
         this.geoIpApi = new GeoIp();
 
-
         this.apiComponentsController = new APIComponentsController();
         Bukkit.getPluginManager().callEvent(new PRE_INITIALIZATION_EVENT());
 
