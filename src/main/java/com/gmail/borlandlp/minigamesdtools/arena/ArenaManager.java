@@ -225,7 +225,7 @@ public class ArenaManager implements APIComponent, ArenaAPI {
             return false;
         }
 
-        // TODO: Приделать конвертацию ID в Broadcaster
+        // TODO: Приделать конвертацию ID в Localizer
         PlayerCheckResult result = this.playerCanJoin(arenaBase, player);
         if(result.getResult() == PlayerCheckResult.CheckResult.DENIED) {
             result.getErrId().forEach(player::sendMessage);

@@ -8,6 +8,7 @@ import com.gmail.borlandlp.minigamesdtools.config.exception.InvalidPathException
 import com.gmail.borlandlp.minigamesdtools.creator.DataProvider;
 import com.gmail.borlandlp.minigamesdtools.gui.hotbar.Hotbar;
 import com.gmail.borlandlp.minigamesdtools.party.Party;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -122,6 +123,16 @@ public class Commands implements CommandExecutor {
             System.out.print(MinigamesDTools.getInstance().getPartyAPI().getPartyOf(player));
 
             return true;
+        } else if(args[0].equalsIgnoreCase("all_arenas")) {
+            player.sendMessage("Arenas list:");
+            String msg = null;
+            for(ArenaBase arena : MinigamesDTools.getInstance().getArenaAPI().getArenas()) {
+                msg = " -" + ChatColor.GREEN + arena.getName()
+                        + ChatColor.GRAY + " [ID:" + arena.getGameId() + "]"
+                        + ChatColor.GREEN + " state:'" + ChatColor.DARK_GREEN + arena.getState() + ChatColor.GREEN + "'"
+                        + " players:'"+ ChatColor.DARK_GREEN + arena.getTeamController().countCurrentPlayers()+ ChatColor.GREEN + "'";
+                player.sendMessage(msg);
+            }
         }
 
         player.sendMessage("Wrong command");
